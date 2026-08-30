@@ -1,0 +1,21 @@
+# This file will automatically update with entries for new content after a build and reload.
+# Please read https://github.com/tModLoader/tModLoader/wiki/Localization to learn more about localization and these files.
+
+Items: {
+	GuildedSaviour: {
+		DisplayName: Guilded Saviour
+		Tooltip:
+			'''
+			Template of an item
+			Replacing this tooltip is duty 
+			It's snowing on Mt.Fuji
+			'''
+	}
+
+	WulfrumWavewire: {
+		DisplayName: Wulfrum Wavewire
+		Tooltip: ""
+	}
+}
+
+Projectiles.WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj

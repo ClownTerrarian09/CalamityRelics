@@ -1,0 +1,3 @@
+displayName = Calamity Relics
+author = Eton
+version = 0.1
