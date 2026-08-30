@@ -3,6 +3,7 @@ using CalamityMod;
 using CalamityMod.Graphics.Primitives;
 using CalamityMod.Items.Weapons.Magic;
 using CalamityRelics.Content.Items;
+using CalamityRelics.Content.Items.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,7 +13,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityRelics.Content.Projectiles;
+namespace CalamityRelics.Content.Projectiles.Friendly;
 
 public class Electrode : ModProjectile
 {

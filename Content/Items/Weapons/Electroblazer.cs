@@ -11,11 +11,12 @@ using CalamityMod.Items.Accessories;
 using CalamityMod.Items.DraedonMisc;
 using CalamityMod.Items.Materials;
 using CalamityRelics.Content.Projectiles;
+using CalamityRelics.Content.Projectiles.Friendly;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Audio;
 
-namespace CalamityRelics.Content.Items
+namespace CalamityRelics.Content.Items.Weapons
 {
 	public class Electroblazer : ModItem
 	{
