@@ -33,14 +33,14 @@ namespace CalamityRelics.Content.Items.Weapons
 			Item.height = 26;
 			Item.useTime = 5;
 			Item.useAnimation = 30;
-			Item.shoot = ModContent.ProjectileType<WulfrumBlaze>();
+			Item.shoot = ProjectileID.Flames;
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.shootSpeed = 8f;
+			Item.shootSpeed = 5f;
 			Item.value = Item.buyPrice(silver: 17);
 			Item.rare = ItemRarityID.Blue;
 			Item.UseSound = SoundID.Item34;
 			Item.autoReuse = true;
-			
+			Item.holdStyle = 16;
 		}
 		public override void HoldItem(Player player)
 		{
@@ -50,8 +50,8 @@ namespace CalamityRelics.Content.Items.Weapons
 		
 		public override void UseAnimation(Player player)
 		{
-			Item.useTime = 5;
-			Item.useAnimation = 20;
+			Item.useTime = 8;
+			Item.useAnimation = 16;
 			Item.UseSound = SoundID.Item34;
 			if (player.altFunctionUse == 2)
 			{
@@ -60,7 +60,26 @@ namespace CalamityRelics.Content.Items.Weapons
 				Item.UseSound = null;
 			}
 		}
-		
+		public override void HoldStyle(Player player, Rectangle heldItemFrame) => SetItemInHand(player, heldItemFrame);
+		public override void UseStyle(Player player, Rectangle heldItemFrame) => SetItemInHand(player, heldItemFrame);
+		public void SetItemInHand(Player player, Rectangle heldItemFrame)
+		{
+			if (Main.MouseWorld.X > player.Center.X)
+			{
+				player.ChangeDir(1);
+			}
+			else
+			{
+				player.ChangeDir(-1);
+			}
+
+			Vector2 itemPosition = player.MountedCenter + new Vector2(-8f * player.direction, -5f * player.gravDir);
+			float itemRotation = (Main.MouseWorld - itemPosition).ToRotation();
+
+			Vector2 itemSize = new Vector2(28, 14);
+			Vector2 itemOrigin = new Vector2(-8, 0);
+			CalamityUtils.CleanHoldStyle(player, itemRotation, itemPosition, itemSize, itemOrigin, true);
+		}
 		public override bool CanShoot(Player player)
 		{
 			return PlayerHasAmmo(player, false);
@@ -88,8 +107,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			
 		}
 
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type,
-			int damage, float knockback)
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			ElectroblazerPlayer ePlayer = player.GetModPlayer<ElectroblazerPlayer>();
 			
@@ -103,7 +121,7 @@ namespace CalamityRelics.Content.Items.Weapons
 					return false;
 				}
 				ePlayer.electrodeCount++;
-				Projectile.NewProjectile(source, position, velocity * 0.9f, ModContent.ProjectileType<Electrode>(), 5, knockback, player.whoAmI);
+				Projectile.NewProjectile(source, position, velocity * 1.5f, ModContent.ProjectileType<Electrode>(), 5, knockback, player.whoAmI);
 				SoundEngine.PlaySound(electricSound);
 				return false;
 			}
@@ -124,5 +142,16 @@ namespace CalamityRelics.Content.Items.Weapons
 	public class ElectroblazerPlayer : ModPlayer
 	{
 		public int electrodeCount;
+		public override void PostUpdate()
+		{
+			if (Player.HeldItem == null || Player.HeldItem.type != ModContent.ItemType<Electroblazer>())
+				return;
+			Vector2 direction = Main.MouseWorld - Player.Center;
+			float rotation = direction.ToRotation() - MathHelper.ToRadians(90);
+			Player.CompositeArmStretchAmount stretch = Player.CompositeArmStretchAmount.Full;
+			Player.SetCompositeArmFront(true, stretch, rotation);
+		}
 	}
+
+	
 }

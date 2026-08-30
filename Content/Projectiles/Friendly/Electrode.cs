@@ -51,7 +51,7 @@ public class Electrode : ModProjectile
     {
         foreach (Projectile projectile in Main.projectile)
         {
-            if (projectile.type != ModContent.ProjectileType<WulfrumBlaze>() || !projectile.active)
+            if (projectile.type != ProjectileID.Flames || !projectile.active)
                 continue;
             if (Vector2.Distance(projectile.Center, Projectile.Center) < 100f)
             {
