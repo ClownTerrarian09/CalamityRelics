@@ -21,10 +21,17 @@ Items: {
 		DisplayName: Electroblazer
 		Tooltip: ""
 	}
+
+	WulfrumPowerCord: {
+		DisplayName: Wulfrum Power Cord
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
 	WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj
 	Electrode.DisplayName: Electrode
 	WulfrumBlaze.DisplayName: Wulfrum Blaze
+	WulfrumWhipProjectile.DisplayName: Wulfrum Whip Projectile
+	WulfrumWhipSparks.DisplayName: Wulfrum Whip Sparks
 }
