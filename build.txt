@@ -1,4 +1,4 @@
 displayName = Calamity Relics
 author = Eton
-version = 0.1
-modReferences = CalamityMod
+version = 0.2
+modReferences = CalamityMod, CalamityModMusic

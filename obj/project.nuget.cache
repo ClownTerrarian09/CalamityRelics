@@ -1,11 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "G2e7xOukStM=",
+  "dgSpecHash": "9NK8GgbmBFU=",
   "success": true,
-  "projectFilePath": "/home/boban/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/CalamityRelics.csproj",
-  "expectedPackageFiles": [
-    "/home/boban/.nuget/packages/microsoft.netcore.app.ref/8.0.28/microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
-    "/home/boban/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.28/microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\CalamityRelics.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
