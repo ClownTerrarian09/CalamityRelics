@@ -11,6 +11,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 {
 	public class WulfrumWhipProjectile : ModProjectile
 	{
+		
+		Vector2 pos;
 		public override void SetStaticDefaults() {
 			// This makes the projectile use whip collision detection and allows flasks to be applied to it.
 			ProjectileID.Sets.IsAWhip[Type] = true;
@@ -65,10 +67,13 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
 			DrawLine(list);
             Main.DrawWhip_WhipBland(Projectile, list);
-
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), list[list.Count - 1], new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 1, 0f, Main.myPlayer);
+			pos = list[list.Count - 1];
 			
             return false;
 		}
+		public override void PostAI()
+        {
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 3, 0f, Main.myPlayer);
+        }
 	}
 }

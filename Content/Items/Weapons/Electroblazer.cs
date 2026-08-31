@@ -39,7 +39,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			Item.useAnimation = 12;
 			Item.shoot = ModContent.ProjectileType<WulfrumBlaze>();
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.shootSpeed = 8f;
+			Item.shootSpeed = 13f;
 			Item.value = Item.buyPrice(silver: 17);
 			Item.rare = ItemRarityID.Blue;
 			Item.UseSound = SoundID.Item34;
