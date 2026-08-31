@@ -41,7 +41,7 @@ public class Electrode : ModProjectile
         Projectile.ignoreWater = true;
         Projectile.penetrate = -1;
         Projectile.DamageType = DamageClass.Ranged;
-        Projectile.timeLeft = 1400;
+        Projectile.timeLeft = 200;
         Projectile.extraUpdates = 2;
         Projectile.usesLocalNPCImmunity = true;
         seed = Main.rand.Next(0, 360);
@@ -87,6 +87,7 @@ public class Electrode : ModProjectile
 
         Projectile.velocity.X *= 0.98f;
         Projectile.velocity.Y += 0.07f;
+        
 
     }
 
@@ -97,6 +98,7 @@ public class Electrode : ModProjectile
             offset = Projectile.position - target.position;
             Projectile.tileCollide = false;
             stuckToNPC = target;
+            Projectile.timeLeft = 900;
         }
     }
 

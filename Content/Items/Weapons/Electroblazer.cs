@@ -20,11 +20,15 @@ namespace CalamityRelics.Content.Items.Weapons
 {
 	public class Electroblazer : ModItem
 	{
-		
-		
 		private SoundStyle electricSound = new("CalamityMod/Sounds/Item/WulfrumProsthesisShoot"){Volume = 0.3f};
 		private SoundStyle outOfElectrodes = new("CalamityMod/Sounds/Item/WulfrumKnifeTileHit1");
+		private SoundStyle electroCharge = new("CalamityRelics/Assets/Sounds/Item/ElectroblazerCharge");
+		private int charge;
+		private int electrodeCooldown;
+		private int chargeTimer;
+		protected override bool CloneNewInstances => true;
 		
+
 		public override void SetDefaults()
 		{
 			Item.damage = 1;
@@ -45,6 +49,60 @@ namespace CalamityRelics.Content.Items.Weapons
 		public override void HoldItem(Player player)
 		{
 			player.Calamity().rightClickListener = true;
+			ElectroblazerPlayer ePlayer = player.GetModPlayer<ElectroblazerPlayer>();
+
+			if (ePlayer.electrodeCount >= 5)
+			{
+				charge = 0;
+				chargeTimer = 0;
+				return;
+			}
+			int totalCharge = charge + ePlayer.electrodeCount;
+			if (player.Calamity().mouseRight)
+			{
+				if (chargeTimer >= 20 - charge * 3)
+				{
+					if (totalCharge < 5)
+					{
+						charge++;
+						SoundStyle pitchShifted = electroCharge;
+						pitchShifted.Pitch = (charge / 5f) * 0.5f;
+						SoundEngine.PlaySound(pitchShifted);
+						chargeTimer = 0;
+					}
+					else
+					{
+						if (Main.rand.Next(2) == 0)
+						{
+							float itemAngle = (Main.MouseWorld - player.MountedCenter).ToRotation();
+							Vector2 along = itemAngle.ToRotationVector2();
+							Vector2 perp  = new Vector2(-along.Y, along.X) * player.direction * player.gravDir;
+							Vector2 itemPosition = player.MountedCenter + along * 20f + perp;
+							Vector2 local = new Vector2(Main.rand.NextFloat(-20f, 20f), Main.rand.NextFloat(-10f, 10f));
+							Dust.NewDustPerfect(itemPosition + local.RotatedBy(itemAngle), DustID.Electric, Scale: 0.4f);
+
+						}
+					}
+				}
+				else
+				{
+					chargeTimer++;
+				}
+				return;
+			}
+
+
+			if (charge > 0)
+			{
+				if (electrodeCooldown > 0)
+				{
+					electrodeCooldown--;
+					return;
+				}
+				charge--;
+				ShootElectrode(player);
+				electrodeCooldown = 8;
+			}
 		}
 		public override bool AltFunctionUse(Player player) => true;
 		
@@ -55,8 +113,8 @@ namespace CalamityRelics.Content.Items.Weapons
 			Item.UseSound = SoundID.Item34;
 			if (player.altFunctionUse == 2)
 			{
-				Item.useTime = 15;
-				Item.useAnimation = 40;
+				Item.useTime = 10;
+				Item.useAnimation = 10;
 				Item.UseSound = null;
 			}
 		}
@@ -73,8 +131,10 @@ namespace CalamityRelics.Content.Items.Weapons
 				player.ChangeDir(-1);
 			}
 
+			float chargeOffset = ((charge / 5f) * 2f);
 			Vector2 itemPosition = player.MountedCenter + new Vector2(-8f * player.direction, -5f * player.gravDir);
 			float itemRotation = (Main.MouseWorld - itemPosition).ToRotation();
+			itemPosition += Main.rand.NextVector2Circular(chargeOffset, chargeOffset);
 
 			Vector2 itemSize = new Vector2(28, 14);
 			Vector2 itemOrigin = new Vector2(-8, 0);
@@ -82,12 +142,12 @@ namespace CalamityRelics.Content.Items.Weapons
 		}
 		public override bool CanShoot(Player player)
 		{
-			return PlayerHasAmmo(player, false);
+			return PlayerHasAmmo(player, false) && charge == 0;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			return PlayerHasAmmo(player, false);
+			return PlayerHasAmmo(player, false) && charge == 0;
 		}
 
 		private bool PlayerHasAmmo(Player player, bool useAmmo)
@@ -113,16 +173,11 @@ namespace CalamityRelics.Content.Items.Weapons
 			
 			if (player.altFunctionUse == 2)
 			{
-				if (player.itemAnimation <= 15)
-					return false;
-				if (ePlayer.electrodeCount >= 5)
+				if (ePlayer.electrodeCount >= 5 || charge >= 5)
 				{
 					SoundEngine.PlaySound(outOfElectrodes);
 					return false;
 				}
-				ePlayer.electrodeCount++;
-				Projectile.NewProjectile(source, position, velocity * 1.5f, ModContent.ProjectileType<Electrode>(), 5, knockback, player.whoAmI);
-				SoundEngine.PlaySound(electricSound);
 				return false;
 			}
 			PlayerHasAmmo(player, true);
@@ -135,6 +190,16 @@ namespace CalamityRelics.Content.Items.Weapons
 			recipe.AddIngredient(ItemID.DirtBlock, 10);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
+		}
+
+
+		private void ShootElectrode(Player player)
+		{
+			ElectroblazerPlayer ePlayer = player.GetModPlayer<ElectroblazerPlayer>();
+			ePlayer.electrodeCount++;
+			Vector2 velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 8f;
+			Projectile.NewProjectile(player.GetSource_ItemUse(Item),player.Center, velocity.RotatedByRandom(MathHelper.ToRadians(5)), ModContent.ProjectileType<Electrode>(), 5, 0.5f, player.whoAmI);
+			SoundEngine.PlaySound(electricSound);
 		}
 		
 	}
