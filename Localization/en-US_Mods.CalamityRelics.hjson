@@ -35,3 +35,10 @@ Projectiles: {
 	WulfrumWhipProjectile.DisplayName: Wulfrum Whip Projectile
 	WulfrumWhipSparks.DisplayName: Wulfrum Whip Sparks
 }
+
+Buffs: {
+	WulfrumWhipDebuff: {
+		DisplayName: Wulfrum Whip Debuff
+		Description: Mods.CalamityRelics.Buffs.WulfrumWhipDebuff.Description
+	}
+}

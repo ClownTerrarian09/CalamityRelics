@@ -6,24 +6,17 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using CalamityRelics.Content.Projectiles.Friendly;
+using CalamityRelics.Content.Buffs;
 
 namespace CalamityRelics.Content.Items.Weapons.Summon
 {
 	public class WulfrumPowerCord : ModItem
 	{
-		public static readonly int TagDamage = 3;
-
-		// public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(ExampleWhipTagDamage);
-
-		public override void SetStaticDefaults() {
-			// Here is where we define how much TagDamage the whip does.
-			// TagDuration and CritChance can be modified, too.
-			// For more customizability, see Example Whip Advanced's tag effects.
-			// ItemID.Sets.UniqueTagEffects[Type] = new WhipTagEffect() { TagDamage = TagDamage };
-		}
+		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(WulfrumWhipDebuff.TagDamage);
 
 		public override void SetDefaults() {
-			Item.DefaultToWhip(ModContent.ProjectileType<WulfrumWhipProjectile>(), 15, 1, 3);
+			Item.DefaultToWhip(ModContent.ProjectileType<WulfrumWhipProjectile>(), 15, 1, 3, 35);
+			Item.useTime = 35;
 			Item.rare = ItemRarityID.Green;
 			Item.value = Item.buyPrice(gold: 1);
 		}

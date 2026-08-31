@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityRelics.Content.Buffs;
 
 namespace CalamityRelics.Content.Projectiles.Friendly
 {
@@ -20,8 +21,9 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 			Projectile.DefaultToWhip();
 
 			// use these to change from the vanilla defaults
-			Projectile.WhipSettings.Segments = 10;
-			// Projectile.WhipSettings.RangeMultiplier = 1f;
+			Projectile.WhipSettings.Segments = 8;
+			Projectile.light = 0.7f;
+			Projectile.WhipSettings.RangeMultiplier = 1f;
 		}
 
 		private float Timer {
@@ -30,6 +32,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) {
+			target.AddBuff(ModContent.BuffType<WulfrumWhipDebuff>(), 240);
 			Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI; // Apply the targeting focus on the NPC who was hit.
 			Projectile.damage = (int)(Projectile.damage * 0.3f); // Multihit penalty. Decrease the damage the more enemies the whip hits.
 		}
