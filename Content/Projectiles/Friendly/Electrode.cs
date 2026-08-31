@@ -49,9 +49,12 @@ public class Electrode : ModProjectile
 
     public override void AI()
     {
+        if (Main.rand.NextFloat() < 0.25f)
+            Dust.NewDustPerfect(Projectile.Center, DustID.Electric);
+        
         foreach (Projectile projectile in Main.projectile)
         {
-            if (projectile.type != ProjectileID.Flames || !projectile.active)
+            if (projectile.type != ModContent.ProjectileType<WulfrumBlaze>() || !projectile.active)
                 continue;
             if (Vector2.Distance(projectile.Center, Projectile.Center) < 100f)
             {
@@ -120,7 +123,7 @@ public class Electrode : ModProjectile
         SoundEngine.PlaySound(WulfrumProsthesis.HitSound, Projectile.Center);
         for (int d = 0; d < 15; d++)
         {
-            Dust chust = Dust.NewDustPerfect(Projectile.Center, DustID.MagicMirror);
+            Dust chust = Dust.NewDustPerfect(Projectile.Center, DustID.Electric);
             chust.noGravity = true;
         }
         ElectroblazerPlayer ePlayer = Main.player[Projectile.owner].GetModPlayer<ElectroblazerPlayer>();

@@ -35,11 +35,11 @@ namespace CalamityRelics.Content.Items.Weapons
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 56;
 			Item.height = 26;
-			Item.useTime = 5;
-			Item.useAnimation = 30;
-			Item.shoot = ProjectileID.Flames;
+			Item.useTime = 6;
+			Item.useAnimation = 12;
+			Item.shoot = ModContent.ProjectileType<WulfrumBlaze>();
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.shootSpeed = 5f;
+			Item.shootSpeed = 8f;
 			Item.value = Item.buyPrice(silver: 17);
 			Item.rare = ItemRarityID.Blue;
 			Item.UseSound = SoundID.Item34;
@@ -101,6 +101,8 @@ namespace CalamityRelics.Content.Items.Weapons
 				}
 				charge--;
 				ShootElectrode(player);
+				player.velocity -= Vector2.Normalize(Main.MouseWorld - player.Center) * 2f;
+				CalamityMod.CalamityUtils.AddScreenshakeAt(player.Center, 0.5f);
 				electrodeCooldown = 8;
 			}
 		}
@@ -108,8 +110,8 @@ namespace CalamityRelics.Content.Items.Weapons
 		
 		public override void UseAnimation(Player player)
 		{
-			Item.useTime = 8;
-			Item.useAnimation = 16;
+			Item.useTime = 6;
+			Item.useAnimation = 12;
 			Item.UseSound = SoundID.Item34;
 			if (player.altFunctionUse == 2)
 			{

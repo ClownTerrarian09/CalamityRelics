@@ -13,7 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace CalamityRelics.Content.Projectiles.Friendly;
-/*
+
 public class WulfrumBlaze : ModProjectile
 {
 
@@ -22,11 +22,14 @@ public override string Texture => $"Terraria/Images/Projectile_{ProjectileID.Fla
 public override void SetStaticDefaults()
 {
     Main.projFrames[Projectile.type] = 7;
+    ProjectileID.Sets.TrailCacheLength[Type] = 20;
+    ProjectileID.Sets.TrailingMode[Type] = 3;
 }
 
 public override void SetDefaults()
 {
     Projectile.CloneDefaults(ProjectileID.Flames);
+    Projectile.timeLeft = (int)(Projectile.timeLeft * 0.25f);
     Projectile.aiStyle = 0;
 }
 public override void AI()
@@ -39,9 +42,18 @@ public override void AI()
     if (Projectile.localAI[0] >= 60f)
         Projectile.velocity *= 0.95f;
 
-    if (Projectile.localAI[0] > 25f && Main.rand.NextFloat() < 0.25f)
+    SpawnDust(DustID.GreenTorch, 0.5f);
+    SpawnDust(DustID.GreenFairy,0.2f);
+    SpawnDust(DustID.GreenMoss,0.3f);
+
+    Projectile.rotation = Projectile.velocity.ToRotation();
+}
+
+private void SpawnDust(int type, float scaling = 1)
+{
+    if (Projectile.localAI[0] > 10f && Main.rand.NextFloat() < 0.25f)
     {
-        Dust dust = Dust.NewDustDirect(Projectile.Center + Main.rand.NextVector2Circular(50f, 50f),4, 4, DustID.MagicMirror,Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
+        Dust dust = Dust.NewDustDirect(Projectile.Center + Main.rand.NextVector2Circular(50f, 50f),4, 4, type,Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100,default, 2f * scaling);
 
         if (Main.rand.Next(4) == 0)
         {
@@ -54,12 +66,9 @@ public override void AI()
             dust.scale *= 0.8f;
         }
 
-        dust.scale *= 1.3f;
-        dust.velocity *= 1.2f;
         dust.customData = 1;
     }
-
-    Projectile.rotation = Projectile.velocity.ToRotation();
+    
 }
 
 public override bool OnTileCollide(Vector2 oldVelocity)
@@ -75,30 +84,43 @@ public override bool PreDraw(ref Color lightColor)
 
     Rectangle sourceRect = texture.Frame(1, 7, 0, 3);
     Vector2 origin = sourceRect.Size() / 2f;
-
-
     float progress = MathHelper.Clamp(age / 50f, 0f, 1f);
     float alpha = (float)Math.Sin(progress * Math.PI);
-    float scale = MathHelper.Clamp((float)(progress * Math.PI), 0.25f, 1f);
-
-    Color colorStart = new Color(250, 127, 55, 255);
-    Color colorEnd   = new Color(105, 90, 20, 255);
+    float scale = MathHelper.Clamp((float)(progress * Math.PI), 0, 1f);
+    
+    Color colorStart = new Color(40, 255, 25, 255);
+    Color colorEnd   = new Color(120, 127, 55, 105);
     Color drawColor  = Color.Lerp(colorStart, colorEnd, progress) * alpha;
 
-    Vector2 drawPos = Projectile.Center - Main.screenPosition;
-    Vector2 offsetDrawPos = Projectile.Center - Main.screenPosition - (Projectile.velocity * 4f);
 
-    float spin = Main.GlobalTimeWrappedHourly * 2f;
+    float spin = Main.GlobalTimeWrappedHourly * 8f;
     float rot1 = Projectile.rotation + spin;
     float rot2 = Projectile.rotation - spin;
+    Vector2 drawPos = Projectile.position + Projectile.Size / 2f - Main.screenPosition;
 
     Main.EntitySpriteDraw(texture, drawPos, sourceRect, drawColor, rot1, origin, scale, SpriteEffects.None, 0);
-    Main.EntitySpriteDraw(texture, offsetDrawPos, sourceRect, drawColor * 0.75f, rot2, origin, scale * 0.75f, SpriteEffects.None, 0);
+    Main.EntitySpriteDraw(texture, drawPos, sourceRect, drawColor, rot2, origin, scale, SpriteEffects.None, 0);
+    float scalePercentagePerFlame = 0.8f;
+    float scaled = scale;
+    for (int i = 0; i < Projectile.oldPos.Length; i++)
+    {
+        if (Projectile.oldPos[i] == Vector2.Zero || i % 5 != 0)
+            continue;
+        
+        scaled *= scalePercentagePerFlame;
+        
+        drawPos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
 
+        Main.EntitySpriteDraw(texture, drawPos, sourceRect, drawColor,
+            Projectile.oldRot[i] + spin, origin, scaled,
+            SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(texture, drawPos, sourceRect, drawColor,
+            Projectile.oldRot[i] - spin, origin, scaled,
+            SpriteEffects.None, 0);
+    }
     return false;
 }
 
 
     
 }
-*/
