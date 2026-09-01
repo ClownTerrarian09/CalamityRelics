@@ -185,7 +185,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			PlayerHasAmmo(player, true);
 			return base.Shoot(player, source, position, velocity, type, damage, knockback);
 		}
-
+//
 		public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
@@ -205,7 +205,7 @@ namespace CalamityRelics.Content.Items.Weapons
 		}
 		
 	}
-
+//
 	public class ElectroblazerPlayer : ModPlayer
 	{
 		public int electrodeCount;
