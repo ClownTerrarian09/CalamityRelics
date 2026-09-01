@@ -2,11 +2,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using CalamityMod.Projectiles;
+using CalamityMod.Particles;
 
 namespace CalamityRelics.Content.Projectiles.Friendly
 {
     public class ElectromagneticSphereProjectileCharge0 : ModProjectile
     {
+        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
         private int bounceCount;
         private bool initialized;
 
@@ -25,6 +28,24 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             Projectile.localNPCHitCooldown = 30; 
 
             Projectile.aiStyle = 0; 
+        }
+        private Color color = new Color(158, 250, 179);
+        private Color color2 = new Color(158, 250, 179, 0.6f);
+        public override void AI()
+        {
+            Particle ring = new BloomRing(Projectile.Center, Projectile.velocity, color, 0.3f*Projectile.ai[0], 3);
+            GeneralParticleHandler.SpawnParticle(ring);
+            Particle spark2 = new BoltParticle(Projectile.Center, 
+            Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), false, 8, 0.12f * Projectile.ai[0], 
+            color2, new Vector2(2.5f, 0.8f), false, false, false, 0.3f);
+            GeneralParticleHandler.SpawnParticle(spark2);
+
+            Particle spark = new BoltParticle(Projectile.Center, 
+            Projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f)), false, 3, 0.12f * Projectile.ai[0], 
+            color, new Vector2(5f, 0.8f), false, false, false, 0.3f);
+            GeneralParticleHandler.SpawnParticle(spark);
+            
+
         }
         
         public override bool OnTileCollide(Vector2 oldVelocity)
