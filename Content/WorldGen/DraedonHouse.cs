@@ -10,8 +10,10 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using CalamityMod.Schematics;
 using Terraria.GameContent.Generation;
+using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
+using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
 
-namespace CalamityRelics.WorldGen
+namespace CalamityRelics.Content.WorldGen
 {
     public class RelicsIceStructureGen : ModSystem
     {
@@ -100,7 +102,7 @@ namespace CalamityRelics.WorldGen
 
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
-            int microBiomeIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Draedon Structures"));
+            int microBiomeIndex = tasks.FindIndex(genpass => genpass.Name.Contains("Draedon Structures"));
 
             if (microBiomeIndex != -1)
             {
@@ -119,50 +121,73 @@ namespace CalamityRelics.WorldGen
         private void PlaceIceStructure()
         {
             bool placed = false;
-            int attempts = 0;
-            int maxAttempts = 10000;
+            int maxAttempts = 500;
+
+            int schematicWidth = 200;
+            int schematicHeight = 150;
 
             Point? iceLabPosition = FindIceLabPosition();
+            List<Point> validCandidates = new List<Point>();
 
-            while (!placed && attempts < maxAttempts)
+            for (int x = 200; x < Main.maxTilesX - 200; x += 5)
             {
-                attempts++;
-
-                int x = Main.rand.Next(200, Main.maxTilesX - 200);
-                int y = Main.rand.Next((int)Main.rockLayer, Main.maxTilesY - 300);
-
-                Tile tile = Main.tile[x, y];
-
-                if (tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock))
+                for (int y = (int)Main.rockLayer; y < Main.maxTilesY - 300; y += 5)
                 {
-                    if (iceLabPosition.HasValue)
+                    Tile tile = Main.tile[x, y];
+                    if (tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock))
                     {
-                        float distanceFromLab = Vector2.Distance(new Vector2(x, y), new Vector2(iceLabPosition.Value.X, iceLabPosition.Value.Y));
-                        if (distanceFromLab < 300f)
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (CheckIceBiomeDensity(x, y, 50, 400))
-                    {
-                        if (IsAreaClear(x, y, 60, 60))
-                        {
-                            bool specialCondition = false;
-
-                            SchematicManager.PlaceSchematic<System.Action<Terraria.Chest>>
-                            (
-                                DraedonHouseSchematicKey,
-                                new Point(x, y),
-                                SchematicAnchor.TopLeft,
-                                ref specialCondition,
-                                null
-                             );
-
-                            placed = true;
-                        }
+                        validCandidates.Add(new Point(x, y));
                     }
                 }
+            }
+
+            if (validCandidates.Count == 0)
+            {
+                Mod.Logger.Warn($"Calamity Relics: Failed to find valid ice candidates for {DraedonHouseSchematicPath}.");
+                return;
+            }
+
+            for (int attempts = 0; attempts < maxAttempts && !placed; attempts++)
+            {
+                Point p = validCandidates[Main.rand.Next(validCandidates.Count)];
+
+                if (iceLabPosition.HasValue)
+                {
+                    float distanceFromLab = Vector2.Distance(new Vector2(p.X, p.Y), new Vector2(iceLabPosition.Value.X, iceLabPosition.Value.Y));
+                    if (distanceFromLab < 300f) continue;
+                }
+
+                if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
+
+                if (!CheckIceBiomeDensity(p.X, p.Y, 50, 400)) continue;
+
+                bool specialCondition = false;
+                SchematicManager.PlaceSchematic<System.Action<Terraria.Chest>>(
+                    DraedonHouseSchematicKey,
+                    p,
+                    SchematicAnchor.TopLeft,
+                    ref specialCondition,
+                    null
+                );
+
+                DraedonHouseSystem.DraedonHouseRect = new Rectangle(p.X, p.Y, schematicWidth, schematicHeight);
+
+                int doorOffsetX = 0;
+                int doorOffsetY = 0;
+
+                int npcSpawnX = (p.X + doorOffsetX) * 16;
+                int npcSpawnY = (p.Y + doorOffsetY) * 16;
+
+                NPC.NewNPC(
+                    new Terraria.DataStructures.EntitySource_WorldGen(),
+                    npcSpawnX,
+                    npcSpawnY,
+                    ModContent.NPCType<DraedonBarrierNPC>()
+                );
+
+                placed = true;
+
+                Mod.Logger.Info($"Calamity Relics: Draedon's House placed at {p.X}, {p.Y}");
             }
 
             if (!placed)

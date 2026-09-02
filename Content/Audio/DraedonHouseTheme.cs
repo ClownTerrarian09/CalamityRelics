@@ -23,7 +23,7 @@ namespace CalamityRelics.Content.Audio
 
         // --- STANDARD TILE ---
         private readonly int[] standardVanillaTiles = { 
-            // Add any vanilla standard tiles here in the future (if there's any)
+            TileID.Glass
         };
         private readonly string[] standardModdedTiles = {
             "CalamityMod/RustedPlating",
@@ -107,7 +107,7 @@ namespace CalamityRelics.Content.Audio
                    counter.StandardBlockCount >= StandardThreshold;
         }
 
-        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+        public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
 
         public override int Music => MusicLoader.GetMusicSlot(Mod, ThemeMusicPath);
     }
