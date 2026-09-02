@@ -11,7 +11,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
     {
         private int bounceCount;
         private bool initialized;
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        // public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
         public override void SetDefaults()
         {
@@ -33,20 +33,17 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         private Color color2 = new Color(158, 250, 225, 0.6f);
         public override void AI()
         {
-            Particle ring = new BloomRing(Projectile.Center, Projectile.velocity, color, 0.3f*Projectile.ai[0], 3);
+            Particle ring = new BloomRing(Projectile.Center, Projectile.velocity, color, 0.25f*Projectile.ai[0], 5);
             GeneralParticleHandler.SpawnParticle(ring);
             Particle spark2 = new BoltParticle(Projectile.Center, 
-            Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), false, 10, 0.12f * Projectile.ai[0], 
+            Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), false, 15, 0.12f * Projectile.ai[0], 
             color2, new Vector2(2.5f, 0.8f), false, false, false, 0.3f);
             GeneralParticleHandler.SpawnParticle(spark2);
 
-            for (int i = 0; i < 3; i++)
-            {
-                Particle spark = new BoltParticle(Projectile.Center, 
-                new Vector2(Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f)), false, 2, 0.12f * Projectile.ai[0], 
-                color2, new Vector2(5f, 0.8f), false, true, false);
-                GeneralParticleHandler.SpawnParticle(spark);
-            } 
+            Particle spark = new BoltParticle(Projectile.Center, 
+            new Vector2(Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f)), false, 2, 0.12f * Projectile.ai[0], 
+            color, new Vector2(4f, 0.8f), false, true, false);
+            GeneralParticleHandler.SpawnParticle(spark);
 
         }
 
