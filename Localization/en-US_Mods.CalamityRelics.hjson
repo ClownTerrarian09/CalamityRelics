@@ -26,6 +26,56 @@ Items: {
 		DisplayName: Wulfrum Power Cord
 		Tooltip: ""
 	}
+
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip:
+			'''
+			Overrides local security protocols.
+			 Hold near a high-voltage barrier to initiate the unlock sequence.
+			'''
+	}
+
+	OffsetScanner: {
+		DisplayName: Biome Offset Scanner
+		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+	}
+
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
+		Tooltip: ""
+	}
+}
+
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
+		Tooltip: ""
+	}
+
+	WulfrumElectromagneticSphere2: {
+		DisplayName: Wulfrum Electromagnetic Sphere2
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -34,6 +84,16 @@ Projectiles: {
 	WulfrumBlaze.DisplayName: Wulfrum Blaze
 	WulfrumWhipProjectile.DisplayName: Wulfrum Whip Projectile
 	WulfrumWhipSparks.DisplayName: Wulfrum Whip Sparks
+	ElectromagneticSphereProjectile.DisplayName: Electromagnetic Sphere Projectile
+	WulfrumESHoldout.DisplayName: Wulfrum E S Holdout
+	WulfrumESHoldout2.DisplayName: Wulfrum E S Holdout2
+	ElectromagneticSphereProjectileCharge0.DisplayName: Electromagnetic Sphere Projectile Charge0
+	ElectromagneticSphereProjectileCharge1.DisplayName: Electromagnetic Sphere Projectile Charge1
+	ElectromagneticSphereProjectileCharge2.DisplayName: Electromagnetic Sphere Projectile Charge2
+	ElectromagneticSphereProjectileCharge3.DisplayName: Electromagnetic Sphere Projectile Charge3
+	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
+	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
+	WulfrumPortal.DisplayName: Wulfrum Portal
 }
 
 Buffs: {
@@ -41,4 +101,16 @@ Buffs: {
 		DisplayName: Wulfrum Whip Debuff
 		Description: Mods.CalamityRelics.Buffs.WulfrumWhipDebuff.Description
 	}
+
+	ConductiveBuff: {
+		DisplayName: Conductive Buff
+		Description: Mods.CalamityRelics.Buffs.ConductiveBuff.Description
+	}
+
+	WulfrumOrbBuff: {
+		DisplayName: Wulfrum Orb Buff
+		Description: Mods.CalamityRelics.Buffs.WulfrumOrbBuff.Description
+	}
 }
+
+NPCs.DraedonBarrierNPC.DisplayName: Security Barrier
