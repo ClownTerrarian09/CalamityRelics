@@ -85,16 +85,15 @@ namespace CalamityRelics.Content.Projectiles.Friendly
                         charge ++;
                         chargeCooldown = 0;
                     }
-                    if (charge == 3)
-                    {
-                        CreateDust(player);
-                    }
+                    CreateDust(player);
                     Projectile.velocity.X *= 1f + Main.rand.Next(-8, 8) * 0.03f * charge;
                 }
 
                 else
                 {
                     ShootCharged(player);
+                    player.velocity -= Vector2.Normalize(Main.MouseWorld - player.Center) * 2f * charge;
+                    CalamityMod.CalamityUtils.AddScreenshakeAt(player.Center, 1.5f * charge);
                     chargeCooldown = 0;
                     charge = 0;
                 }
@@ -117,7 +116,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             Vector2 perp  = new Vector2(-along.Y, along.X) * player.direction * player.gravDir;
             Vector2 itemPosition = player.MountedCenter + along * 20f + perp;
             Vector2 local = new Vector2(Main.rand.NextFloat(-20f, 20f), Main.rand.NextFloat(-10f, 10f)); 
-            Dust.NewDustPerfect(itemPosition + local.RotatedBy(itemAngle), DustID.Electric, Scale: 0.8f);
+            Dust.NewDustPerfect(itemPosition + local.RotatedBy(itemAngle), DustID.Electric, Scale: 0.3f * charge);
         }
 
         private void ShootCharged(Player player)

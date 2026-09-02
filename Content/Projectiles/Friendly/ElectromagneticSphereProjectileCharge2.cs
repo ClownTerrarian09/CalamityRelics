@@ -21,7 +21,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             Projectile.hostile = false;
             Projectile.DamageType = DamageClass.Magic;
 
-            Projectile.penetrate = -1; 
+            Projectile.penetrate = 8; 
             Projectile.timeLeft = 360; 
 
             Projectile.usesLocalNPCImmunity = true;
@@ -46,6 +46,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             GeneralParticleHandler.SpawnParticle(spark);
 
         }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) {
+			Projectile.damage = (int)(Projectile.damage * 0.8f);
+		}
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
