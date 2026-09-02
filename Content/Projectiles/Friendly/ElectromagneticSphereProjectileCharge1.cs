@@ -40,11 +40,13 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             color2, new Vector2(2.5f, 0.8f), false, false, false, 0.3f);
             GeneralParticleHandler.SpawnParticle(spark2);
 
-            Particle spark = new BoltParticle(Projectile.Center, 
-            Projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f)), false, 3, 0.12f * Projectile.ai[0], 
-            color, new Vector2(5f, 0.8f), false, false, false, 0.3f);
-            GeneralParticleHandler.SpawnParticle(spark);
-
+            for (int i = 0; i < 3; i++)
+            {
+                Particle spark = new BoltParticle(Projectile.Center, 
+                new Vector2(Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f)), false, 2, 0.12f * Projectile.ai[0], 
+                color2, new Vector2(5f, 0.8f), false, true, false);
+                GeneralParticleHandler.SpawnParticle(spark);
+            } 
         }
         
         public override bool OnTileCollide(Vector2 oldVelocity)
