@@ -55,25 +55,14 @@ Items: {
 		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
-}
-
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
 
 	WulfrumElectromagneticSphere2: {
 		DisplayName: Wulfrum Electromagnetic Sphere2
+		Tooltip: ""
+	}
+
+	RustedCodebreaker: {
+		DisplayName: Rusted Codebreaker
 		Tooltip: ""
 	}
 }
