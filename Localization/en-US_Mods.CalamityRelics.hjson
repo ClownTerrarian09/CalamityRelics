@@ -17,6 +17,14 @@ Items: {
 		Tooltip: ""
 	}
 
+	Grenade: {
+		DisplayName: Grenade
+		Tooltip: ""
+	}
+
+	MagmaConduit: {
+		DisplayName: Magma Conduit
+	}
 	Electroblazer: {
 		DisplayName: Electroblazer
 		Tooltip: ""
@@ -83,6 +91,11 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	GrenadeProjExp.DisplayName: Grenade Proj Exp
+	GrenadeShrapnel.DisplayName: Grenade Shrapnel
+	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
+	MagmaConduitProj.DisplayName: Magma Conduit Proj
+	MagmaProj.DisplayName: Magma Proj
 }
 
 Buffs: {
