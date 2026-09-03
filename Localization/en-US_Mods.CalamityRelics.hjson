@@ -24,6 +24,7 @@ Items: {
 
 	MagmaConduit: {
 		DisplayName: Magma Conduit
+	}
 	Electroblazer: {
 		DisplayName: Electroblazer
 		Tooltip: ""
@@ -62,34 +63,14 @@ Items: {
 		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
-}
-
-Projectiles: {
-	WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj
-	GrenadeProj.DisplayName: Grenade Proj
-	GrenadeProjExp.DisplayName: Grenade Proj Exp
-	GrenadeShrapnel.DisplayName: Grenade Shrapnel
-	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
-	MagmaConduitProj.DisplayName: Magma Conduit Proj
-	MagmaProj.DisplayName: Magma Proj
-}
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
 
 	WulfrumElectromagneticSphere2: {
 		DisplayName: Wulfrum Electromagnetic Sphere2
+		Tooltip: ""
+	}
+
+	RustedCodebreaker: {
+		DisplayName: Rusted Codebreaker
 		Tooltip: ""
 	}
 }
@@ -110,6 +91,11 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	GrenadeProjExp.DisplayName: Grenade Proj Exp
+	GrenadeShrapnel.DisplayName: Grenade Shrapnel
+	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
+	MagmaConduitProj.DisplayName: Magma Conduit Proj
+	MagmaProj.DisplayName: Magma Proj
 }
 
 Buffs: {
