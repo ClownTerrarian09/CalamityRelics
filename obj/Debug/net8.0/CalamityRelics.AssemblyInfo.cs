@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CalamityRelics")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e38f5e526b66ab52a2ce080cbcdcf705041618cc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2397b874788c539ff81aaa63688f0651d8fafb8")]
 [assembly: System.Reflection.AssemblyProductAttribute("CalamityRelics")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CalamityRelics")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
