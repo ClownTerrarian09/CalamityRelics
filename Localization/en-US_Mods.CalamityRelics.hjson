@@ -16,6 +16,24 @@ Items: {
 		DisplayName: Wulfrum Wavewire
 		Tooltip: ""
 	}
+
+	Grenade: {
+		DisplayName: Grenade
+		Tooltip: ""
+	}
+
+	MagmaConduit: {
+		DisplayName: Magma Conduit
+		Tooltip: ""
+	}
 }
 
-Projectiles.WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj
+Projectiles: {
+	WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj
+	GrenadeProj.DisplayName: Grenade Proj
+	GrenadeProjExp.DisplayName: Grenade Proj Exp
+	GrenadeShrapnel.DisplayName: Grenade Shrapnel
+	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
+	MagmaConduitProj.DisplayName: Magma Conduit Proj
+	MagmaProj.DisplayName: Magma Proj
+}
