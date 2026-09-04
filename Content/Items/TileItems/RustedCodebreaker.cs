@@ -10,7 +10,7 @@ namespace CalamityRelics.Content.Items.TileItems
     {
         public override void SetDefaults(){
             Item.width = 42; Item.height = 34;
-            Item.DefaultToPlaceableTile(ModContent.TileType<RustedCodebreakerFurnitureOff>(), 0);
+            Item.DefaultToPlaceableTile(ModContent.TileType<RustedCodebreakerFurniture>(), 0);
             Item.rare = ItemRarityID.Orange;
         }
     }
