@@ -134,16 +134,16 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             Vector2 velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 10f;
             switch (charge)
             {
-                case 1 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 1 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge1>(), 75, 2f, player.whoAmI, 1.5f);
                     break;
-                case 2 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 2 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge2>(), 100, 2f, player.whoAmI, 2f);
                     break;
-                case 3 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 3 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge3>(), 125, 2f, player.whoAmI, 2.5f);
                     break;
-                default : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                default : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge0>(), 50, 2f, player.whoAmI, 1f);
                     break;
             }
