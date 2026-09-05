@@ -29,17 +29,17 @@ namespace CalamityRelics.Content.Items.Weapons
 
             Item.DamageType = DamageClass.Magic;
             Item.noMelee = true;
-            Item.damage = 100;
-            Item.mana = 80;
-            Item.knockBack = 5f;
+            Item.damage = 50;
+            Item.mana = 15;
+            Item.knockBack = 2f;
 
            
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
 
-            Item.UseSound = SoundID.Item71;
+            Item.UseSound = SoundID.Item66;
 
-            Item.shoot = ModContent.ProjectileType<WulfrumESHoldout>();
+            Item.shoot = ModContent.ProjectileType<WulfrumESHoldout2>();
             Item.shootSpeed = 2f;
             Item.autoReuse = true;
             Item.channel = true;
@@ -51,7 +51,7 @@ namespace CalamityRelics.Content.Items.Weapons
             player.Calamity().rightClickListener = true;
             if (player.Calamity().mouseRight)
             {
-                mult = 0.25f;
+                mult = 1.5f;
                 base.ModifyManaCost(player, ref reduce, ref mult);
             }
         }
@@ -61,15 +61,15 @@ namespace CalamityRelics.Content.Items.Weapons
             if (player.Calamity().mouseRight)
             {
                 type = ModContent.ProjectileType<WulfrumESHoldout2>();
+                velocity = Vector2.Normalize(velocity) * holdDistance;
             }
             else
             {
-                type = ModContent.ProjectileType<WulfrumESHoldout>();
+                type = ModContent.ProjectileType<ElectromagneticSphereProjectileCharge0>();
+                velocity = Vector2.Normalize(velocity) * 5;
             }
 
-			velocity = Vector2.Normalize(velocity) * holdDistance;
-
-			Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer);
+			Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer, 1f);
 			return false;
 		}
         
