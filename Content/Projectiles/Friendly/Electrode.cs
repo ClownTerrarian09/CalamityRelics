@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CalamityMod;
 using CalamityMod.Graphics.Primitives;
 using CalamityMod.Items.Weapons.Magic;
@@ -12,6 +13,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityMod.Particles;
 
 namespace CalamityRelics.Content.Projectiles.Friendly;
 
@@ -52,6 +54,8 @@ public class Electrode : ModProjectile
         if (Main.rand.NextFloat() < 0.25f)
             Dust.NewDustPerfect(Projectile.Center, DustID.Electric);
         
+        Particle elec = new ElectricSpark(Projectile.Center, Projectile.velocity * 0.5f, Color.Aqua, Color.White, 1 * Main.rand.NextFloat(0.8f, 1f), 30);
+        GeneralParticleHandler.SpawnParticle(elec);
         foreach (Projectile projectile in Main.projectile)
         {
             if (projectile.type != ModContent.ProjectileType<WulfrumBlaze>() || !projectile.active)
@@ -116,9 +120,10 @@ public class Electrode : ModProjectile
     {
         if (stuckToNPC != null)
         {
-            int damage = triggered ? 25 : 5;
+            int damage = triggered ? 25 : 10;
             stuckToNPC.StrikeNPC(new NPC.HitInfo(){Damage = damage,Knockback = 0,DamageType = DamageClass.Ranged});
             Main.player[Projectile.owner].dpsDamage += damage;
+            Main.player[Projectile.owner].GetModPlayer<ElectroblazerPlayer>().OnHitNPC(stuckToNPC,new NPC.HitInfo(){Damage = damage,Knockback = 0,DamageType = DamageClass.Ranged},damage);
         }
         SoundEngine.PlaySound(WulfrumProsthesis.HitSound, Projectile.Center);
         for (int d = 0; d < 15; d++)

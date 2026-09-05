@@ -37,21 +37,47 @@ Items: {
 		Tooltip: ""
 	}
 
-	SecurityController: {
-		DisplayName: Security Controller
-		Tooltip:
-			'''
-			Overrides local security protocols.
-			 Hold near a high-voltage barrier to initiate the unlock sequence.
-			'''
+	WulfrumConnectorSuit: {
+		DisplayName: Wulfrum Connector Suit
+		Tooltip: ""
+	}
+
+	WulfrumConnectorVisor: {
+		DisplayName: Wulfrum Connector Visor
+		Tooltip: ""
+	}
+
+	WulfrumConnectorWalkers: {
+		DisplayName: Wulfrum Connector Walkers
+		Tooltip: ""
+	}
+
+	RustedCodebreaker: {
+		DisplayName: Rusted Codebreaker
+		Tooltip: ""
 	}
 
 	OffsetScanner: {
-		DisplayName: Biome Offset Scanner
-		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+		DisplayName: Offset Scanner
+		Tooltip: ""
+	}
+
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip: ""
+	}
+
+	MagmaConduit: {
+		DisplayName: Magma Conduit
+		Tooltip: ""
 	}
 
 	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumElectromagneticSphere2: {
 		DisplayName: Wulfrum Electromagnetic Sphere
 		Tooltip: ""
 	}
@@ -65,16 +91,6 @@ Items: {
 		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
-
-	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	RustedCodebreaker: {
-		DisplayName: Rusted Codebreaker
-		Tooltip: ""
-	}
 }
 
 Projectiles: {
@@ -83,22 +99,22 @@ Projectiles: {
 	WulfrumBlaze.DisplayName: Wulfrum Blaze
 	WulfrumWhipProjectile.DisplayName: Wulfrum Whip Projectile
 	WulfrumWhipSparks.DisplayName: Wulfrum Whip Sparks
-	ElectromagneticSphereProjectile.DisplayName: Electromagnetic Sphere Projectile
-	WulfrumESHoldout.DisplayName: Wulfrum E S Holdout
-	WulfrumESHoldout2.DisplayName: Wulfrum E S Holdout2
 	ElectromagneticSphereProjectileCharge0.DisplayName: Electromagnetic Sphere Projectile Charge0
 	ElectromagneticSphereProjectileCharge1.DisplayName: Electromagnetic Sphere Projectile Charge1
 	ElectromagneticSphereProjectileCharge2.DisplayName: Electromagnetic Sphere Projectile Charge2
 	ElectromagneticSphereProjectileCharge3.DisplayName: Electromagnetic Sphere Projectile Charge3
-	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
-	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
-	WulfrumPortal.DisplayName: Wulfrum Portal
+	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeProjExp.DisplayName: Grenade Proj Exp
 	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeShrapnel.DisplayName: Grenade Shrapnel
-	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
 	MagmaConduitProj.DisplayName: Magma Conduit Proj
 	MagmaProj.DisplayName: Magma Proj
+	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
+	WulfrumESHoldout.DisplayName: Wulfrum E S Holdout
+	WulfrumESHoldout2.DisplayName: Wulfrum E S Holdout2
+	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
+	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
+	WulfrumPortal.DisplayName: Wulfrum Portal
 }
 
 Buffs: {
@@ -118,4 +134,4 @@ Buffs: {
 	}
 }
 
-NPCs.DraedonBarrierNPC.DisplayName: Security Barrier
+NPCs.DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
