@@ -46,7 +46,7 @@ public override void AI()
     Projectile.localAI[0] += 1f;
 
     if (age > 2)
-        {
+    {
         Particle fire = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.5f, drawColor, 30, scale * Main.rand.NextFloat(0.8f, 1f), 0.7f, glowing: true);
         GeneralParticleHandler.SpawnParticle(fire);
     }

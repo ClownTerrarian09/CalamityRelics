@@ -21,7 +21,6 @@ namespace CalamityRelics.Content.Items.Weapons
 	public class Electroblazer : ModItem
 	{
 		private SoundStyle electricSound = new("CalamityMod/Sounds/Item/WulfrumProsthesisShoot"){Volume = 0.3f};
-		private SoundStyle outOfElectrodes = new("CalamityMod/Sounds/Item/WulfrumKnifeTileHit1");
 		private SoundStyle electroCharge = new("CalamityRelics/Assets/Sounds/Item/ElectroblazerCharge");
 		private int charge;
 		private int electrodeCooldown;
@@ -31,7 +30,7 @@ namespace CalamityRelics.Content.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			Item.damage = 1;
+			Item.damage = 6;
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 56;
 			Item.height = 26;
@@ -60,7 +59,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			int totalCharge = charge + ePlayer.electrodeCount;
 			if (player.Calamity().mouseRight)
 			{
-				if (chargeTimer >= 20 - charge * 3)
+				if (chargeTimer >= 15 - charge * 3)
 				{
 					if (totalCharge < 5)
 					{
@@ -102,7 +101,7 @@ namespace CalamityRelics.Content.Items.Weapons
 				charge--;
 				ShootElectrode(player);
 				player.velocity -= Vector2.Normalize(Main.MouseWorld - player.Center) * 2f;
-				CalamityMod.CalamityUtils.AddScreenshakeAt(player.Center, 0.5f);
+				CalamityMod.CalamityUtils.AddScreenshakeAt(player.Center, 1.5f);
 				electrodeCooldown = 8;
 			}
 		}
@@ -172,18 +171,13 @@ namespace CalamityRelics.Content.Items.Weapons
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			ElectroblazerPlayer ePlayer = player.GetModPlayer<ElectroblazerPlayer>();
-			
-			if (player.altFunctionUse == 2)
-			{
-				if (ePlayer.electrodeCount >= 5 || charge >= 5)
-				{
-					SoundEngine.PlaySound(outOfElectrodes);
-					return false;
-				}
+			if(player.altFunctionUse == 2)
 				return false;
+			if (PlayerHasAmmo(player, true))
+			{
+				Projectile.NewProjectile(source, position, velocity.RotatedByRandom(MathHelper.ToRadians(5)), type, damage, knockback, player.whoAmI);
 			}
-			PlayerHasAmmo(player, true);
-			return base.Shoot(player, source, position, velocity, type, damage, knockback);
+			return false;
 		}
 //
 		public override void AddRecipes()
@@ -209,6 +203,8 @@ namespace CalamityRelics.Content.Items.Weapons
 	public class ElectroblazerPlayer : ModPlayer
 	{
 		public int electrodeCount;
+		private int damageEvery10;
+		private int resetCounter;
 		public override void PostUpdate()
 		{
 			if (Player.HeldItem == null || Player.HeldItem.type != ModContent.ItemType<Electroblazer>())
@@ -217,6 +213,27 @@ namespace CalamityRelics.Content.Items.Weapons
 			float rotation = direction.ToRotation() - MathHelper.ToRadians(90);
 			Player.CompositeArmStretchAmount stretch = Player.CompositeArmStretchAmount.Full;
 			Player.SetCompositeArmFront(true, stretch, rotation);
+			
+		}
+
+		public override void PreUpdate()
+		{
+			if (resetCounter > 600)
+			{
+				Main.NewText((float)damageEvery10 / 10f);
+				resetCounter = 0;
+				damageEvery10 = 0;
+			}
+			else
+			{
+				resetCounter++;
+				
+			}
+		}
+
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+		{
+			damageEvery10 += damageDone;
 		}
 	}
 
