@@ -30,6 +30,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 			Projectile.DamageType = DamageClass.Magic;
 			Projectile.ignoreWater = true;
             Projectile.hide = true;
+            Projectile.soundDelay = 24;
+            Projectile.light = 1;
 
             DrawOffsetX = -10;
 			DrawOriginOffsetY = -4;
@@ -74,6 +76,12 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 				player.ChangeDir(-1);
 			}
 
+            // Plays a charging sound.
+            if (Projectile.soundDelay <= 0) {
+				SoundEngine.PlaySound(SoundID.Item132, Projectile.Center);
+				Projectile.soundDelay = 24;
+			}
+
             // Charge the alt function.
             if (Main.myPlayer == Projectile.owner)
             {
@@ -82,6 +90,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
                     chargeCooldown ++;
                     if (chargeCooldown >= chargeTimer && charge < 3)
                     {
+                        SoundEngine.PlaySound(SoundID.Item113, Projectile.Center);
                         charge ++;
                         chargeCooldown = 0;
                     }
@@ -121,19 +130,20 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
         private void ShootCharged(Player player)
         {
-            Vector2 velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 8f;
+            SoundEngine.PlaySound(SoundID.Item66);
+            Vector2 velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 10f;
             switch (charge)
             {
-                case 1 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 1 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge1>(), 75, 2f, player.whoAmI, 1.5f);
                     break;
-                case 2 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 2 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge2>(), 100, 2f, player.whoAmI, 2f);
                     break;
-                case 3 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                case 3 : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge3>(), 125, 2f, player.whoAmI, 2.5f);
                     break;
-                default : Projectile.NewProjectile(Projectile.GetSource_FromAI(),player.Center, velocity, 
+                default : Projectile.NewProjectile(Projectile.GetSource_FromAI(),Projectile.Center, velocity, 
                     ModContent.ProjectileType<ElectromagneticSphereProjectileCharge0>(), 50, 2f, player.whoAmI, 1f);
                     break;
             }

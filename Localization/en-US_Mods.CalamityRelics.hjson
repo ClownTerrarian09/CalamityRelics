@@ -17,6 +17,16 @@ Items: {
 		Tooltip: ""
 	}
 
+	Grenade: {
+		DisplayName: Grenade
+		Tooltip: ""
+	}
+
+	MagmaConduit: {
+		DisplayName: Magma Conduit
+		Tooltip: ""
+	}
+
 	Electroblazer: {
 		DisplayName: Electroblazer
 		Tooltip: ""
@@ -68,7 +78,7 @@ Items: {
 	}
 
 	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere2
+		DisplayName: Wulfrum Electromagnetic Sphere
 		Tooltip: ""
 	}
 
@@ -95,6 +105,7 @@ Projectiles: {
 	ElectromagneticSphereProjectileCharge3.DisplayName: Electromagnetic Sphere Projectile Charge3
 	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeProjExp.DisplayName: Grenade Proj Exp
+	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeShrapnel.DisplayName: Grenade Shrapnel
 	MagmaConduitProj.DisplayName: Magma Conduit Proj
 	MagmaProj.DisplayName: Magma Proj
