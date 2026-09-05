@@ -215,7 +215,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			Player.SetCompositeArmFront(true, stretch, rotation);
 			
 		}
-
+		/*
 		public override void PreUpdate()
 		{
 			if (resetCounter > 600)
@@ -235,6 +235,7 @@ namespace CalamityRelics.Content.Items.Weapons
 		{
 			damageEvery10 += damageDone;
 		}
+		*/
 	}
 
 	
