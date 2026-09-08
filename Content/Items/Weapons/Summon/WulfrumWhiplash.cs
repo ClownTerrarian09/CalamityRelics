@@ -15,9 +15,9 @@ namespace CalamityRelics.Content.Items.Weapons.Summon
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(WulfrumWhipDebuff.TagDamage);
 
 		public override void SetDefaults() {
-			Item.DefaultToWhip(ModContent.ProjectileType<WulfrumWhipProjectile>(), 15, 1, 3, 35);
-			Item.useTime = 40;
-			Item.useAnimation = 40;
+			Item.DefaultToWhip(ModContent.ProjectileType<WulfrumWhipProjectile>(), 15, 1, 5, 35);
+			Item.useTime = 32;
+			Item.useAnimation = 32;
 			Item.rare = ItemRarityID.Green;
 			Item.value = Item.buyPrice(gold: 1);
 		}

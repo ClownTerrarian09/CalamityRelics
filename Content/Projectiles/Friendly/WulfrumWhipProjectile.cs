@@ -12,7 +12,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 	public class WulfrumWhipProjectile : ModProjectile
 	{
 		
-		Vector2 position;
+		List<Vector2> positionList = new List<Vector2>();
+		public int timer;
 		public override void SetStaticDefaults() {
 			// This makes the projectile use whip collision detection and allows flasks to be applied to it.
 			ProjectileID.Sets.IsAWhip[Type] = true;
@@ -26,6 +27,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 			Projectile.WhipSettings.Segments = 8;
 			Projectile.light = 1.1f;
 			Projectile.WhipSettings.RangeMultiplier = 1f;
+			timer = 0;
 		}
 
 		private float Timer {
@@ -118,14 +120,28 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
 				pos += diff;
 			}
-
-			position = list[list.Count - 1];
+			positionList.Add(list[^1]);
 			
             return false;
 		}
 		public override void PostAI()
         {
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 3, 0f, Main.myPlayer);
+			timer ++;
+			if (timer > 15)
+			{
+			Vector2 currentPos = positionList[positionList.Count - 1];
+			Vector2 lastPos = positionList[positionList.Count - 9];
+			Vector2 midpoint1 =  Midpoint(currentPos, lastPos);
+			Projectile.NewProjectile(Projectile.GetSource_FromAI(), currentPos, new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 5, 0f, Main.myPlayer);
+			Projectile.NewProjectile(Projectile.GetSource_FromAI(), midpoint1, new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 5, 0f, Main.myPlayer);
+			Projectile.NewProjectile(Projectile.GetSource_FromAI(), Midpoint(lastPos, midpoint1), new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 0, 0f, Main.myPlayer);
+			Projectile.NewProjectile(Projectile.GetSource_FromAI(), Midpoint(currentPos, midpoint1), new Vector2(0, 0), ModContent.ProjectileType<WulfrumWhipSparks>(), 0, 0f, Main.myPlayer);
+			}
         }
+
+		public Vector2 Midpoint(Vector2 v1, Vector2 v2)
+		{
+			return new Vector2((v1.X + v2.X)/2, (v1.Y + v2.Y)/2);
+		}
 	}
 }
