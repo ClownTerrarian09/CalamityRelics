@@ -30,7 +30,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             {
                 Particle spark2 = new BoltParticle(Projectile.Center + new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8f, 8f)), 
             -Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), false, 18, 0.15f, 
-            new Color(0, 216, 255, 0.1f), new Vector2(2.5f, 0.8f), true, true, false, 0.3f);
+            new Color(0, 216, 255, 0.08f), new Vector2(2.5f, 0.8f), true, true, false, 0.3f);
             GeneralParticleHandler.SpawnParticle(spark2);
             }
             
