@@ -6,6 +6,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using CalamityRelics.Content.Buffs;
+using Terraria.Audio;
 
 namespace CalamityRelics.Content.Projectiles.Friendly
 {
@@ -28,6 +29,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 			Projectile.light = 1.1f;
 			Projectile.WhipSettings.RangeMultiplier = 1f;
 			timer = 0;
+			Projectile.soundDelay = 36;
 		}
 
 		private float Timer {
@@ -126,6 +128,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 		}
 		public override void PostAI()
         {
+			if (Projectile.soundDelay <= 0) {
+				SoundEngine.PlaySound(SoundID.NPCHit34, Projectile.Center);
+				Projectile.soundDelay = 36;
+			}
 			timer ++;
 			if (timer > 15)
 			{
