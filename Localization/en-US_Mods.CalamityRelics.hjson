@@ -89,6 +89,10 @@ Items: {
 
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
+    Tooltip: ""
+  }
+	WulfrumWhiplash: {
+		DisplayName: Wulfrum Whiplash
 		Tooltip: ""
 	}
 }
