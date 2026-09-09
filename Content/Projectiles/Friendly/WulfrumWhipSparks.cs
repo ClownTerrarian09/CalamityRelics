@@ -26,13 +26,12 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         }
         public override void AI()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                Particle spark2 = new BoltParticle(Projectile.Center + new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8f, 8f)), 
-            -Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), false, 18, 0.15f, 
-            new Color(0, 216, 255, 0.1f), new Vector2(2.5f, 0.8f), true, true, false, 0.3f);
+
+            Particle spark2 = new BoltParticle(Projectile.Center + new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8f, 8f)), 
+            Projectile.velocity + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)) * 0.8f, false, 20, 0.1f, 
+            new Color(143, 254, 255), new Vector2(1.8f, 0.8f), false, false, false, 0.6f);
             GeneralParticleHandler.SpawnParticle(spark2);
-            }
+
             
             if (Main.rand.NextBool(50))
             {

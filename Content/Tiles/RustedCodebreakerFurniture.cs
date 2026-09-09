@@ -12,7 +12,7 @@ using CalamityRelics.Content.Items.TileItems;
 using Terraria.Audio;
 using Terraria.GameContent.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.Utilities;
+using CalamityMod.Particles;
 
 namespace CalamityRelics.Content.Tiles{
     internal class RustedCodebreakerFurniture : ModTile{
@@ -23,7 +23,7 @@ namespace CalamityRelics.Content.Tiles{
             Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			DustType = DustID.Silt;
-			AddMapEntry(new Color(70, 60, 50)); 
+			AddMapEntry(new Color(70, 60, 50), Language.GetText("Rusted Codebreaker")); 
 
             TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.newTile.StyleHorizontal = true;
@@ -42,12 +42,28 @@ namespace CalamityRelics.Content.Tiles{
 		}
         public override void MouseOver(int i, int j)
         {
-            Player player = Main.LocalPlayer;
-            player.noThrow = 2;
-            player.cursorItemIconEnabled = true;
-            int style = TileObjectData.GetTileStyle(Main.tile[i, j]);
-            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, style);
+            Tile tile = Main.tile[i, j];
+            if (tile.TileFrameY < 72)
+            {
+                Player player = Main.LocalPlayer;
+                player.noThrow = 2;
+                player.cursorItemIconEnabled = true;
+                int style = TileObjectData.GetTileStyle(Main.tile[i, j]);
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, style);
+            }
+            
         }
+
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
+
+        public override bool IsTileSpelunkable(int i, int j)
+        {
+            return true;
+        }
+
         public override bool RightClick(int i, int j)
         {
             Tile tile = Main.tile[i, j];
