@@ -67,11 +67,6 @@ Items: {
 		Tooltip: ""
 	}
 
-	MagmaConduit: {
-		DisplayName: Magma Conduit
-		Tooltip: ""
-	}
-
 	WulfrumElectromagneticSphere: {
 		DisplayName: Wulfrum Electromagnetic Sphere
 		Tooltip: ""
@@ -91,6 +86,11 @@ Items: {
 		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
+
+	CnidarianSinus: {
+		DisplayName: Cnidarian Sinus
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -105,7 +105,6 @@ Projectiles: {
 	ElectromagneticSphereProjectileCharge3.DisplayName: Electromagnetic Sphere Projectile Charge3
 	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeProjExp.DisplayName: Grenade Proj Exp
-	GrenadeProj.DisplayName: Grenade Proj
 	GrenadeShrapnel.DisplayName: Grenade Shrapnel
 	MagmaConduitProj.DisplayName: Magma Conduit Proj
 	MagmaProj.DisplayName: Magma Proj
@@ -115,6 +114,7 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	CnidarianMist.DisplayName: Cnidarian Mist
 }
 
 Buffs: {
