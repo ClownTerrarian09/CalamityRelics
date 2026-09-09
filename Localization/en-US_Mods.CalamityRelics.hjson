@@ -87,6 +87,10 @@ Items: {
 		Tooltip: ""
 	}
 
+	CnidarianSinus: {
+		DisplayName: Cnidarian Sinus
+    Tooltip: ""
+  }
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
 		Tooltip: ""
@@ -114,6 +118,7 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	CnidarianMist.DisplayName: Cnidarian Mist
 }
 
 Buffs: {
