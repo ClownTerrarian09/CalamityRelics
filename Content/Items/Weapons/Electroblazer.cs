@@ -133,7 +133,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			}
 
 			float chargeOffset = ((charge / 5f) * 2f);
-			Vector2 itemPosition = player.MountedCenter + new Vector2(-8f * player.direction, -5f * player.gravDir);
+			Vector2 itemPosition = player.MountedCenter + new Vector2(-8f * player.direction, -5f);
 			float itemRotation = (Main.MouseWorld - itemPosition).ToRotation();
 			itemPosition += Main.rand.NextVector2Circular(chargeOffset, chargeOffset);
 
@@ -209,11 +209,13 @@ namespace CalamityRelics.Content.Items.Weapons
 		{
 			if (Player.HeldItem == null || Player.HeldItem.type != ModContent.ItemType<Electroblazer>())
 				return;
+
 			Vector2 direction = Main.MouseWorld - Player.Center;
+			direction.Y *= Player.gravDir;
+
 			float rotation = direction.ToRotation() - MathHelper.ToRadians(90);
 			Player.CompositeArmStretchAmount stretch = Player.CompositeArmStretchAmount.Full;
 			Player.SetCompositeArmFront(true, stretch, rotation);
-			
 		}
 		/*
 		public override void PreUpdate()

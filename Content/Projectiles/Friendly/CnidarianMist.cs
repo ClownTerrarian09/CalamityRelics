@@ -54,6 +54,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             }
             else
             {
+                
+                Particle waterMist = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.5f, Color.White, 5, 0.2f * Main.rand.NextFloat(0.8f, 1f) *
+                    (amnt + 0.5f), 0.7f, glowing: true);
+                GeneralParticleHandler.SpawnParticle(waterMist);
                 Particle water = new WaterFlavoredParticle(Projectile.Center, Projectile.velocity * 0.5f, false, 2, 1f * Main.rand.NextFloat(0.8f, 1f), new Color(100, 149, 273, alpha) * amnt);
                 GeneralParticleHandler.SpawnParticle(water);
                 if(Main.rand.NextFloat(amnt + 0.1f) > 0.08f)
