@@ -56,11 +56,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
             if (bouttaBlowUp > 200)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(0, -8), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(-4, -4), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(4, -4), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(-6, -2), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(6, -2), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
+                for (int i = 0; i < 12; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(0, 8).RotatedBy(i * 30), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
+                }
             }
 
             Projectile.Kill();
@@ -239,12 +238,11 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
         public override void SetDefaults()
         {
-            Projectile.damage = 60 + (int)(Projectile.ai[0]);
+            Projectile.damage = 20;
             Projectile.width = 100;
             Projectile.height = 100;
             Projectile.timeLeft = 100;
             Projectile.friendly = true;
-            Projectile.hostile = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
         }
@@ -255,7 +253,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
             if (timere == 1)
             {
-                Projectile.damage += (int)(Projectile.ai[0] / 10);
+                Projectile.damage = 20;
+                Projectile.damage += (int)(Projectile.ai[0] / 20);
             }
 
             if (timere == 3)
@@ -285,19 +284,19 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
             for (int i = 0; i < 2; i++)
             {
-                Main.spriteBatch.Draw(texture3, Projectile.Center - Main.screenPosition, null, new Color(255, 144, 39, 0) * (0.5f * EOpacity2), i, texture3.Size() / 2, 1.25f * ESize2, SpriteEffects.None, 1);
+                Main.spriteBatch.Draw(texture3, Projectile.Center - Main.screenPosition, null, new Color(255, 144, 39, 0) * (0.5f * EOpacity2), i, texture3.Size() / 2, 0.75f * ESize2, SpriteEffects.None, 1);
             }
 
-            Main.spriteBatch.Draw(texture4, Projectile.Center - Main.screenPosition, null, new Color(50, 50, 50) * (EOpacity2), 0, texture4.Size() / 2, 1.5f * ESize2, SpriteEffects.None, 1);
+            Main.spriteBatch.Draw(texture4, Projectile.Center - Main.screenPosition, null, new Color(50, 50, 50) * (EOpacity2), 0, texture4.Size() / 2, 1.25f * ESize2, SpriteEffects.None, 1);
 
-            Main.spriteBatch.Draw(texture2, Projectile.Center - Main.screenPosition, null, new Color(255, 110, 69, 0) * (0.75f * EOpacity), 0, texture2.Size() / 2, 1.5f * EOpacity, SpriteEffects.None, 1);
+            Main.spriteBatch.Draw(texture2, Projectile.Center - Main.screenPosition, null, new Color(255, 110, 69, 0) * (0.75f * EOpacity), 0, texture2.Size() / 2, 1.25f * EOpacity, SpriteEffects.None, 1);
 
             for (int i = 0; i < 2; i++)
             {
-                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 185, 129, 0) * EOpacity, i, texture.Size() / 2, 0.4f * ESize2, SpriteEffects.None, 1);
+                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 185, 129, 0) * EOpacity, i, texture.Size() / 2, 0.15f * ESize2, SpriteEffects.None, 1);
             }
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0) * EOpacity, 1, texture.Size() / 2, 0.2f * ESize2, SpriteEffects.None, 1);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0) * EOpacity, 1, texture.Size() / 2, 0.1f * ESize2, SpriteEffects.None, 1);
 
             return false;
         }
@@ -310,11 +309,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 3;
-            Projectile.frame = Main.rand.Next(0, 2);
         }
         public override void SetDefaults()
         {
-            Projectile.damage = 23;
+            Projectile.damage = 8;
             Projectile.width = 16;
             Projectile.height = 16;
             Projectile.tileCollide = true;
@@ -323,6 +321,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
             Projectile.penetrate = 2;
         }
 
+        public override void Load()
+        {
+            Projectile.frame = Main.rand.Next(0, 2);
+        }
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
@@ -385,11 +387,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
             if (bouttaBlowUp > 200)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(0, -8), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(-4, -4), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(4, -4), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(-6, -2), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(6, -2), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
+                for (int i = 0; i < 12; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(0, 8).RotatedBy(i * 30), ModContent.ProjectileType<GrenadeShrapnel>(), 25, 5, -1);
+                }
             }
 
             Projectile.Kill();
