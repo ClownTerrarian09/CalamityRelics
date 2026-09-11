@@ -170,13 +170,21 @@ namespace CalamityRelics.Content.WorldGen
                     null
                 );
 
-                DraedonHouseSystem.DraedonHouseRect = new Rectangle(p.X, p.Y, schematicWidth, schematicHeight);
+                int xOffset = 10;
+                int yOffset = 13;
+                int buildingWidth = 133;
+                int buildingHeight = 65;
 
-                int doorOffsetX = 0;
-                int doorOffsetY = 0;
+                DraedonHouseSystem.DraedonHouseRect = new Rectangle(p.X + xOffset, p.Y + yOffset, buildingWidth, buildingHeight);
+                DraedonHouseSystem.DraedonHouseLegsRect = new Rectangle(
+                    DraedonHouseSystem.DraedonHouseRect.X + 68,
+                    DraedonHouseSystem.DraedonHouseRect.Y + 65,
+                    17,
+                    43
+                );
 
-                int npcSpawnX = (p.X + doorOffsetX) * 16;
-                int npcSpawnY = (p.Y + doorOffsetY) * 16;
+                int npcSpawnX = (DraedonHouseSystem.DraedonHouseRect.X + DraedonHouseSystem.DoorOffsetX) * 16 + 8;
+                int npcSpawnY = (DraedonHouseSystem.DraedonHouseRect.Y + DraedonHouseSystem.DoorOffsetY) * 16 + 8;
 
                 NPC.NewNPC(
                     new Terraria.DataStructures.EntitySource_WorldGen(),

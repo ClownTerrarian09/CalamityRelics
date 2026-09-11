@@ -11,13 +11,27 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
     public class DraedonHouseSystem : ModSystem
     {
         public static Rectangle DraedonHouseRect = Rectangle.Empty;
+        public static Rectangle DraedonHouseLegsRect = Rectangle.Empty;
         public static bool IsHouseUnlocked = false;
 
-        public static int DoorOffsetX = 32;
-        public static int DoorOffsetY = 73;
+        public static int DoorOffsetX = 22;
+        public static int DoorOffsetY = 60;
 
         public static HashSet<int> ProtectedLabTiles = new HashSet<int>();
         public static HashSet<int> ProtectedLabWalls = new HashSet<int>();
+
+        /// <summary>
+        /// Checks if a given tile coordinate (i, j) is inside any part of the Draedon House structure.
+        /// </summary>
+        public static bool IsTileInHouse(int i, int j)
+        {
+            if (DraedonHouseRect == Rectangle.Empty)
+                return false;
+
+            Point tilePoint = new Point(i, j);
+
+            return DraedonHouseRect.Contains(tilePoint) || DraedonHouseLegsRect.Contains(tilePoint);
+        }
 
         public override void PostSetupContent()
         {
@@ -27,9 +41,9 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             int[] vanillaTiles = new int[]
             {
                 TileID.IronBrick, TileID.Glass, TileID.TopazGemspark,
-                TileID.MarbleBlock, TileID.Chain, TileID.MinecartTrack,
+                TileID.MarbleBlock, TileID.Chain, TileID.ItemFrame,
                 TileID.MetalBars, TileID.Switches, TileID.Furnaces,
-                TileID.Bottles, TileID.BouncyBoulder, TileID.ItemFrame
+                TileID.Bottles, TileID.BouncyBoulder
             };
 
             foreach (int id in vanillaTiles) ProtectedLabTiles.Add(id);
@@ -72,6 +86,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
         public override void ClearWorld()
         {
             DraedonHouseRect = Rectangle.Empty;
+            DraedonHouseLegsRect = Rectangle.Empty;
             IsHouseUnlocked = false;
         }
 
@@ -96,7 +111,15 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                     tag.GetInt("DraHouseW"),
                     tag.GetInt("DraHouseH")
                 );
+
+                DraedonHouseLegsRect = new Rectangle(
+                    DraedonHouseRect.X + 68,
+                    DraedonHouseRect.Y + 65,
+                    17,
+                    43
+                );
             }
+
             IsHouseUnlocked = tag.GetBool("DraHouseUnlocked");
             DoorOffsetX = tag.GetInt("DraDoorOffsetX");
             DoorOffsetY = tag.GetInt("DraDoorOffsetY");

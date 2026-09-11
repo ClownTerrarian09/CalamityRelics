@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
 using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.PlayerTrap;
@@ -9,19 +10,25 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Ti
     {
         public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
         {
+            if (Terraria.Wiring.running)
+            {
+                return base.CanKillTile(i, j, type, ref blockDamaged);
+            }
+
             if (!DraedonHouseSystem.IsHouseUnlocked &&
-                DraedonHouseSystem.DraedonHouseRect.Contains(i, j) &&
+                DraedonHouseSystem.IsTileInHouse(i, j) &&
                 DraedonHouseSystem.ProtectedLabTiles.Contains(type))
             {
                 return false;
             }
+
             return base.CanKillTile(i, j, type, ref blockDamaged);
         }
 
         public override bool CanExplode(int i, int j, int type)
         {
             if (!DraedonHouseSystem.IsHouseUnlocked &&
-                DraedonHouseSystem.DraedonHouseRect.Contains(i, j) &&
+                DraedonHouseSystem.IsTileInHouse(i, j) &&
                 DraedonHouseSystem.ProtectedLabTiles.Contains(type))
             {
                 return false;
@@ -32,11 +39,15 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Ti
         public override void RightClick(int i, int j, int type)
         {
             if (!DraedonHouseSystem.IsHouseUnlocked &&
-                DraedonHouseSystem.DraedonHouseRect.Contains(i, j) &&
+                DraedonHouseSystem.IsTileInHouse(i, j) &&
                 DraedonHouseSystem.ProtectedLabTiles.Contains(type))
             {
-                Main.LocalPlayer.chest = -1;
+                if (type == TileID.ClosedDoor || type == TileID.OpenDoor || type == TileID.Switches || type == TileID.Lever)
+                {
+                    return;
+                }
 
+                Main.LocalPlayer.chest = -1;
                 Main.LocalPlayer.GetModPlayer<DraedonHousePlayer>().ApplySecurityShock(i, j);
             }
         }

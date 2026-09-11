@@ -24,68 +24,48 @@ Items: {
 
 	MagmaConduit: {
 		DisplayName: Magma Conduit
-<<<<<<< Updated upstream
 		Tooltip: ""
 	}
 
 	Electroblazer: {
 		DisplayName: Electroblazer
-=======
-
-		Electroblazer: {
-			DisplayName: Electroblazer
-			Tooltip: ""
-		}
-
-		WulfrumPowerCord: {
-			DisplayName: Wulfrum Power Cord
-			Tooltip: ""
-		}
-
-		SecurityController: {
-			DisplayName: Security Controller
-			Tooltip:
-				'''
-				Overrides local security protocols.
-				 Hold near a high-voltage barrier to initiate the unlock sequence.
-				'''
-		}
-
-		OffsetScanner: {
-			DisplayName: Biome Offset Scanner
-			Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
-		}
-
-		WulfrumElectromagneticSphere: {
-			DisplayName: Wulfrum Electromagnetic Sphere
-			Tooltip: ""
-		}
-
-		WulfrumOrb: {
-			DisplayName: Wulfrum Orb
-			Tooltip: ""
-		}
-
-		WulfrumSpikyBalls: {
-			DisplayName: Wulfrum Spiky Balls
-			Tooltip: ""
-		}
-
->>>>>>> Stashed changes
 		Tooltip: ""
 	}
 
-	Projectiles: {
-		WulfrumWavewireProj.DisplayName: Wulfrum Wavewire Proj
-		GrenadeProj.DisplayName: Grenade Proj
-		GrenadeProjExp.DisplayName: Grenade Proj Exp
-		GrenadeShrapnel.DisplayName: Grenade Shrapnel
-		StickyGrenadeProj.DisplayName: Sticky Grenade Proj
-		MagmaConduitProj.DisplayName: Magma Conduit Proj
-		MagmaProj.DisplayName: Magma Proj
+	WulfrumPowerCord: {
+		DisplayName: Wulfrum Power Cord
+		Tooltip: ""
 	}
 
-<<<<<<< Updated upstream
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip:
+			'''
+			Overrides local security protocols.
+			 Hold near a high-voltage barrier to initiate the unlock sequence.
+			'''
+	}
+
+	OffsetScanner: {
+		DisplayName: Biome Offset Scanner
+		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+	}
+
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
+		Tooltip: ""
+	}
+
 	WulfrumConnectorSuit: {
 		DisplayName: Wulfrum Connector Suit
 		Tooltip: ""
@@ -106,77 +86,13 @@ Items: {
 		Tooltip: ""
 	}
 
-	OffsetScanner: {
-		DisplayName: Offset Scanner
-		Tooltip: ""
-	}
-
-	SecurityController: {
-		DisplayName: Security Controller
-		Tooltip: ""
-	}
-
-=======
->>>>>>> Stashed changes
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-<<<<<<< Updated upstream
-=======
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
-
->>>>>>> Stashed changes
-	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
-
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
-    Tooltip: ""
-  }
+		Tooltip: ""
+	}
+
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
-		Tooltip: ""
-	}
-
-	OffsetScanner: {
-		DisplayName: Offset Scanner
-		Tooltip: ""
-	}
-
-	SecurityController: {
-		DisplayName: Security Controller
-		Tooltip: ""
-	}
-
-	Electroblazer: {
-		DisplayName: Electroblazer
-		Tooltip: ""
-	}
-
-	WulfrumPowerCord: {
-		DisplayName: Wulfrum Power Cord
 		Tooltip: ""
 	}
 
@@ -185,8 +101,18 @@ Items: {
 		Tooltip: ""
 	}
 
+	StructureSizeScanner: {
+		Tooltip: ""
+		DisplayName: Structure Size Scanner
+	}
+
 	CaudalGeode: {
 		DisplayName: Caudal Geode
+		Tooltip: ""
+	}
+
+	WulfrumElectromagneticSphere2: {
+		DisplayName: Wulfrum Electromagnetic Sphere2
 		Tooltip: ""
 	}
 }
@@ -212,18 +138,11 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
-<<<<<<< Updated upstream
 	CnidarianMist.DisplayName: Cnidarian Mist
-=======
-	GrenadeProj.DisplayName: Grenade Proj
-	GrenadeProjExp.DisplayName: Grenade Proj Exp
-	GrenadeShrapnel.DisplayName: Grenade Shrapnel
-	MagmaConduitProj.DisplayName: Magma Conduit Proj
-	MagmaProj.DisplayName: Magma Proj
-	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
 	CnidrionBubble.DisplayName: Cnidrion Bubble
 	WaterBolt.DisplayName: Water Bolt
->>>>>>> Stashed changes
+	ClickEffectProj.DisplayName: Click Effect Proj
+	SecurityControllerProj.DisplayName: Security Controller Proj
 }
 
 Buffs: {
@@ -243,11 +162,7 @@ Buffs: {
 	}
 }
 
-<<<<<<< Updated upstream
-NPCs.DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
-=======
 NPCs: {
 	DraedonBarrierNPC.DisplayName: Security Barrier
 	Cnidrion.DisplayName: Cnidrion
 }
->>>>>>> Stashed changes

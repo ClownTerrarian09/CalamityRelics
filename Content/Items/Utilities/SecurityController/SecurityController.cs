@@ -1,8 +1,11 @@
+using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
+using CalamityRelics.Content.Projectiles.Environment.ClickEffectProj;
+using CalamityRelics.Content.Projectiles.Environment.SecurityControllerProj;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
 
 namespace CalamityRelics.Content.Items.Utilities.SecurityController
 {
@@ -18,6 +21,10 @@ namespace CalamityRelics.Content.Items.Utilities.SecurityController
             Item.autoReuse = false;
             Item.consumable = false;
             Item.UseSound = SoundID.Item92;
+
+            Item.noUseGraphic = true;
+            Item.shoot = ModContent.ProjectileType<SecurityControllerProj>();
+            Item.shootSpeed = 1f;
         }
 
         public override void HoldItem(Player player)
@@ -46,6 +53,16 @@ namespace CalamityRelics.Content.Items.Utilities.SecurityController
                     if (barrier.ModNPC is DraedonBarrierNPC barrierNPC)
                     {
                         barrierNPC.StartUnlockSequence();
+
+                        Projectile.NewProjectile(
+                            player.GetSource_ItemUse(Item),
+                            player.Top,
+                            Vector2.Zero,
+                            ModContent.ProjectileType<ClickEffectProj>(),
+                            0,
+                            0,
+                            player.whoAmI
+                        );
                     }
                 }
             }
@@ -77,6 +94,23 @@ namespace CalamityRelics.Content.Items.Utilities.SecurityController
                     }
                 }
             }
+            return false;
+        }
+
+        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            Player player = Main.LocalPlayer;
+
+            string texturePath = Texture;
+
+            if (player.HeldItem.type == Type && player.itemTime > 0)
+            {
+                texturePath += "Press";
+            }
+
+            Texture2D drawTexture = ModContent.Request<Texture2D>(texturePath).Value;
+            spriteBatch.Draw(drawTexture, position, null, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+
             return false;
         }
     }

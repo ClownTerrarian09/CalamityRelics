@@ -13,7 +13,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Pl
         {
             if (DraedonHouseSystem.IsHouseUnlocked) return;
 
-            // Check if the player is actively swinging a tool
             if (Player.whoAmI == Main.myPlayer && Player.ItemAnimationActive)
             {
                 bool swingingPickaxe = Player.HeldItem.pick > 0;
@@ -24,7 +23,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Pl
                     int targetX = Player.tileTargetX;
                     int targetY = Player.tileTargetY;
 
-                    if (DraedonHouseSystem.DraedonHouseRect.Contains(targetX, targetY))
+                    if (DraedonHouseSystem.IsTileInHouse(targetX, targetY))
                     {
                         Tile targetTile = Main.tile[targetX, targetY];
                         bool triggerShock = false;
