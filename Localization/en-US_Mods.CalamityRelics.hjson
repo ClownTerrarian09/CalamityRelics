@@ -89,11 +89,24 @@ Items: {
 
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
-    Tooltip: ""
-  }
+		Tooltip: ""
+	}
+
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
 		Tooltip: ""
+	}
+
+	DecayedSchematic: {
+		DisplayName: Decayed Schematic
+		Tooltip:
+			'''
+			This dusty device can be easily torn apart with a light breeze. Its rust can scratch even diamonds. 
+			Yet, its detailed drawings still dance beautifully across the screen.
+			This information will prove useful.
+
+			Click to view its contents.
+			'''
 	}
 }
 
@@ -139,3 +152,4 @@ Buffs: {
 }
 
 NPCs.DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
