@@ -17,6 +17,16 @@ Items: {
 		Tooltip: ""
 	}
 
+	Grenade: {
+		DisplayName: Grenade
+		Tooltip: ""
+	}
+
+	MagmaConduit: {
+		DisplayName: Magma Conduit
+		Tooltip: ""
+	}
+
 	Electroblazer: {
 		DisplayName: Electroblazer
 		Tooltip: ""
@@ -27,54 +37,73 @@ Items: {
 		Tooltip: ""
 	}
 
-	SecurityController: {
-		DisplayName: Security Controller
-		Tooltip:
-			'''
-			Overrides local security protocols.
-			 Hold near a high-voltage barrier to initiate the unlock sequence.
-			'''
+	WulfrumConnectorSuit: {
+		DisplayName: Wulfrum Connector Suit
+		Tooltip: ""
+	}
+
+	WulfrumConnectorVisor: {
+		DisplayName: Wulfrum Connector Visor
+		Tooltip: ""
+	}
+
+	WulfrumConnectorWalkers: {
+		DisplayName: Wulfrum Connector Walkers
+		Tooltip: ""
+	}
+
+	RustedCodebreaker: {
+		DisplayName: Rusted Codebreaker
+		Tooltip: ""
 	}
 
 	OffsetScanner: {
-		DisplayName: Biome Offset Scanner
-		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+		DisplayName: Offset Scanner
+		Tooltip: ""
+	}
+
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip: ""
 	}
 
 	WulfrumElectromagneticSphere: {
 		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
-}
-
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
 
 	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere2
+		DisplayName: Wulfrum Electromagnetic Sphere
 		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
+		Tooltip: ""
+	}
+
+	CnidarianSinus: {
+		DisplayName: Cnidarian Sinus
+		Tooltip: ""
+	}
+
+	WulfrumWhiplash: {
+		DisplayName: Wulfrum Whiplash
+		Tooltip: ""
+	}
+
+	Weapons: {
+		Rogue: {
+			WulfrumSpikyBalls: {
+				Tooltip: ""
+				DisplayName: Wulfrum Spiky Balls
+			}
+		}
 	}
 }
 
@@ -84,16 +113,23 @@ Projectiles: {
 	WulfrumBlaze.DisplayName: Wulfrum Blaze
 	WulfrumWhipProjectile.DisplayName: Wulfrum Whip Projectile
 	WulfrumWhipSparks.DisplayName: Wulfrum Whip Sparks
-	ElectromagneticSphereProjectile.DisplayName: Electromagnetic Sphere Projectile
-	WulfrumESHoldout.DisplayName: Wulfrum E S Holdout
-	WulfrumESHoldout2.DisplayName: Wulfrum E S Holdout2
 	ElectromagneticSphereProjectileCharge0.DisplayName: Electromagnetic Sphere Projectile Charge0
 	ElectromagneticSphereProjectileCharge1.DisplayName: Electromagnetic Sphere Projectile Charge1
 	ElectromagneticSphereProjectileCharge2.DisplayName: Electromagnetic Sphere Projectile Charge2
 	ElectromagneticSphereProjectileCharge3.DisplayName: Electromagnetic Sphere Projectile Charge3
+	GrenadeProj.DisplayName: Grenade Proj
+	GrenadeProjExp.DisplayName: Grenade Proj Exp
+	GrenadeShrapnel.DisplayName: Grenade Shrapnel
+	MagmaConduitProj.DisplayName: Magma Conduit Proj
+	MagmaProj.DisplayName: Magma Proj
+	StickyGrenadeProj.DisplayName: Sticky Grenade Proj
+	WulfrumESHoldout.DisplayName: Wulfrum E S Holdout
+	WulfrumESHoldout2.DisplayName: Wulfrum E S Holdout2
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	CnidarianMist.DisplayName: Cnidarian Mist
+	WulfrumOrbProjectileSecondary.DisplayName: Wulfrum Orb Projectile Secondary
 }
 
 Buffs: {
@@ -113,4 +149,4 @@ Buffs: {
 	}
 }
 
-NPCs.DraedonBarrierNPC.DisplayName: Security Barrier
+NPCs.DraedonBarrierNPC.DisplayName: Draedon Barrier N P C

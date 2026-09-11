@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\CalamityRelics.csproj": {}
+    "/home/Ramu/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/CalamityRelics.csproj": {}
   },
   "projects": {
-    "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\CalamityRelics.csproj": {
+    "/home/Ramu/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/CalamityRelics.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\CalamityRelics.csproj",
+        "projectUniqueName": "/home/Ramu/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/CalamityRelics.csproj",
         "projectName": "CalamityRelics",
-        "projectPath": "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\CalamityRelics.csproj",
-        "packagesPath": "C:\\Users\\MTI INFO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\MTI INFO\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\CalamityRelics\\obj\\",
+        "projectPath": "/home/Ramu/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/CalamityRelics.csproj",
+        "packagesPath": "/home/Ramu/.nuget/packages/",
+        "outputPath": "/home/Ramu/.local/share/Terraria/tModLoader/ModSources/CalamityRelics/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\MTI INFO\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/Ramu/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -35,13 +33,7 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.400"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -58,12 +50,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.30, 8.0.30]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.130/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

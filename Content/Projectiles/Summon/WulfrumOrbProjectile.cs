@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using CalamityRelics.Content.Buffs.SummonWeapons;
+using CalamityRelics.Content.Projectiles.Friendly;
 
 namespace CalamityRelics.Content.Projectiles.Summon
 {
@@ -20,8 +21,8 @@ namespace CalamityRelics.Content.Projectiles.Summon
 
         public override void SetDefaults()
         {
-            Projectile.width = 32;
-            Projectile.height = 32;
+            Projectile.width = 88;
+            Projectile.height = 84;
             Projectile.tileCollide = false;
             Projectile.friendly = true;
             Projectile.minion = true; 
@@ -150,48 +151,60 @@ namespace CalamityRelics.Content.Projectiles.Summon
 
         private void AIMovement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
         {
-            
-            float shootRange = 100f; 
+            float TileGap = 80f; 
 
             if (foundTarget)
             {
-                if (distanceFromTarget < shootRange)
+                if (distanceFromTarget <= TileGap)
                 {
-                   
-                    float chargeSpeed = 16f; // charge speed
-                    float chargeInertia = 15f; 
-
-                    Vector2 direction = targetCenter - Projectile.Center;
-                    direction.Normalize();
-                    direction *= chargeSpeed;
-
-                    Projectile.velocity = (Projectile.velocity * (chargeInertia - 1) + direction) / chargeInertia;
                     
-                    Projectile.ai[0] = 0; 
+                    // 1. Close range
+                    
+                    // Rapidly decelerate to a stop
+                    Projectile.velocity *= 0.1f; 
+
+                    // Increment close-range attack timer
+                    Projectile.ai[0]++;
+                    int blastFireRate = 10; // slow down when balancing
+
+                    if (Projectile.ai[0] >= blastFireRate)
+                    {
+                        if (Main.myPlayer == Projectile.owner)
+                        {
+                            Projectile.NewProjectile(
+                                Projectile.GetSource_FromThis(), 
+                                Projectile.Center, 
+                                Vector2.Zero,
+                                ModContent.ProjectileType<WulfrumOrbProjectileSecondary>(), 
+                                Projectile.damage, 
+                                Projectile.knockBack, 
+                                Projectile.owner,
+                                Projectile.whoAmI
+                            );
+                        }
+                        Projectile.ai[0] = 0; 
+                    }
                 }
                 else
                 {
+                    // 2. RANGED MODE (Hover & Shoot Primary)
                     
-                    float hoverSpeed = 6f; // Shoot Speed
+                    // Move towards the target
+                    float hoverSpeed = 3f; 
                     float hoverInertia = 40f; 
 
-                    Vector2 direction = targetCenter - Projectile.Center;
-                    direction.Normalize();
-                    direction *= hoverSpeed;
-
+                    Vector2 direction = (targetCenter - Projectile.Center).SafeNormalize(Vector2.Zero) * hoverSpeed;
                     Projectile.velocity = (Projectile.velocity * (hoverInertia - 1) + direction) / hoverInertia;
-
                     
-                    Projectile.ai[0]++;
-                    int fireRate = 30; 
+                    Projectile.ai[1]++;
+                    int primaryFireRate = 30; 
 
-                    if (Projectile.ai[0] >= fireRate)
+                    if (Projectile.ai[1] >= primaryFireRate)
                     {
                         if (Main.myPlayer == Projectile.owner)
                         {
                             Vector2 shootVelocity = (targetCenter - Projectile.Center).SafeNormalize(Vector2.Zero) * 12f;
-
-                            // Modify 'ProjectileID.GreenLaser' to whatever custom projectile you want this minion to shoot
+                            
                             Projectile.NewProjectile(
                                 Projectile.GetSource_FromThis(), 
                                 Projectile.Center, 
@@ -202,23 +215,21 @@ namespace CalamityRelics.Content.Projectiles.Summon
                                 Projectile.owner
                             );
                         }
-                        // Reset the timer after firing
-                        Projectile.ai[0] = 0; 
+                        Projectile.ai[1] = 0; 
                     }
                 }
                 return; 
             }
-
-            //  IDLE MODE 
-            Projectile.ai[0] = 29; //ready to fire
+            // 3. Idle (Return to Player)
+            Projectile.ai[0] = 0;
+            Projectile.ai[1] = 0;
 
             float speed = distanceToIdlePosition > 600f ? 17f : 4f;
             float inertia = distanceToIdlePosition > 600f ? 20f : 40f;
 
             if (distanceToIdlePosition > 20f)
             {
-                vectorToIdlePosition.Normalize();
-                vectorToIdlePosition *= speed;
+                vectorToIdlePosition = vectorToIdlePosition.SafeNormalize(Vector2.Zero) * speed;
                 Projectile.velocity = (Projectile.velocity * (inertia - 1) + vectorToIdlePosition) / inertia;
             } 
             else if (Projectile.velocity == Vector2.Zero)

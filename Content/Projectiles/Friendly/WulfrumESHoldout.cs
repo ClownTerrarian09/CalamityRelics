@@ -91,17 +91,17 @@ namespace CalamityRelics.Content.Projectiles.Friendly
                 }
                 else
                 {
-                    cooldown = 0;
-                    canShootNormal = true;
+                    // cooldown = 0;
+                    // canShootNormal = true;
+                    Projectile.Kill();
                 }
             }
             
 
 			Projectile.spriteDirection = Projectile.direction;
-			player.ChangeDir(Projectile.direction); // Change the player's direction based on the projectile's own
-			// player.heldProj = Projectile.whoAmI; // We tell the player that the drill is the held projectile, so it will draw in their hand
-			player.SetDummyItemTime(2); // Make sure the player's item time does not change while the projectile is out
-			Projectile.Center = playerCenter; // Centers the projectile on the player. Projectile.velocity will be added to this in later Terraria code causing the projectile to be held away from the player at a set distance.
+			player.ChangeDir(Projectile.direction);
+			player.SetDummyItemTime(2);
+			Projectile.Center = playerCenter; 
 			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 			player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
         }
