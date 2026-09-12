@@ -9,9 +9,12 @@ using Terraria.WorldBuilding;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using CalamityMod.Schematics;
+using CalamityMod.Items.Materials;
 using Terraria.GameContent.Generation;
 using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
 using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
+using CalamityRelics.Content.Items.DraedonItems;
+using CalamityRelics.Content.Tiles;
 
 namespace CalamityRelics.Content.WorldGen
 {
@@ -126,12 +129,11 @@ namespace CalamityRelics.Content.WorldGen
             int schematicWidth = 200;
             int schematicHeight = 150;
 
-            Point? iceLabPosition = FindIceLabPosition();
             List<Point> validCandidates = new List<Point>();
 
             for (int x = 200; x < Main.maxTilesX - 200; x += 5)
             {
-                for (int y = (int)Main.rockLayer; y < Main.maxTilesY - 300; y += 5)
+                for (int y = 100; y < (int)Main.worldSurface; y += 5)
                 {
                     Tile tile = Main.tile[x, y];
                     if (tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock))
@@ -143,7 +145,7 @@ namespace CalamityRelics.Content.WorldGen
 
             if (validCandidates.Count == 0)
             {
-                Mod.Logger.Warn($"Calamity Relics: Failed to find valid ice candidates for {DraedonHouseSchematicPath}.");
+                Mod.Logger.Warn($"Calamity Relics: Failed to find valid surface tundra candidates for {DraedonHouseSchematicPath}.");
                 return;
             }
 
@@ -151,14 +153,7 @@ namespace CalamityRelics.Content.WorldGen
             {
                 Point p = validCandidates[Main.rand.Next(validCandidates.Count)];
 
-                if (iceLabPosition.HasValue)
-                {
-                    float distanceFromLab = Vector2.Distance(new Vector2(p.X, p.Y), new Vector2(iceLabPosition.Value.X, iceLabPosition.Value.Y));
-                    if (distanceFromLab < 300f) continue;
-                }
-
                 if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
-
                 if (!CheckIceBiomeDensity(p.X, p.Y, 50, 400)) continue;
 
                 bool specialCondition = false;
@@ -167,7 +162,7 @@ namespace CalamityRelics.Content.WorldGen
                     p,
                     SchematicAnchor.TopLeft,
                     ref specialCondition,
-                    null
+                    FillDraedonChests
                 );
 
                 int xOffset = 10;
@@ -193,14 +188,65 @@ namespace CalamityRelics.Content.WorldGen
                     ModContent.NPCType<DraedonBarrierNPC>()
                 );
 
+                int codebreakerOffsetX = 34;
+                int codebreakerOffsetY = 16;
+                Terraria.WorldGen.PlaceTile(p.X + codebreakerOffsetX, p.Y + codebreakerOffsetY, ModContent.TileType<RustedCodebreakerFurniture>());
+
                 placed = true;
 
-                Mod.Logger.Info($"Calamity Relics: Draedon's House placed at {p.X}, {p.Y}");
+                Mod.Logger.Info($"Calamity Relics: Draedon's House placed at {p.X}, {p.Y} in the Surface Tundra");
             }
 
             if (!placed)
             {
                 Mod.Logger.Warn($"Calamity Relics: Failed to find a suitable location for {DraedonHouseSchematicPath}.");
+            }
+        }
+
+        private void FillDraedonChests(Chest chest)
+        {
+            Tile chestTile = Main.tile[chest.x, chest.y];
+
+            int agedSecurityID = ModContent.TryFind("CalamityMod", "AgedSecurityChestTile", out ModTile aged) ? aged.Type : -1;
+            int wulfrumChestID = ModContent.TryFind("CalamityMod", "AnodizedWulfrumChest", out ModTile wulf) ? wulf.Type : -1;
+
+            if (chestTile.TileType == agedSecurityID)
+            {
+                PlaceItemInRandomSlot(chest, (Terraria.WorldGen.SavedOreTiers.Gold == TileID.Gold) ? ItemID.GoldBar : ItemID.PlatinumBar, Main.rand.Next(10, 20));
+                PlaceItemInRandomSlot(chest, (Terraria.WorldGen.SavedOreTiers.Iron == TileID.Iron) ? ItemID.IronBar : ItemID.LeadBar, Main.rand.Next(10, 20));
+                PlaceItemInRandomSlot(chest, (Terraria.WorldGen.SavedOreTiers.Silver == TileID.Silver) ? ItemID.SilverBar : ItemID.TungstenBar, Main.rand.Next(10, 20));
+            }
+            else if (chestTile.TileType == wulfrumChestID)
+            {
+                PlaceItemInRandomSlot(chest, ModContent.ItemType<DubiousPlating>(), Main.rand.Next(15, 30));
+                PlaceItemInRandomSlot(chest, ModContent.ItemType<MysteriousCircuitry>(), Main.rand.Next(15, 30));
+                PlaceItemInRandomSlot(chest, ModContent.ItemType<WulfrumMetalScrap>(), Main.rand.Next(20, 40));
+            }
+        }
+
+        /// <summary>
+        /// Generate randomized location item in chests.
+        /// </summary>
+        private void PlaceItemInRandomSlot(Chest chest, int itemType, int totalStack)
+        {
+            int remainingStack = totalStack;
+            int maxAttempts = 150;
+            int attempts = 0;
+
+            while (remainingStack > 0 && attempts < maxAttempts)
+            {
+                attempts++;
+                int randomSlot = Main.rand.Next(chest.item.Length);
+
+                if (chest.item[randomSlot].IsAir)
+                {
+                    int stackToPlace = System.Math.Min(remainingStack, Main.rand.Next(1, 6));
+
+                    chest.item[randomSlot].SetDefaults(itemType);
+                    chest.item[randomSlot].stack = stackToPlace;
+
+                    remainingStack -= stackToPlace;
+                }
             }
         }
 
@@ -235,24 +281,6 @@ namespace CalamityRelics.Content.WorldGen
                 }
             }
             return false;
-        }
-
-        private Point? FindIceLabPosition()
-        {
-            if (ElumplateID == -1) return null;
-
-            for (int x = 100; x < Main.maxTilesX - 100; x += 15)
-            {
-                for (int y = (int)Main.rockLayer; y < Main.maxTilesY - 200; y += 15)
-                {
-                    Tile tile = Main.tile[x, y];
-                    if (tile.HasTile && tile.TileType == ElumplateID)
-                    {
-                        return new Point(x, y);
-                    }
-                }
-            }
-            return null;
         }
 
         private bool IsAreaClear(int startX, int startY, int width, int height)

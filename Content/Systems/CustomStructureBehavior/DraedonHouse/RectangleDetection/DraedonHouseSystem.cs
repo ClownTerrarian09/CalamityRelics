@@ -64,7 +64,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                 "AgedLaboratoryContainmentBox", "AgedSecurityChest", "AnodizedWulfrumSink",
                 "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabStation",
                 "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryDesign",
-                "AgedLaboratoryConsole", "PlaguedBed", "CodebreakerTile", "ChargedWulfrumEnergyBarrier"
+                "AgedLaboratoryConsole", "PlaguedBed", "ChargedWulfrumEnergyBarrier"
             };
             foreach (string name in calamityTiles)
             {
