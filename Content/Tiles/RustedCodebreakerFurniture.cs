@@ -13,6 +13,7 @@ using Terraria.Audio;
 using Terraria.GameContent.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using CalamityMod.Particles;
+using CalamityRelics.Content.Items.DraedonItems;
 
 namespace CalamityRelics.Content.Tiles{
     internal class RustedCodebreakerFurniture : ModTile{
@@ -71,7 +72,7 @@ namespace CalamityRelics.Content.Tiles{
             {
                 SoundEngine.PlaySound(SoundID.Shatter);
                 Player player = Main.LocalPlayer;
-                Item.NewItem(player.GetSource_TileInteraction(i, j), player.Center, 1, 1, ModContent.ItemType<RustedCodebreaker>());
+                Item.NewItem(player.GetSource_TileInteraction(i, j), player.Center, 1, 1, ModContent.ItemType<DecayedSchematic>());
                 ToggleTile(i, j);
                 return true;
             }
