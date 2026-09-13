@@ -132,6 +132,7 @@ Projectiles: {
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
 	CnidarianMist.DisplayName: Cnidarian Mist
+	WulfrumBeam.DisplayName: Wulfrum Beam
 }
 
 Buffs: {
@@ -151,5 +152,9 @@ Buffs: {
 	}
 }
 
-NPCs.DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+NPCs: {
+	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+	WulfrumProbe.DisplayName: Wulfrum Probe
+}
+
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
