@@ -48,8 +48,8 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             AIType = -1;
             NPC.aiStyle = -1;
             NPC.damage = 35;
-            NPC.lifeMax = 80;
-            NPC.defense = 10;
+            NPC.lifeMax = 180;
+            NPC.defense = 15;
             NPC.knockBackResist = 0.35f;
             NPC.width = 102;
             NPC.height = 92;
@@ -92,7 +92,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                         desired = Vector2.Normalize(desired) * speed;
                     NPC.velocity = Vector2.Lerp(NPC.velocity, desired, 0.08f);
                     StateTimer++;
-                    if (StateTimer >= 1000f)
+                    if (StateTimer >= 700f)
                     {
                         StateTimer = 0;
                         AIState = ProbeAIState.Charging;

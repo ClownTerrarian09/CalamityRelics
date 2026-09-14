@@ -108,6 +108,11 @@ Items: {
 			Click to view its contents.
 			'''
 	}
+
+	WulfrumMicrowaver: {
+		DisplayName: Wulfrum Microwaver
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -133,6 +138,7 @@ Projectiles: {
 	WulfrumPortal.DisplayName: Wulfrum Portal
 	CnidarianMist.DisplayName: Cnidarian Mist
 	WulfrumBeam.DisplayName: Wulfrum Beam
+	WulfrumMicrowave.DisplayName: Wulfrum Microwave
 }
 
 Buffs: {
