@@ -15,7 +15,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
         public static bool IsHouseUnlocked = false;
 
         public static int DoorOffsetX = 22;
-        public static int DoorOffsetY = 60;
+        public static int DoorOffsetY = 64;
 
         public static HashSet<int> ProtectedLabTiles = new HashSet<int>();
         public static HashSet<int> ProtectedLabWalls = new HashSet<int>();
@@ -38,7 +38,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             ProtectedLabTiles.Clear();
             ProtectedLabWalls.Clear();
 
-            int[] vanillaTiles = new int[]
+            int[] vanillaTiles =
             {
                 TileID.IronBrick, TileID.Glass, TileID.TopazGemspark,
                 TileID.MarbleBlock, TileID.Chain, TileID.ItemFrame,
@@ -48,20 +48,20 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
 
             foreach (int id in vanillaTiles) ProtectedLabTiles.Add(id);
 
-            int[] vanillaWalls = new int[]
+            int[] vanillaWalls =
             {
                 WallID.IronBrick, WallID.Glass, WallID.MarbleBlock
             };
 
             foreach (int id in vanillaWalls) ProtectedLabWalls.Add(id);
 
-            string[] calamityTiles = new string[]
+            string[] calamityTiles =
             {
                 "RustedPlating", "WulfrumPanels", "RustedPipes", "RustedShelf",
                 "MiniAgedFrostlight", "MiniCagedFrostlight", "WulfrumPlating",
                 "AnodizedWulfrumPlatform", "RoundedAnodizedWulfrumPanels", "WulfrumSiding",
                 "LaboratoryPipePlating", "PowerCellFactory", "ChargingStation",
-                "AgedLaboratoryContainmentBox", "AgedSecurityChest", "AnodizedWulfrumSink",
+                "AgedLaboratoryContainmentBox", "AgedSecurityChestTile", "AnodizedWulfrumSink",
                 "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabStation",
                 "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryDesign",
                 "AgedLaboratoryConsole", "PlaguedBed", "ChargedWulfrumEnergyBarrier"
@@ -71,7 +71,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                 if (ModContent.TryFind("CalamityMod", name, out ModTile tile)) ProtectedLabTiles.Add(tile.Type);
             }
 
-            string[] calamityWalls = new string[]
+            string[] calamityWalls =
             {
                 "WulfrumSidingWall", "HazardChevronWall", "WulfrumSheetWall",
                 "RoundedAnodizedWulfrumPanelWall", "RustedPlatingWall", "RustedPlatePillar",
@@ -80,6 +80,26 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             foreach (string name in calamityWalls)
             {
                 if (ModContent.TryFind("CalamityMod", name, out ModWall wall)) ProtectedLabWalls.Add(wall.Type);
+            }
+
+            string[] relicsTiles =
+            {
+                "RustedCodebreakerFurniture"
+            };
+
+            foreach (string name in relicsTiles)
+            {
+                if (ModContent.TryFind("CalamityRelics", name, out ModTile tile)) ProtectedLabTiles.Add(tile.Type);
+            }
+
+            string[] relicsWalls =
+            {
+                //
+            };
+
+            foreach (string name in relicsWalls)
+            {
+                if (ModContent.TryFind("CalamityRelics", name, out ModWall wall)) ProtectedLabWalls.Add(wall.Type);
             }
         }
 

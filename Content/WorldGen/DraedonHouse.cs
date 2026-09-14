@@ -1,20 +1,19 @@
+using CalamityMod.Items.Materials;
+using CalamityMod.Schematics;
+using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
+using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
+using CalamityRelics.Content.Tiles;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 using Terraria;
+using Terraria.GameContent.Generation;
+using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
-using Terraria.ID;
-using Microsoft.Xna.Framework;
-using CalamityMod.Schematics;
-using CalamityMod.Items.Materials;
-using Terraria.GameContent.Generation;
-using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
-using CalamityRelics.Content.NPCs.DraedonHouseBarrier;
-using CalamityRelics.Content.Items.DraedonItems;
-using CalamityRelics.Content.Tiles;
 
 namespace CalamityRelics.Content.WorldGen
 {
@@ -86,7 +85,7 @@ namespace CalamityRelics.Content.WorldGen
                         var tileMaps = (System.Collections.IDictionary)tileMapsField.GetValue(null);
 
                         tileMaps[DraedonHouseSchematicKey] = parsedSchematic;
-                        Mod.Logger.Info($"Successfully injected {DraedonHouseSchematicPath} into Calamity's SchematicManager.");
+
                     }
                 }
                 catch (System.Exception ex)
@@ -126,8 +125,8 @@ namespace CalamityRelics.Content.WorldGen
             bool placed = false;
             int maxAttempts = 500;
 
-            int schematicWidth = 200;
-            int schematicHeight = 150;
+            int schematicWidth = 149;
+            int schematicHeight = 129;
 
             List<Point> validCandidates = new List<Point>();
 
@@ -168,7 +167,7 @@ namespace CalamityRelics.Content.WorldGen
                 int xOffset = 10;
                 int yOffset = 13;
                 int buildingWidth = 133;
-                int buildingHeight = 65;
+                int buildingHeight = 69;
 
                 DraedonHouseSystem.DraedonHouseRect = new Rectangle(p.X + xOffset, p.Y + yOffset, buildingWidth, buildingHeight);
                 DraedonHouseSystem.DraedonHouseLegsRect = new Rectangle(
@@ -188,13 +187,17 @@ namespace CalamityRelics.Content.WorldGen
                     ModContent.NPCType<DraedonBarrierNPC>()
                 );
 
-                int codebreakerOffsetX = 34;
-                int codebreakerOffsetY = 16;
-                Terraria.WorldGen.PlaceTile(p.X + codebreakerOffsetX, p.Y + codebreakerOffsetY, ModContent.TileType<RustedCodebreakerFurniture>());
+                int codebreakerTileType = ModContent.TileType<RustedCodebreakerFurniture>();
+                int codebreakerPlaceX = DraedonHouseSystem.DraedonHouseRect.X + 34;
+                int codebreakerPlaceY = DraedonHouseSystem.DraedonHouseRect.Y + 20;
+
+                Terraria.WorldGen.PlaceObject(codebreakerPlaceX, codebreakerPlaceY, codebreakerTileType);
+
+                GenerateRoofTrees(p.X, p.Y, schematicWidth);
 
                 placed = true;
 
-                Mod.Logger.Info($"Calamity Relics: Draedon's House placed at {p.X}, {p.Y} in the Surface Tundra");
+
             }
 
             if (!placed)
@@ -250,6 +253,41 @@ namespace CalamityRelics.Content.WorldGen
             }
         }
 
+        /// <summary>
+        /// Plant trees, That's it.
+        /// </summary>
+        private void GenerateRoofTrees(int startX, int startY, int width)
+        {
+            for (int i = startX; i < startX + width; i += Main.rand.Next(4, 10))
+            {
+                for (int j = startY - 15; j < startY + 20; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+                    Tile tileAbove = Main.tile[i, j - 1];
+
+                    if (tile.HasTile && tile.TileType == TileID.SnowBlock && !tileAbove.HasTile)
+                    {
+                        bool exposed = true;
+                        for (int k = j - 1; k > j - 15; k--)
+                        {
+                            if (Main.tile[i, k].HasTile && Main.tileSolid[Main.tile[i, k].TileType])
+                            {
+                                exposed = false;
+                                break;
+                            }
+                        }
+
+                        if (exposed)
+                        {
+                            Terraria.WorldGen.PlaceTile(i, j - 1, TileID.Saplings, mute: true, forced: true);
+                            Terraria.WorldGen.GrowTree(i, j - 1);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
         private bool CheckIceBiomeDensity(int centerX, int centerY, int radius, int requiredTiles)
         {
             int iceCount = 0;
@@ -298,6 +336,30 @@ namespace CalamityRelics.Content.WorldGen
                 }
             }
             return true;
+        }
+    }
+
+    public class SaplingCleanupSystem : ModSystem
+    {
+        public static void ClearUngrownSaplings()
+        {
+            int clearedCount = 0;
+
+            for (int x = 0; x < Main.maxTilesX; x++)
+            {
+                for (int y = 0; y < Main.maxTilesY; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+
+                    if (tile.HasTile && TileID.Sets.TreeSapling[tile.TileType])
+                    {
+                        Terraria.WorldGen.KillTile(x, y, noItem: false);
+                        clearedCount++;
+                    }
+                }
+            }
+
+            Main.NewText($"Cleaned up {clearedCount} ungrown saplings.", 50, 255, 50);
         }
     }
 }
