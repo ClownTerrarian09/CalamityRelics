@@ -11,53 +11,69 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
     public class DraedonHouseSystem : ModSystem
     {
         public static Rectangle DraedonHouseRect = Rectangle.Empty;
+        public static Rectangle DraedonHouseLegsRect = Rectangle.Empty;
         public static bool IsHouseUnlocked = false;
 
-        public static int DoorOffsetX = 32;
-        public static int DoorOffsetY = 73;
+        public static int DoorOffsetX = 22;
+        public static int DoorOffsetY = 64;
 
         public static HashSet<int> ProtectedLabTiles = new HashSet<int>();
         public static HashSet<int> ProtectedLabWalls = new HashSet<int>();
+
+        /// <summary>
+        /// Checks if a given tile coordinate (i, j) is inside any part of the Draedon House structure.
+        /// </summary>
+        public static bool IsTileInHouse(int i, int j)
+        {
+            if (DraedonHouseRect == Rectangle.Empty)
+                return false;
+
+            Point tilePoint = new Point(i, j);
+
+            return DraedonHouseRect.Contains(tilePoint) || DraedonHouseLegsRect.Contains(tilePoint);
+        }
 
         public override void PostSetupContent()
         {
             ProtectedLabTiles.Clear();
             ProtectedLabWalls.Clear();
 
-            int[] vanillaTiles = new int[]
+            int[] vanillaTiles =
             {
                 TileID.IronBrick, TileID.Glass, TileID.TopazGemspark,
-                TileID.MarbleBlock, TileID.Chain, TileID.MinecartTrack,
+                TileID.TopazGemsparkOff, TileID.Chain, TileID.ItemFrame,
                 TileID.MetalBars, TileID.Switches, TileID.Furnaces,
-                TileID.Bottles, TileID.BouncyBoulder, TileID.ItemFrame
+                TileID.Bottles, TileID.BouncyBoulder, TileID.Grate,
+                TileID.GrateClosed, TileID.MarbleBlock, TileID.MinecartTrack
             };
 
             foreach (int id in vanillaTiles) ProtectedLabTiles.Add(id);
 
-            int[] vanillaWalls = new int[]
+            int[] vanillaWalls =
             {
                 WallID.IronBrick, WallID.Glass, WallID.MarbleBlock
             };
 
             foreach (int id in vanillaWalls) ProtectedLabWalls.Add(id);
 
-            string[] calamityTiles = new string[]
+            string[] calamityTiles =
             {
                 "RustedPlating", "WulfrumPanels", "RustedPipes", "RustedShelf",
                 "MiniAgedFrostlight", "MiniCagedFrostlight", "WulfrumPlating",
                 "AnodizedWulfrumPlatform", "RoundedAnodizedWulfrumPanels", "WulfrumSiding",
                 "LaboratoryPipePlating", "PowerCellFactory", "ChargingStation",
-                "AgedLaboratoryContainmentBox", "AgedSecurityChest", "AnodizedWulfrumSink",
-                "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabStation",
-                "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryDesign",
-                "AgedLaboratoryConsole", "PlaguedBed", "CodebreakerTile", "ChargedWulfrumEnergyBarrier"
+                "AgedLaboratoryContainmentBox", "AgedSecurityChestTile", "AnodizedWulfrumSink",
+                "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabstation",
+                "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryScreen",
+                "AgedLaboratoryConsole", "PlaguedPlateBed", "ChargedWulfrumEnergyBarrier", "LaboratoryDisplay",
+                "AgedLaboratoryDisplay", "AgedLaboratoryDoorClosed", "AgedLaboratoryDoorOpen"
             };
             foreach (string name in calamityTiles)
             {
                 if (ModContent.TryFind("CalamityMod", name, out ModTile tile)) ProtectedLabTiles.Add(tile.Type);
             }
 
-            string[] calamityWalls = new string[]
+            string[] calamityWalls =
             {
                 "WulfrumSidingWall", "HazardChevronWall", "WulfrumSheetWall",
                 "RoundedAnodizedWulfrumPanelWall", "RustedPlatingWall", "RustedPlatePillar",
@@ -67,11 +83,32 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             {
                 if (ModContent.TryFind("CalamityMod", name, out ModWall wall)) ProtectedLabWalls.Add(wall.Type);
             }
+
+            string[] relicsTiles =
+            {
+                "RustedCodebreakerFurniture"
+            };
+
+            foreach (string name in relicsTiles)
+            {
+                if (ModContent.TryFind("CalamityRelics", name, out ModTile tile)) ProtectedLabTiles.Add(tile.Type);
+            }
+
+            string[] relicsWalls =
+            {
+                //
+            };
+
+            foreach (string name in relicsWalls)
+            {
+                if (ModContent.TryFind("CalamityRelics", name, out ModWall wall)) ProtectedLabWalls.Add(wall.Type);
+            }
         }
 
         public override void ClearWorld()
         {
             DraedonHouseRect = Rectangle.Empty;
+            DraedonHouseLegsRect = Rectangle.Empty;
             IsHouseUnlocked = false;
         }
 
@@ -96,7 +133,15 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                     tag.GetInt("DraHouseW"),
                     tag.GetInt("DraHouseH")
                 );
+
+                DraedonHouseLegsRect = new Rectangle(
+                    DraedonHouseRect.X + 68,
+                    DraedonHouseRect.Y + 65,
+                    17,
+                    47
+                );
             }
+
             IsHouseUnlocked = tag.GetBool("DraHouseUnlocked");
             DoorOffsetX = tag.GetInt("DraDoorOffsetX");
             DoorOffsetY = tag.GetInt("DraDoorOffsetY");

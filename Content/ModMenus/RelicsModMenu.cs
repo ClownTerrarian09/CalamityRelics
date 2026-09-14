@@ -20,12 +20,13 @@ namespace CalamityRelics.Content.Items
         {
             Texture2D Logo = ModContent.Request<Texture2D>("CalamityRelics/Assets/Menu/RelicsLogo").Value;
 
-            spriteBatch.Draw(Logo, logoDrawCenter + new Vector2(0, 25 + (float)(Math.Sin(Main.GlobalTimeWrappedHourly / 2) * 10)), null, new Color(255, 255, 255), 0, Logo.Size() / 2, 1.25f, SpriteEffects.None, 1f);
+            //spriteBatch.Draw(Logo, logoDrawCenter + new Vector2(0, 25 + (float)(Math.Sin(Main.GlobalTimeWrappedHourly / 2) * 10)), null, new Color(255, 255, 255), 0, Logo.Size() / 2, 1.25f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(Logo, logoDrawCenter + new Vector2(0, 75 + (float)(Math.Sin(Main.GlobalTimeWrappedHourly / 2) * 5)), null, new Color(255, 255, 255), 0, Logo.Size() / 2, 1.25f, SpriteEffects.None, 1f);
 
             return false;
         }
 
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Music/TaleofaNewWorld");
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Music/ToTellAStory");
         public override ModSurfaceBackgroundStyle MenuBackgroundStyle => ModContent.GetInstance<RelicsBG>();
 	}
 }
