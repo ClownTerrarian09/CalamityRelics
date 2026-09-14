@@ -155,6 +155,7 @@ Projectiles: {
 	WaterBolt.DisplayName: Water Bolt
 	ClickEffectProj.DisplayName: Click Effect Proj
 	SecurityControllerProj.DisplayName: Security Controller Proj
+	WulfrumBeam.DisplayName: Wulfrum Beam
 }
 
 Buffs: {
@@ -177,6 +178,6 @@ Buffs: {
 NPCs: {
 	DraedonBarrierNPC.DisplayName: Security Barrier
 	Cnidrion.DisplayName: Cnidrion
+	WulfrumProbe.DisplayName: Wulfrum Probe
 }
-
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
