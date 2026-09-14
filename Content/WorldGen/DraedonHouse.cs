@@ -153,7 +153,9 @@ namespace CalamityRelics.Content.WorldGen
                 Point p = validCandidates[Main.rand.Next(validCandidates.Count)];
 
                 if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
-                if (!CheckIceBiomeDensity(p.X, p.Y, 50, 400)) continue;
+                int scanCenterX = p.X + (schematicWidth / 2);
+                int scanCenterY = p.Y + (schematicHeight / 2);
+                if (!CheckIceBiomeDensity(scanCenterX, scanCenterY, 80, 3000)) continue;
 
                 bool specialCondition = false;
                 SchematicManager.PlaceSchematic<System.Action<Terraria.Chest>>(
@@ -254,9 +256,9 @@ namespace CalamityRelics.Content.WorldGen
         }
 
         /// <summary>
-        /// Plant trees, That's it.
+        /// Plant trees, and instantly clean up failures.
         /// </summary>
-        private void GenerateRoofTrees(int startX, int startY, int width)
+        private static void GenerateRoofTrees(int startX, int startY, int width)
         {
             for (int i = startX; i < startX + width; i += Main.rand.Next(4, 10))
             {
@@ -280,7 +282,13 @@ namespace CalamityRelics.Content.WorldGen
                         if (exposed)
                         {
                             Terraria.WorldGen.PlaceTile(i, j - 1, TileID.Saplings, mute: true, forced: true);
-                            Terraria.WorldGen.GrowTree(i, j - 1);
+
+                            bool successfullyGrew = Terraria.WorldGen.GrowTree(i, j - 1);
+
+                            if (!successfullyGrew)
+                            {
+                                Terraria.WorldGen.KillTile(i, j - 1, noItem: true);
+                            }
                         }
                         break;
                     }
@@ -336,30 +344,6 @@ namespace CalamityRelics.Content.WorldGen
                 }
             }
             return true;
-        }
-    }
-
-    public class SaplingCleanupSystem : ModSystem
-    {
-        public static void ClearUngrownSaplings()
-        {
-            int clearedCount = 0;
-
-            for (int x = 0; x < Main.maxTilesX; x++)
-            {
-                for (int y = 0; y < Main.maxTilesY; y++)
-                {
-                    Tile tile = Main.tile[x, y];
-
-                    if (tile.HasTile && TileID.Sets.TreeSapling[tile.TileType])
-                    {
-                        Terraria.WorldGen.KillTile(x, y, noItem: false);
-                        clearedCount++;
-                    }
-                }
-            }
-
-            Main.NewText($"Cleaned up {clearedCount} ungrown saplings.", 50, 255, 50);
         }
     }
 }

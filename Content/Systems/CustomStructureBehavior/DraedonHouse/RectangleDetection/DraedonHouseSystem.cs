@@ -41,9 +41,10 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             int[] vanillaTiles =
             {
                 TileID.IronBrick, TileID.Glass, TileID.TopazGemspark,
-                TileID.MarbleBlock, TileID.Chain, TileID.ItemFrame,
+                TileID.TopazGemsparkOff, TileID.Chain, TileID.ItemFrame,
                 TileID.MetalBars, TileID.Switches, TileID.Furnaces,
-                TileID.Bottles, TileID.BouncyBoulder
+                TileID.Bottles, TileID.BouncyBoulder, TileID.Grate,
+                TileID.GrateClosed, TileID.MarbleBlock, TileID.MinecartTrack
             };
 
             foreach (int id in vanillaTiles) ProtectedLabTiles.Add(id);
@@ -62,9 +63,10 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                 "AnodizedWulfrumPlatform", "RoundedAnodizedWulfrumPanels", "WulfrumSiding",
                 "LaboratoryPipePlating", "PowerCellFactory", "ChargingStation",
                 "AgedLaboratoryContainmentBox", "AgedSecurityChestTile", "AnodizedWulfrumSink",
-                "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabStation",
-                "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryDesign",
-                "AgedLaboratoryConsole", "PlaguedBed", "ChargedWulfrumEnergyBarrier"
+                "AnodizedWulfrumChest", "WulfrumSink", "WulfrumToilet", "WulfrumLabstation",
+                "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryScreen",
+                "AgedLaboratoryConsole", "PlaguedPlateBed", "ChargedWulfrumEnergyBarrier", "LaboratoryDisplay",
+                "AgedLaboratoryDisplay", "AgedLaboratoryDoorClosed", "AgedLaboratoryDoorOpen"
             };
             foreach (string name in calamityTiles)
             {
@@ -136,7 +138,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                     DraedonHouseRect.X + 68,
                     DraedonHouseRect.Y + 65,
                     17,
-                    43
+                    47
                 );
             }
 

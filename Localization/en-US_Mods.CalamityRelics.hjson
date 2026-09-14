@@ -180,4 +180,5 @@ NPCs: {
 	Cnidrion.DisplayName: Cnidrion
 	WulfrumProbe.DisplayName: Wulfrum Probe
 }
+
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
