@@ -127,6 +127,11 @@ Items: {
 			Click to view its contents.
 			'''
 	}
+
+	WulfrumMicrowaver: {
+		DisplayName: Wulfrum Microwaver
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -156,6 +161,7 @@ Projectiles: {
 	ClickEffectProj.DisplayName: Click Effect Proj
 	SecurityControllerProj.DisplayName: Security Controller Proj
 	WulfrumBeam.DisplayName: Wulfrum Beam
+	WulfrumMicrowave.DisplayName: Wulfrum Microwave
 }
 
 Buffs: {
