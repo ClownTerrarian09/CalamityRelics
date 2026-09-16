@@ -155,6 +155,7 @@ Buffs: {
 NPCs: {
 	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
 	WulfrumProbe.DisplayName: Wulfrum Probe
+	WulfrumTower.DisplayName: Wulfrum Tower
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
