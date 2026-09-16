@@ -37,6 +37,35 @@ Items: {
 		Tooltip: ""
 	}
 
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip:
+			'''
+			Overrides local security protocols.
+			 Hold near a high-voltage barrier to initiate the unlock sequence.
+			'''
+	}
+
+	OffsetScanner: {
+		DisplayName: Biome Offset Scanner
+		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+	}
+
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
+		Tooltip: ""
+	}
+
 	WulfrumConnectorSuit: {
 		DisplayName: Wulfrum Connector Suit
 		Tooltip: ""
@@ -57,36 +86,6 @@ Items: {
 		Tooltip: ""
 	}
 
-	OffsetScanner: {
-		DisplayName: Offset Scanner
-		Tooltip: ""
-	}
-
-	SecurityController: {
-		DisplayName: Security Controller
-		Tooltip: ""
-	}
-
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-		Tooltip: ""
-	}
-
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
-	}
-
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
-	}
-
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
 		Tooltip: ""
@@ -94,6 +93,26 @@ Items: {
 
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
+		Tooltip: ""
+	}
+
+	CnidrionBag: {
+		DisplayName: Cnidrion Bag
+		Tooltip: ""
+	}
+
+	StructureSizeScanner: {
+		Tooltip: ""
+		DisplayName: Structure Size Scanner
+	}
+
+	CaudalGeode: {
+		DisplayName: Caudal Geode
+		Tooltip: ""
+	}
+
+	WulfrumElectromagneticSphere2: {
+		DisplayName: Wulfrum Electromagnetic Sphere2
 		Tooltip: ""
 	}
 
@@ -107,6 +126,11 @@ Items: {
 
 			Click to view its contents.
 			'''
+	}
+
+	WulfrumMicrowaver: {
+		DisplayName: Wulfrum Microwaver
+		Tooltip: ""
 	}
 }
 
@@ -132,7 +156,12 @@ Projectiles: {
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
 	CnidarianMist.DisplayName: Cnidarian Mist
+	CnidrionBubble.DisplayName: Cnidrion Bubble
+	WaterBolt.DisplayName: Water Bolt
+	ClickEffectProj.DisplayName: Click Effect Proj
+	SecurityControllerProj.DisplayName: Security Controller Proj
 	WulfrumBeam.DisplayName: Wulfrum Beam
+	WulfrumMicrowave.DisplayName: Wulfrum Microwave
 }
 
 Buffs: {
@@ -153,7 +182,8 @@ Buffs: {
 }
 
 NPCs: {
-	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+	DraedonBarrierNPC.DisplayName: Security Barrier
+	Cnidrion.DisplayName: Cnidrion
 	WulfrumProbe.DisplayName: Wulfrum Probe
 	WulfrumTower.DisplayName: Wulfrum Tower
 }
