@@ -7,10 +7,16 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityMod;
 using CalamityMod.NPCs.NormalNPCs;
 using System.Collections;
 using System.Collections.Generic;
 using CalamityMod.Particles;
+using CalamityMod.Sounds;
+using CalamityMod.Items.Accessories;
+using CalamityMod.Items.Materials;
+using Terraria.GameContent.Bestiary;
+using Terraria.ModLoader.Utilities;
 
 namespace CalamityRelics.Content.NPCs.Wulfrum
 {
@@ -32,8 +38,49 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             NPC.height = 136;
             NPC.knockBackResist = 0f;
             NPC.lifeMax = 1000;
+            NPC.defense = 10;
             NPC.damage = 0;
             NPC.noGravity = true;
+            NPC.HitSound = WulfrumAmplifier.Hit;
+            NPC.DeathSound = CommonCalamitySounds.WulfrumNPCDeathSound;
+            NPC.Calamity().VulnerableToSickness = false;
+            NPC.Calamity().VulnerableToElectricity = true;
+        }
+        public override void SetStaticDefaults()
+        {
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers();
+            value.PortraitPositionYOverride = -32f;
+            NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.DayTime,
+                new FlavorTextBestiaryInfoElement("This wulfrum tower is a modified wulfrum amplifier made to be much more dangerous. Seems like it was unwillingly unleashed...")
+            });
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.PlayerSafe || spawnInfo.Player.Calamity().ZoneSulphur || (!spawnInfo.Player.ZoneOverworldHeight && !Main.remixWorld) || (!spawnInfo.Player.ZoneNormalCaverns && spawnInfo.Player.ZoneGlowshroom && Main.remixWorld))
+                return 0f;
+
+            return (Main.remixWorld ? SpawnCondition.Cavern.Chance : SpawnCondition.OverworldDaySlime.Chance) * (Main.hardMode ? 0 : 0.03f);
+        }
+
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            base.ApplyDifficultyAndPlayerScaling(numPlayers, balance, bossAdjustment);
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ModContent.ItemType<WulfrumMetalScrap>(), 1, 5, 6);
+            npcLoot.Add(ModContent.ItemType<EnergyCore>(), 1, 1);
+
         }
 
         public override void AI()
@@ -113,11 +160,21 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             fireRateTimer ++;
             NPC.SuperArmor = true;
             stateTimer ++;
+            NPC.HitSound = SoundID.NPCHit4;
+            for (int i=0; i<3; i++)
+            {
+                float randomAngle = Main.rand.NextFloat(0, 3.14f*2);
+                Vector2 pos = new Vector2(800*MathF.Cos(randomAngle), 800*MathF.Sin(randomAngle));
+                Dust newdust = Dust.NewDustPerfect(pos+NPC.Center, DustID.Electric, Alpha: 1);
+                newdust.noGravity = true;
+            }
+
 
             if (fireRateTimer >= fireRate)
             {
+                SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Item/WulfrumScrewdriverThrust"), NPC.Center);
                 Particle pulseRing = new CustomPulse(NPC.Center, Vector2.Zero, new Color(0, 255, 249), "CalamityMod/Particles/HighResHollowCircleHardEdge", 
-                Vector2.One, 0, 0f, 1.5f, 80);
+                Vector2.One, 0, 0f, 0.8f, 60);
                 GeneralParticleHandler.SpawnParticle(pulseRing);
                 foreach (NPC npcType in Main.ActiveNPCs)
                     {
@@ -133,6 +190,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             {
                 stateTimer = 0;
                 fireRateTimer = 0;
+                NPC.HitSound = WulfrumAmplifier.Hit;
                 NPC.SuperArmor = false;
                 isChargeState = !isChargeState;
             }

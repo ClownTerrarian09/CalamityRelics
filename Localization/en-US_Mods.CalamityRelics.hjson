@@ -83,7 +83,7 @@ Items: {
 
 	RustedCodebreaker: {
 		DisplayName: Rusted Codebreaker
-		Tooltip: ""
+		Tooltip: An ancient tool. It seems high quality, yet broken down.
 	}
 
 	CnidarianSinus: {
@@ -93,7 +93,12 @@ Items: {
 
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
-		Tooltip: ""
+		Tooltip:
+			'''
+			1 summon tag damage
+			Your summons will focus struck enemies
+			'Not quite my tempo'
+			'''
 	}
 
 	CnidrionBag: {
