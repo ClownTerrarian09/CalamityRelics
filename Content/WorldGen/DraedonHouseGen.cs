@@ -17,7 +17,7 @@ using Terraria.WorldBuilding;
 
 namespace CalamityRelics.Content.WorldGen
 {
-    public class RelicsIceStructureGen : ModSystem
+    public class DraedonHouse : ModSystem
     {
         private const string DraedonHouseSchematicKey = "CalamityRelics:DraedonHouse";
 
@@ -111,7 +111,7 @@ namespace CalamityRelics.Content.WorldGen
                 tasks.Insert(microBiomeIndex + 1, new PassLegacy("Draedon's House", (progress, configuration) =>
                 {
                     progress.Message = "Forging Draedon's Past";
-                    PlaceIceStructure();
+                    GenDraedonHouse();
                 }));
             }
             else
@@ -120,12 +120,12 @@ namespace CalamityRelics.Content.WorldGen
             }
         }
 
-        private void PlaceIceStructure()
+        private void GenDraedonHouse()
         {
             bool placed = false;
             int maxAttempts = 500;
 
-            int schematicWidth = 149;
+            int schematicWidth = 172;
             int schematicHeight = 129;
 
             List<Point> validCandidates = new List<Point>();
@@ -166,7 +166,7 @@ namespace CalamityRelics.Content.WorldGen
                     FillDraedonChests
                 );
 
-                int xOffset = 10;
+                int xOffset = 16;
                 int yOffset = 13;
                 int buildingWidth = 133;
                 int buildingHeight = 69;
@@ -208,6 +208,9 @@ namespace CalamityRelics.Content.WorldGen
             }
         }
 
+        /// <summary>
+        /// Fill Chests, that's it.
+        /// </summary>
         private void FillDraedonChests(Chest chest)
         {
             Tile chestTile = Main.tile[chest.x, chest.y];
@@ -232,7 +235,7 @@ namespace CalamityRelics.Content.WorldGen
         /// <summary>
         /// Generate randomized location item in chests.
         /// </summary>
-        private void PlaceItemInRandomSlot(Chest chest, int itemType, int totalStack)
+        private static void PlaceItemInRandomSlot(Chest chest, int itemType, int totalStack)
         {
             int remainingStack = totalStack;
             int maxAttempts = 150;
@@ -296,7 +299,10 @@ namespace CalamityRelics.Content.WorldGen
             }
         }
 
-        private bool CheckIceBiomeDensity(int centerX, int centerY, int radius, int requiredTiles)
+        /// <summary>
+        /// Check if local ice biome is sufficient to host.
+        /// </summary>
+        private static bool CheckIceBiomeDensity(int centerX, int centerY, int radius, int requiredTiles)
         {
             int iceCount = 0;
 
@@ -329,7 +335,7 @@ namespace CalamityRelics.Content.WorldGen
             return false;
         }
 
-        private bool IsAreaClear(int startX, int startY, int width, int height)
+        private static bool IsAreaClear(int startX, int startY, int width, int height)
         {
             for (int i = startX; i < startX + width; i++)
             {

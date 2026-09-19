@@ -801,5 +801,7 @@ namespace CalamityRelics.Content.NPCs.Bosses.Cnidrion
 
             return false;
         }
+
+
 	}
 }
