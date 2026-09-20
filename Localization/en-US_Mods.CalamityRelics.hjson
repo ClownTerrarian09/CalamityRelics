@@ -83,7 +83,7 @@ Items: {
 
 	RustedCodebreaker: {
 		DisplayName: Rusted Codebreaker
-		Tooltip: ""
+		Tooltip: An ancient tool. It seems high quality, yet broken down.
 	}
 
 	CnidarianSinus: {
@@ -93,7 +93,12 @@ Items: {
 
 	WulfrumWhiplash: {
 		DisplayName: Wulfrum Whiplash
-		Tooltip: ""
+		Tooltip:
+			'''
+			1 summon tag damage
+			Your summons will focus struck enemies
+			'Not quite my tempo'
+			'''
 	}
 
 	CnidrionBag: {
@@ -197,6 +202,8 @@ NPCs: {
 	DraedonBarrierNPC.DisplayName: Security Barrier
 	Cnidrion.DisplayName: Cnidrion
 	WulfrumProbe.DisplayName: Wulfrum Probe
+	WulfrumTower.DisplayName: Wulfrum Tower
+	SecureAndDestroy.DisplayName: Secure And Destroy
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...

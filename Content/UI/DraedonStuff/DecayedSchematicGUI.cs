@@ -8,11 +8,11 @@ namespace CalamityRelics.Content.UI.DraedonStuff
         public override int TotalPages => 1;
         public override string GetTextByPage()
         {
-            return "Amogus";
+            return ("This wulfrum material is quite flimsy. This will not do. Technological advancement has still got a ways to go. In the meantime, I will improve these materials, just as how I will improve the world.");
         }
         public override Texture2D GetTextureByPage()
         {
-            return ModContent.Request<Texture2D>("CalamityRelics/Content/UI/DraedonStuff/Amongus").Value;
+            return ModContent.Request<Texture2D>("CalamityRelics/Content/UI/DraedonStuff/DecayedSchematic").Value;
         }
     }
 }
