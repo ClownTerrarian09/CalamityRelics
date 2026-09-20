@@ -132,6 +132,11 @@ Items: {
 		DisplayName: Wulfrum Microwaver
 		Tooltip: ""
 	}
+
+	EnchantedBloom: {
+		DisplayName: Enchanted Bloom
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -162,6 +167,8 @@ Projectiles: {
 	SecurityControllerProj.DisplayName: Security Controller Proj
 	WulfrumBeam.DisplayName: Wulfrum Beam
 	WulfrumMicrowave.DisplayName: Wulfrum Microwave
+	EnchantedBloomVine.DisplayName: Enchanted Bloom Vine
+	EnchantedLeaf.DisplayName: Enchanted Leaf
 }
 
 Buffs: {
@@ -178,6 +185,11 @@ Buffs: {
 	WulfrumOrbBuff: {
 		DisplayName: Wulfrum Orb Buff
 		Description: Mods.CalamityRelics.Buffs.WulfrumOrbBuff.Description
+	}
+
+	EnchantedBloomBuff: {
+		DisplayName: Enchanted Bloom Buff
+		Description: Mods.CalamityRelics.Buffs.EnchantedBloomBuff.Description
 	}
 }
 
