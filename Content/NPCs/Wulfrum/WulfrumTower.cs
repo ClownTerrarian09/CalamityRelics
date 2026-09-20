@@ -1,19 +1,14 @@
 using System;
-using CalamityRelics.Content.Projectiles.Enemy;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using CalamityMod;
 using CalamityMod.NPCs.NormalNPCs;
-using System.Collections;
 using System.Collections.Generic;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using CalamityMod.Items.Accessories;
 using CalamityMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader.Utilities;
@@ -49,7 +44,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         public override void SetStaticDefaults()
         {
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers();
-            value.PortraitPositionYOverride = -32f;
+            value.PortraitPositionYOverride = -16f;
             NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
         }
 
@@ -73,7 +68,16 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            base.ApplyDifficultyAndPlayerScaling(numPlayers, balance, bossAdjustment);
+            if (Main.masterMode)
+            {
+                NPC.lifeMax = (int)(3000*balance);
+                NPC.defense = 30;
+            }
+            else if (Main.expertMode)
+            {
+                NPC.lifeMax = (int)(2000*balance);
+                NPC.defense = 20;
+            }
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
