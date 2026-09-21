@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CalamityMod;
 using CalamityMod.CalPlayer;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,7 @@ using CalamityRelics.Content.Projectiles.Friendly;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Audio;
+using Terraria.GameInput;
 
 namespace CalamityRelics.Content.Items.Weapons
 {
@@ -157,8 +159,11 @@ namespace CalamityRelics.Content.Items.Weapons
 				return true;
 			int ammoType = ItemID.Gel;
 			bool hasItem = player.HasItem(ammoType);
-			if(hasItem && useAmmo)
-				player.ConsumeItem(ammoType);
+			if (hasItem && useAmmo)
+			{
+				if(Main.rand.Next(3) == 0)
+					player.ConsumeItem(ammoType);
+			}
 			return hasItem;
 		}
 
@@ -179,14 +184,6 @@ namespace CalamityRelics.Content.Items.Weapons
 			}
 			return false;
 		}
-//
-		public override void AddRecipes()
-		{
-			Recipe recipe = CreateRecipe();
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
-		}
 
 
 		private void ShootElectrode(Player player)
@@ -197,9 +194,21 @@ namespace CalamityRelics.Content.Items.Weapons
 			Projectile.NewProjectile(player.GetSource_ItemUse(Item),player.Center, velocity.RotatedByRandom(MathHelper.ToRadians(5)), ModContent.ProjectileType<Electrode>(), 5, 0.5f, player.whoAmI);
 			SoundEngine.PlaySound(electricSound);
 		}
-		
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			string key = PlayerInput.GenerateInputTag_ForCurrentGamemode(true, "MouseRight");
+			var line = new TooltipLine(Mod, "AltUse", $"Press {key} to fire electrodes")
+			{
+				OverrideColor = Color.Cyan
+			};
+			int index = tooltips.FindLastIndex(t => t.Mod == "Terraria" && t.Name.StartsWith("Tooltip"));
+			if (index != -1)
+				tooltips.Insert(index + 1, line);
+			else
+				tooltips.Add(line);
+		}
 	}
-//
 	public class ElectroblazerPlayer : ModPlayer
 	{
 		public int electrodeCount;
@@ -217,27 +226,7 @@ namespace CalamityRelics.Content.Items.Weapons
 			Player.CompositeArmStretchAmount stretch = Player.CompositeArmStretchAmount.Full;
 			Player.SetCompositeArmFront(true, stretch, rotation);
 		}
-		/*
-		public override void PreUpdate()
-		{
-			if (resetCounter > 600)
-			{
-				Main.NewText((float)damageEvery10 / 10f);
-				resetCounter = 0;
-				damageEvery10 = 0;
-			}
-			else
-			{
-				resetCounter++;
-				
-			}
-		}
 
-		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-		{
-			damageEvery10 += damageDone;
-		}
-		*/
 	}
 
 	
