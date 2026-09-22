@@ -29,7 +29,7 @@ Items: {
 
 	Electroblazer: {
 		DisplayName: Electroblazer
-		Tooltip: ""
+		Tooltip: Fires a Wulfrum blaze that can activate and explode electrodes
 	}
 
 	WulfrumPowerCord: {
@@ -88,7 +88,7 @@ Items: {
 
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
-		Tooltip: ""
+		Tooltip: Spews popping Cnidarian tears
 	}
 
 	WulfrumWhiplash: {
@@ -135,12 +135,12 @@ Items: {
 
 	WulfrumMicrowaver: {
 		DisplayName: Wulfrum Microwaver
-		Tooltip: ""
+		Tooltip: IMA FIRIN MAH LAZER
 	}
 
 	EnchantedBloom: {
 		DisplayName: Enchanted Bloom
-		Tooltip: ""
+		Tooltip: Summons a rideable blooming rose.
 	}
 }
 
@@ -194,7 +194,7 @@ Buffs: {
 
 	EnchantedBloomBuff: {
 		DisplayName: Enchanted Bloom Buff
-		Description: Mods.CalamityRelics.Buffs.EnchantedBloomBuff.Description
+		Description: Enchanted Bloom Mount
 	}
 }
 
