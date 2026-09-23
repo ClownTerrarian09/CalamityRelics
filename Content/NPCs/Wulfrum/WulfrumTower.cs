@@ -12,11 +12,15 @@ using CalamityMod.Sounds;
 using CalamityMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CalamityRelics.Content.NPCs.Wulfrum
 {
     public class WulfrumTower : ModNPC
     {
+        private static Texture2D texture;
+        private SpriteEffects speffect;
+
         public bool isChargeState;
         private float stateTimer{
                 get => NPC.ai[0];
@@ -28,9 +32,10 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             }
         public override void SetDefaults()
         {
+            texture = ModContent.Request<Texture2D>("CalamityRelics/Content/NPCs/Wulfrum/WulfrumTower_Glow").Value;
             NPC.aiStyle = -1;
             NPC.width = 58;
-            NPC.height = 136;
+            NPC.height = 148;
             NPC.knockBackResist = 0f;
             NPC.lifeMax = 1000;
             NPC.defense = 10;
@@ -43,6 +48,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         }
         public override void SetStaticDefaults()
         {
+            Main.npcFrameCount[Type] = 9;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers();
             value.PortraitPositionYOverride = -16f;
             NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
@@ -87,6 +93,24 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
 
         }
 
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+            {
+                speffect = (NPC.spriteDirection == -1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally; 
+                Rectangle drawRectangle = texture.Frame(1, 9, 0, NPC.frame.Y/NPC.height);
+                Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+                spriteBatch.Draw
+                (
+                    texture,
+                    NPC.Center - screenPos+ new Vector2(0, 3),
+                    drawRectangle,
+                    Color.White,
+                    NPC.rotation,
+                    drawOrigin,
+                    1f, 
+                    speffect, 
+                    0f
+                );
+        }
         public override void AI()
         {
             if (NPC.target == 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active){
@@ -197,6 +221,22 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                 NPC.HitSound = WulfrumAmplifier.Hit;
                 NPC.SuperArmor = false;
                 isChargeState = !isChargeState;
+            }
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            int startFrame = 0;
+            int endFrame = 8;
+            int frameSpeed = 4;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter >= frameSpeed){
+                NPC.frameCounter = 0f;
+                NPC.frame.Y += frameHeight;
+
+                if (frameHeight*endFrame < NPC.frame.Y){
+                    NPC.frame.Y = startFrame*frameHeight;
+                }
             }
         }
     }
