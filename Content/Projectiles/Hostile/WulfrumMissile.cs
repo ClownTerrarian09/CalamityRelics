@@ -81,7 +81,7 @@ namespace CalamityRelics.Content.Projectiles.Hostile
             int playerIndex = (int)Projectile.ai[0];
             diving = true;
 
-            Vector2 posCurrent = Projectile.position;
+            Vector2 posCurrent = Projectile.Center;
             Vector2 velCurrent = Projectile.velocity;
             
             Random random = Random.Shared;

@@ -134,4 +134,5 @@ NPCs: {
 	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
 	WulfrumSentinel.DisplayName: Wulfrum Sentinel
 	RollingBomb.DisplayName: Rolling Bomb
+	WulfrumSentinelDrone.DisplayName: Wulfrum Sentinel Drone
 }
