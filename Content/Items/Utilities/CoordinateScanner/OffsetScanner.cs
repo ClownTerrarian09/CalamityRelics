@@ -12,8 +12,26 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
         public override string Texture => "Terraria/Images/Item_" + ItemID.Ruler;
         protected override bool CloneNewInstances => true;
         private int targetIndex = 0;
-        private readonly string[] targetNames = { "Draedon's House", "Cnidrion's Pond" };
+        private readonly string[] targetNames =
+        [
+            "Draedon's House", "Cnidrion's Pond"
+        ];
 
+        /// <summary>
+        /// Detect specific structure's coordinate.
+        /// </summary>
+        private Rectangle GetTargetRect()
+        {
+            switch (targetIndex)
+            {
+                case 0:
+                    return DraedonHouseSystem.DraedonHouseRect;
+                case 1:
+                    return OasisRemnantSystem.OasisRemnantRect;
+                default:
+                    return Rectangle.Empty;
+            }
+        }
         public override void SetDefaults()
         {
             Item.width = 20;
@@ -49,7 +67,7 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
                 {
                     if (player.altFunctionUse == 2)
                     {
-                        player.Teleport(new Vector2(rect.X * 16, rect.Y * 16));
+                        player.Teleport(new(rect.X * 16, rect.Y * 16));
                         Main.NewText($"Teleported to {targetNames[targetIndex]} origin!", Color.Yellow);
                     }
                     else
@@ -60,6 +78,9 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
                         int offsetY = targetY - rect.Y;
 
                         Main.NewText($"[{targetNames[targetIndex]}] Offset X: {offsetX}, Offset Y: {offsetY}", Color.Cyan);
+                        Main.NewText($"[{targetNames[targetIndex]}] Rect X:{rect.X} Y:{rect.Y} W:{rect.Width} H:{rect.Height}", Color.CornflowerBlue);
+                        var playerTile = player.Center.ToTileCoordinates();
+                        Main.NewText($"Player tile: X:{playerTile.X} Y:{playerTile.Y} InsideRect:{rect.Contains(playerTile)}", Color.LightGoldenrodYellow);
                     }
                 }
                 else
@@ -68,22 +89,6 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// Detect specific structure's coordinate.
-        /// </summary>
-        private Rectangle GetTargetRect()
-        {
-            switch (targetIndex)
-            {
-                case 0:
-                    return DraedonHouseSystem.DraedonHouseRect;
-                case 1:
-                    return OasisRemnantSystem.OasisRemnantRect;
-                default:
-                    return Rectangle.Empty;
-            }
         }
     }
 }

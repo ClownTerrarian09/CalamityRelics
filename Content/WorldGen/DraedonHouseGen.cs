@@ -11,7 +11,6 @@ using System.Reflection;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -20,193 +19,12 @@ namespace CalamityRelics.Content.WorldGen
     public class DraedonHouse : ModSystem
     {
         private const string DraedonHouseSchematicKey = "CalamityRelics:DraedonHouse";
-
         private const string DraedonHouseSchematicPath = "Content/Structures/DraedonHouse.csch";
         private const string CalamityModName = "CalamityMod";
         private const string CalamitySchematicIOType = "CalamityMod.Schematics.CalamitySchematicIO";
         private const string CalamitySchematicManagerType = "CalamityMod.Schematics.SchematicManager";
-
-        private static HashSet<int> RestrictedTiles = new HashSet<int>();
+        private static HashSet<int> RestrictedTiles = [];
         private static int ElumplateID = -1;
-
-        public override void PostSetupContent()
-        {
-            RestrictedTiles.Clear();
-
-            RestrictedTiles.Add(TileID.LihzahrdBrick);
-            RestrictedTiles.Add(TileID.BlueDungeonBrick);
-            RestrictedTiles.Add(TileID.GreenDungeonBrick);
-            RestrictedTiles.Add(TileID.PinkDungeonBrick);
-
-            if (ModContent.TryFind("CalamityMod", "Elumplate", out ModTile elumplate))
-            {
-                ElumplateID = elumplate.Type;
-                RestrictedTiles.Add(ElumplateID);
-            }
-
-            string[] calamityLabTiles = new string[]
-            {
-                "LaboratoryPlating",
-                "LaboratoryPanels",
-                "HazardChevronPanels",
-                "LaboratoryPipePlating",
-                "LaboratoryPlateBeam",
-                "LaboratoryPlatePillar",
-                "RustedPlating",
-                "RustedPipes",
-                "RustedPlateBeam",
-                "RustedPlatePillar",
-                "Navyplate",
-                "Plagueplate",
-                "Cinderplate",
-                "Chaosplate"
-            };
-
-            foreach (string tileName in calamityLabTiles)
-            {
-                if (ModContent.TryFind("CalamityMod", tileName, out ModTile tile))
-                {
-                    RestrictedTiles.Add(tile.Type);
-                }
-            }
-
-            if (ModLoader.TryGetMod(CalamityModName, out Mod calamity))
-            {
-                try
-                {
-                    using (Stream stream = Mod.GetFileStream(DraedonHouseSchematicPath))
-                    {
-                        Type ioType = calamity.Code.GetType(CalamitySchematicIOType);
-                        MethodInfo importMethod = ioType.GetMethod("ImportSchematic", BindingFlags.NonPublic | BindingFlags.Static);
-                        object parsedSchematic = importMethod.Invoke(null, new object[] { stream });
-
-                        Type managerType = calamity.Code.GetType(CalamitySchematicManagerType);
-                        FieldInfo tileMapsField = managerType.GetField("TileMaps", BindingFlags.NonPublic | BindingFlags.Static);
-                        var tileMaps = (System.Collections.IDictionary)tileMapsField.GetValue(null);
-
-                        tileMaps[DraedonHouseSchematicKey] = parsedSchematic;
-
-                    }
-                }
-                catch (System.Exception ex)
-                {
-                    Mod.Logger.Error($"Calamity Relics: Failed to inject schematic via reflection. {ex}");
-                }
-            }
-        }
-
-        public override void Unload()
-        {
-            RestrictedTiles?.Clear();
-            RestrictedTiles = null;
-            ElumplateID = -1;
-        }
-
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
-        {
-            int microBiomeIndex = tasks.FindIndex(genpass => genpass.Name.Contains("Draedon Structures"));
-
-            if (microBiomeIndex != -1)
-            {
-                tasks.Insert(microBiomeIndex + 1, new PassLegacy("Draedon's House", (progress, configuration) =>
-                {
-                    progress.Message = "Forging Draedon's Past";
-                    GenDraedonHouse();
-                }));
-            }
-            else
-            {
-                Mod.Logger.Warn("Calamity Relics: Could not find 'Draedon Structures' generation pass. The Relics Ice Structure will not be generated.");
-            }
-        }
-
-        private void GenDraedonHouse()
-        {
-            bool placed = false;
-            int maxAttempts = 500;
-
-            int schematicWidth = 172;
-            int schematicHeight = 129;
-
-            List<Point> validCandidates = new List<Point>();
-
-            for (int x = 200; x < Main.maxTilesX - 200; x += 5)
-            {
-                for (int y = 100; y < (int)Main.worldSurface; y += 5)
-                {
-                    Tile tile = Main.tile[x, y];
-                    if (tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock))
-                    {
-                        validCandidates.Add(new Point(x, y));
-                    }
-                }
-            }
-
-            if (validCandidates.Count == 0)
-            {
-                Mod.Logger.Warn($"Calamity Relics: Failed to find valid surface tundra candidates for {DraedonHouseSchematicPath}.");
-                return;
-            }
-
-            for (int attempts = 0; attempts < maxAttempts && !placed; attempts++)
-            {
-                Point p = validCandidates[Main.rand.Next(validCandidates.Count)];
-
-                if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
-                int scanCenterX = p.X + (schematicWidth / 2);
-                int scanCenterY = p.Y + (schematicHeight / 2);
-                if (!CheckIceBiomeDensity(scanCenterX, scanCenterY, 80, 3000)) continue;
-
-                bool specialCondition = false;
-                SchematicManager.PlaceSchematic<System.Action<Terraria.Chest>>(
-                    DraedonHouseSchematicKey,
-                    p,
-                    SchematicAnchor.TopLeft,
-                    ref specialCondition,
-                    FillDraedonChests
-                );
-
-                int xOffset = 16;
-                int yOffset = 13;
-                int buildingWidth = 133;
-                int buildingHeight = 69;
-
-                DraedonHouseSystem.DraedonHouseRect = new Rectangle(p.X + xOffset, p.Y + yOffset, buildingWidth, buildingHeight);
-                DraedonHouseSystem.DraedonHouseLegsRect = new Rectangle(
-                    DraedonHouseSystem.DraedonHouseRect.X + 68,
-                    DraedonHouseSystem.DraedonHouseRect.Y + 65,
-                    17,
-                    43
-                );
-
-                int npcSpawnX = (DraedonHouseSystem.DraedonHouseRect.X + DraedonHouseSystem.DoorOffsetX) * 16 + 8;
-                int npcSpawnY = (DraedonHouseSystem.DraedonHouseRect.Y + DraedonHouseSystem.DoorOffsetY) * 16 + 8;
-
-                NPC.NewNPC(
-                    new Terraria.DataStructures.EntitySource_WorldGen(),
-                    npcSpawnX,
-                    npcSpawnY,
-                    ModContent.NPCType<DraedonBarrierNPC>()
-                );
-
-                int codebreakerTileType = ModContent.TileType<RustedCodebreakerFurniture>();
-                int codebreakerPlaceX = DraedonHouseSystem.DraedonHouseRect.X + 34;
-                int codebreakerPlaceY = DraedonHouseSystem.DraedonHouseRect.Y + 20;
-
-                Terraria.WorldGen.PlaceObject(codebreakerPlaceX, codebreakerPlaceY, codebreakerTileType);
-
-                GenerateRoofTrees(p.X, p.Y, schematicWidth);
-
-                placed = true;
-
-
-            }
-
-            if (!placed)
-            {
-                Mod.Logger.Warn($"Calamity Relics: Failed to find a suitable location for {DraedonHouseSchematicPath}.");
-            }
-        }
 
         /// <summary>
         /// Fill Chests, that's it.
@@ -335,6 +153,9 @@ namespace CalamityRelics.Content.WorldGen
             return false;
         }
 
+        /// <summary>
+        /// Check if the area is clear or not to spawn the building.
+        /// </summary>
         private static bool IsAreaClear(int startX, int startY, int width, int height)
         {
             for (int i = startX; i < startX + width; i++)
@@ -350,6 +171,200 @@ namespace CalamityRelics.Content.WorldGen
                 }
             }
             return true;
+        }
+
+        public override void PostSetupContent()
+        {
+            RestrictedTiles.Clear();
+
+            RestrictedTiles.Add(TileID.LihzahrdBrick);
+            RestrictedTiles.Add(TileID.BlueDungeonBrick);
+            RestrictedTiles.Add(TileID.GreenDungeonBrick);
+            RestrictedTiles.Add(TileID.PinkDungeonBrick);
+
+            if (ModContent.TryFind("CalamityMod", "Elumplate", out ModTile elumplate))
+            {
+                ElumplateID = elumplate.Type;
+                RestrictedTiles.Add(ElumplateID);
+            }
+
+            string[] calamityLabTiles =
+            [
+                "LaboratoryPlating",
+                "LaboratoryPanels",
+                "HazardChevronPanels",
+                "LaboratoryPipePlating",
+                "LaboratoryPlateBeam",
+                "LaboratoryPlatePillar",
+                "RustedPlating",
+                "RustedPipes",
+                "RustedPlateBeam",
+                "RustedPlatePillar",
+                "Navyplate",
+                "Plagueplate",
+                "Cinderplate",
+                "Chaosplate"
+            ];
+
+            foreach (string tileName in calamityLabTiles)
+            {
+                if (ModContent.TryFind("CalamityMod", tileName, out ModTile tile))
+                {
+                    RestrictedTiles.Add(tile.Type);
+                }
+            }
+
+            if (ModLoader.TryGetMod(CalamityModName, out Mod calamity))
+            {
+                try
+                {
+                    using Stream stream = Mod.GetFileStream(DraedonHouseSchematicPath);
+                    {
+                        Type ioType = calamity.Code.GetType(CalamitySchematicIOType);
+                        MethodInfo importMethod = ioType.GetMethod("ImportSchematic", BindingFlags.NonPublic | BindingFlags.Static);
+                        object parsedSchematic = importMethod.Invoke(null, [stream]);
+
+                        Type managerType = calamity.Code.GetType(CalamitySchematicManagerType);
+                        FieldInfo tileMapsField = managerType.GetField("TileMaps", BindingFlags.NonPublic | BindingFlags.Static);
+                        var tileMaps = (System.Collections.IDictionary)tileMapsField.GetValue(null);
+
+                        tileMaps[DraedonHouseSchematicKey] = parsedSchematic;
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Mod.Logger.Error($"Calamity Relics: Failed to inject schematic via reflection. {ex}");
+                }
+            }
+        }
+
+        public override void Unload()
+        {
+            RestrictedTiles?.Clear();
+            RestrictedTiles = null;
+            ElumplateID = -1;
+        }
+
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+        {
+            int microBiomeIndex = tasks.FindIndex(genpass => genpass.Name.Contains("Draedon Structures"));
+
+            if (microBiomeIndex != -1)
+            {
+                tasks.Insert(microBiomeIndex + 1, new PassLegacy("Draedon's House", (progress, configuration) =>
+                {
+                    progress.Message = "Forging Draedon's Past";
+                    GenDraedonHouse();
+                }));
+            }
+            else
+            {
+                Mod.Logger.Warn("Calamity Relics: Could not find 'Draedon Structures' generation pass. The Relics Ice Structure will not be generated.");
+            }
+        }
+
+        private void GenDraedonHouse()
+        {
+            bool placed = false;
+            int maxAttempts = 500;
+
+            int schematicWidth = 172;
+            int schematicHeight = 129;
+
+            List<Point> validCandidates = [];
+
+            for (int x = 200; x < Main.maxTilesX - 200; x += 5)
+            {
+                for (int y = 100; y < (int)Main.worldSurface; y += 5)
+                {
+                    Tile tile = Main.tile[x, y];
+                    if (tile.HasTile && (tile.TileType == TileID.IceBlock || tile.TileType == TileID.SnowBlock))
+                    {
+                        validCandidates.Add(new(x, y));
+                    }
+                }
+            }
+
+            if (validCandidates.Count == 0)
+            {
+                Mod.Logger.Warn($"Calamity Relics: Failed to find valid surface tundra candidates for {DraedonHouseSchematicPath}.");
+                return;
+            }
+
+            for (int attempts = 0; attempts < maxAttempts && !placed; attempts++)
+            {
+                Point p = validCandidates[Main.rand.Next(validCandidates.Count)];
+
+                if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
+                int scanCenterX = p.X + (schematicWidth / 2);
+                int scanCenterY = p.Y + (schematicHeight / 2);
+                if (!CheckIceBiomeDensity(scanCenterX, scanCenterY, 80, 3000)) continue;
+
+                bool specialCondition = false;
+                SchematicManager.PlaceSchematic<Action<Chest>>(
+                    DraedonHouseSchematicKey,
+                    p,
+                    SchematicAnchor.TopLeft,
+                    ref specialCondition,
+                    FillDraedonChests
+                );
+
+                int xOffset = 16;
+                int yOffset = 13;
+                int buildingWidth = 133;
+                int buildingHeight = 69;
+
+                DraedonHouseSystem.DraedonHouseRect = new(p.X + xOffset, p.Y + yOffset, buildingWidth, buildingHeight);
+                DraedonHouseSystem.DraedonHouseLegsRect = new(
+                    DraedonHouseSystem.DraedonHouseRect.X + 68,
+                    DraedonHouseSystem.DraedonHouseRect.Y + 65,
+                    17,
+                    43
+                );
+                Mod.Logger.Info($"Calamity Relics: DraedonHouseRect set to X:{DraedonHouseSystem.DraedonHouseRect.X} Y:{DraedonHouseSystem.DraedonHouseRect.Y} W:{DraedonHouseSystem.DraedonHouseRect.Width} H:{DraedonHouseSystem.DraedonHouseRect.Height}");
+
+                int npcSpawnX = (DraedonHouseSystem.DraedonHouseRect.X + DraedonHouseSystem.DoorOffsetX) * 16 + 8;
+                int npcSpawnY = (DraedonHouseSystem.DraedonHouseRect.Y + DraedonHouseSystem.DoorOffsetY) * 16 + 8;
+
+                NPC.NewNPC(
+                    new Terraria.DataStructures.EntitySource_WorldGen(),
+                    npcSpawnX,
+                    npcSpawnY,
+                    ModContent.NPCType<DraedonBarrierNPC>()
+                );
+                int spawnedIndex = NPC.NewNPC(
+                    new Terraria.DataStructures.EntitySource_WorldGen(),
+                    npcSpawnX,
+                    npcSpawnY,
+                    ModContent.NPCType<DraedonBarrierNPC>()
+                );
+                if (spawnedIndex >= 0 && spawnedIndex < Main.maxNPCs && Main.npc[spawnedIndex].active)
+                {
+                    Mod.Logger.Info($"Calamity Relics: Draedon Barrier placed by generation index:{spawnedIndex} at X:{Main.npc[spawnedIndex].Center.X} Y:{Main.npc[spawnedIndex].Center.Y} (generation-time only)");
+                }
+                else
+                {
+                    Mod.Logger.Warn($"Calamity Relics: Draedon Barrier generation spawn returned index:{spawnedIndex}. Active check failed.");
+                }
+
+                int codebreakerTileType = ModContent.TileType<RustedCodebreakerFurniture>();
+                int codebreakerPlaceX = DraedonHouseSystem.DraedonHouseRect.X + 34;
+                int codebreakerPlaceY = DraedonHouseSystem.DraedonHouseRect.Y + 20;
+
+                Terraria.WorldGen.PlaceObject(codebreakerPlaceX, codebreakerPlaceY, codebreakerTileType);
+
+                GenerateRoofTrees(p.X, p.Y, schematicWidth);
+
+                placed = true;
+
+
+            }
+
+            if (!placed)
+            {
+                Mod.Logger.Warn($"Calamity Relics: Failed to find a suitable location for {DraedonHouseSchematicPath}.");
+            }
         }
     }
 }
