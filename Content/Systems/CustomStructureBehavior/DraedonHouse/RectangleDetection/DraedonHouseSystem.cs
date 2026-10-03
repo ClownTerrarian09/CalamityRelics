@@ -17,8 +17,9 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
         public static bool IsHouseUnlocked = false;
         public static int DoorOffsetX = 22;
         public static int DoorOffsetY = 64;
-        public static HashSet<int> ProtectedLabTiles = new HashSet<int>();
-        public static HashSet<int> ProtectedLabWalls = new HashSet<int>();
+        public static HashSet<int> ProtectedLabTiles = [];
+        public static HashSet<int> ProtectedLabWalls = [];
+
 
         /// <summary>
         /// Checks if a given tile coordinate (i, j) is inside any part of the Draedon House structure.
@@ -28,7 +29,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             if (DraedonHouseRect == Rectangle.Empty)
                 return false;
 
-            Point tilePoint = new Point(i, j);
+            Point tilePoint = new(i, j);
 
             return DraedonHouseRect.Contains(tilePoint) || DraedonHouseLegsRect.Contains(tilePoint);
         }
@@ -123,6 +124,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             tag["DraDoorOffsetX"] = DoorOffsetX;
             tag["DraDoorOffsetY"] = DoorOffsetY;
             tag["DraHouse_HasSpawnedBarrier"] = HasSpawnedBarrier;
+
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -148,6 +150,8 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             DoorOffsetX = tag.GetInt("DraDoorOffsetX");
             DoorOffsetY = tag.GetInt("DraDoorOffsetY");
             if (tag.ContainsKey("DraHouse_HasSpawnedBarrier")) HasSpawnedBarrier = tag.GetBool("DraHouse_HasSpawnedBarrier");
+
+
         }
 
         public override void PostUpdateWorld()
@@ -217,5 +221,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                 }
             }
         }
+
+
     }
 }

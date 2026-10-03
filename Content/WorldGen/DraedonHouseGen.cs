@@ -25,6 +25,15 @@ namespace CalamityRelics.Content.WorldGen
         private const string CalamitySchematicManagerType = "CalamityMod.Schematics.SchematicManager";
         private static HashSet<int> RestrictedTiles = [];
         private static int ElumplateID = -1;
+        private static readonly int[] ForbiddenTiles =
+        [
+            TileID.Stone,
+            TileID.Dirt,
+            TileID.Sand,
+            TileID.HardenedSand,
+            TileID.Mud,
+        ];
+
 
         /// <summary>
         /// Fill Chests, that's it.
@@ -147,6 +156,26 @@ namespace CalamityRelics.Content.WorldGen
                                 return true;
                             }
                         }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if there any forbidden tiles that exist near the candidate spot for spawning the structure.
+        /// </summary>
+        private static bool HasForbiddenTiles(int centerX, int centerY, int radius)
+        {
+            for (int i = centerX - radius; i <= centerX + radius; i++)
+            {
+                for (int j = centerY - radius; j <= centerY + radius; j++)
+                {
+                    if (i < 0 || i >= Main.maxTilesX || j < 0 || j >= Main.maxTilesY) continue;
+                    Tile tile = Main.tile[i, j];
+                    if (tile.HasTile && System.Array.IndexOf(ForbiddenTiles, tile.TileType) >= 0)
+                    {
+                        return true;
                     }
                 }
             }
@@ -299,6 +328,7 @@ namespace CalamityRelics.Content.WorldGen
                 if (!IsAreaClear(p.X, p.Y, schematicWidth, schematicHeight)) continue;
                 int scanCenterX = p.X + (schematicWidth / 2);
                 int scanCenterY = p.Y + (schematicHeight / 2);
+                if (HasForbiddenTiles(scanCenterX, scanCenterY, 80)) continue;
                 if (!CheckIceBiomeDensity(scanCenterX, scanCenterY, 80, 3000)) continue;
 
                 bool specialCondition = false;
