@@ -10,7 +10,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Ti
     {
         public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
         {
-            if (Terraria.Wiring.running)
+            if (Wiring.running)
             {
                 return base.CanKillTile(i, j, type, ref blockDamaged);
             }

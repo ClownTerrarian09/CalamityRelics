@@ -51,6 +51,11 @@ Items: {
 		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
 	}
 
+	StructureSpawner: {
+		DisplayName: Structure Spawner
+		Tooltip: Right-click in your inventory to cycle schematics. Left-click in the world to place the selected structure.
+	}
+
 	WulfrumElectromagneticSphere: {
 		DisplayName: Wulfrum Electromagnetic Sphere
 		Tooltip: ""

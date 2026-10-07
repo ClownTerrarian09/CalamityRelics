@@ -8,7 +8,6 @@ using CalamityMod.UI;
 using CalamityRelics.Content.UI.DraedonStuff;
 using CalamityMod.UI.DraedonLogs;
 using System.Collections.Generic;
-using CalamityRelics.Core;
 using CalamityRelics.Content.Items.Weapons;
 using CalamityRelics.Content.Items.Weapons.Summon;
 using CalamityMod.Items.DraedonMisc;

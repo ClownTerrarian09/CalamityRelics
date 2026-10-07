@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -53,7 +52,7 @@ namespace CalamityRelics.Content.NPCs.DraedonHouseBarrier
         {
             if (Main.rand.NextBool(2))
             {
-                Vector2 pos = new Vector2(NPC.position.X + Main.rand.NextFloat(NPC.width), NPC.position.Y + Main.rand.NextFloat(NPC.height));
+                Vector2 pos = new(NPC.position.X + Main.rand.NextFloat(NPC.width), NPC.position.Y + Main.rand.NextFloat(NPC.height));
                 Dust core = Dust.NewDustPerfect(pos, DustID.Electric, Vector2.Zero, 0, default, 1.2f);
                 core.noGravity = true;
             }
@@ -65,8 +64,8 @@ namespace CalamityRelics.Content.NPCs.DraedonHouseBarrier
                 float startX = NPC.position.X + Main.rand.NextFloat(4f, NPC.width - 4f);
                 float endX = NPC.position.X + Main.rand.NextFloat(4f, NPC.width - 4f);
 
-                Vector2 top = new Vector2(startX, NPC.position.Y);
-                Vector2 bottom = new Vector2(endX, NPC.position.Y + NPC.height);
+                Vector2 top = new(startX, NPC.position.Y);
+                Vector2 bottom = new(endX, NPC.position.Y + NPC.height);
 
                 int segments = 8;
                 Vector2 lastPos = top;

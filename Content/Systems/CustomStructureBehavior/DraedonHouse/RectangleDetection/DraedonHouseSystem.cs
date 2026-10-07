@@ -10,15 +10,15 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
 {
     public class DraedonHouseSystem : ModSystem
     {
+        public static bool HasSpawnedBarrier = false;
         public static Rectangle DraedonHouseRect = Rectangle.Empty;
         public static Rectangle DraedonHouseLegsRect = Rectangle.Empty;
         public static bool IsHouseUnlocked = false;
-
         public static int DoorOffsetX = 22;
         public static int DoorOffsetY = 64;
+        public static HashSet<int> ProtectedLabTiles = [];
+        public static HashSet<int> ProtectedLabWalls = [];
 
-        public static HashSet<int> ProtectedLabTiles = new HashSet<int>();
-        public static HashSet<int> ProtectedLabWalls = new HashSet<int>();
 
         /// <summary>
         /// Checks if a given tile coordinate (i, j) is inside any part of the Draedon House structure.
@@ -28,7 +28,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             if (DraedonHouseRect == Rectangle.Empty)
                 return false;
 
-            Point tilePoint = new Point(i, j);
+            Point tilePoint = new(i, j);
 
             return DraedonHouseRect.Contains(tilePoint) || DraedonHouseLegsRect.Contains(tilePoint);
         }
@@ -39,25 +39,25 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             ProtectedLabWalls.Clear();
 
             int[] vanillaTiles =
-            {
+            [
                 TileID.IronBrick, TileID.Glass, TileID.TopazGemspark,
                 TileID.TopazGemsparkOff, TileID.Chain, TileID.ItemFrame,
                 TileID.MetalBars, TileID.Switches, TileID.Furnaces,
                 TileID.Bottles, TileID.BouncyBoulder, TileID.Grate,
                 TileID.GrateClosed, TileID.MarbleBlock, TileID.MinecartTrack
-            };
+            ];
 
             foreach (int id in vanillaTiles) ProtectedLabTiles.Add(id);
 
             int[] vanillaWalls =
-            {
+            [
                 WallID.IronBrick, WallID.Glass, WallID.MarbleBlock
-            };
+            ];
 
             foreach (int id in vanillaWalls) ProtectedLabWalls.Add(id);
 
             string[] calamityTiles =
-            {
+            [
                 "RustedPlating", "WulfrumPanels", "RustedPipes", "RustedShelf",
                 "MiniAgedFrostlight", "MiniCagedFrostlight", "WulfrumPlating",
                 "AnodizedWulfrumPlatform", "RoundedAnodizedWulfrumPanels", "WulfrumSiding",
@@ -67,27 +67,27 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                 "WulfrumTable", "WulfrumBed", "LaboratoryConsole", "AgedLaboratoryScreen",
                 "AgedLaboratoryConsole", "PlaguedPlateBed", "ChargedWulfrumEnergyBarrier", "LaboratoryDisplay",
                 "AgedLaboratoryDisplay", "AgedLaboratoryDoorClosed", "AgedLaboratoryDoorOpen"
-            };
+            ];
             foreach (string name in calamityTiles)
             {
                 if (ModContent.TryFind("CalamityMod", name, out ModTile tile)) ProtectedLabTiles.Add(tile.Type);
             }
 
             string[] calamityWalls =
-            {
+            [
                 "WulfrumSidingWall", "HazardChevronWall", "WulfrumSheetWall",
                 "RoundedAnodizedWulfrumPanelWall", "RustedPlatingWall", "RustedPlatePillar",
                 "RustedPlateBeam"
-            };
+            ];
             foreach (string name in calamityWalls)
             {
                 if (ModContent.TryFind("CalamityMod", name, out ModWall wall)) ProtectedLabWalls.Add(wall.Type);
             }
 
-            string[] relicsTiles =
-            {
+            string[] relicsTiles = 
+            [
                 "RustedCodebreakerFurniture"
-            };
+            ];
 
             foreach (string name in relicsTiles)
             {
@@ -95,9 +95,9 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             }
 
             string[] relicsWalls =
-            {
+            [
                 //
-            };
+            ];
 
             foreach (string name in relicsWalls)
             {
@@ -110,6 +110,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             DraedonHouseRect = Rectangle.Empty;
             DraedonHouseLegsRect = Rectangle.Empty;
             IsHouseUnlocked = false;
+            HasSpawnedBarrier = false;
         }
 
         public override void SaveWorldData(TagCompound tag)
@@ -121,6 +122,8 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             tag["DraHouseUnlocked"] = IsHouseUnlocked;
             tag["DraDoorOffsetX"] = DoorOffsetX;
             tag["DraDoorOffsetY"] = DoorOffsetY;
+            tag["DraHouse_HasSpawnedBarrier"] = HasSpawnedBarrier;
+
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -145,28 +148,73 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             IsHouseUnlocked = tag.GetBool("DraHouseUnlocked");
             DoorOffsetX = tag.GetInt("DraDoorOffsetX");
             DoorOffsetY = tag.GetInt("DraDoorOffsetY");
+            if (tag.ContainsKey("DraHouse_HasSpawnedBarrier")) HasSpawnedBarrier = tag.GetBool("DraHouse_HasSpawnedBarrier");
+
+
         }
 
         public override void PostUpdateWorld()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient) return;
-
-            if (!IsHouseUnlocked && DraedonHouseRect != Rectangle.Empty)
+            if (DraedonHouseRect != Rectangle.Empty)
             {
                 int barrierType = ModContent.NPCType<DraedonBarrierNPC>();
-                if (!NPC.AnyNPCs(barrierType))
+                if (HasSpawnedBarrier && !NPC.AnyNPCs(barrierType))
                 {
-                    int spawnX = (DraedonHouseRect.X + DoorOffsetX) * 16 + 8;
-                    int spawnY = (DraedonHouseRect.Y + DoorOffsetY) * 16 + 8;
+                    HasSpawnedBarrier = false;
+                }
 
-                    NPC.NewNPC(
-                        new Terraria.DataStructures.EntitySource_Misc("CalamityRelics: Draedon Barrier Persistence"),
-                        spawnX,
-                        spawnY,
-                        barrierType
-                    );
+                if (!IsHouseUnlocked && !HasSpawnedBarrier)
+                {
+                    bool anyPlayerNear = false;
+                    int checkRadiusTiles = 200;
+                    int spawnTileX = DraedonHouseRect.X + DoorOffsetX;
+                    int spawnTileY = DraedonHouseRect.Y + DoorOffsetY;
+                    for (int i = 0; i < Main.maxPlayers; i++)
+                    {
+                        Player pl = Main.player[i];
+                        if (pl == null || !pl.active || pl.dead) continue;
+                        var pt = pl.Center.ToTileCoordinates();
+                        int dx = pt.X - spawnTileX;
+                        int dy = pt.Y - spawnTileY;
+                        if (dx * dx + dy * dy <= checkRadiusTiles * checkRadiusTiles)
+                        {
+                            anyPlayerNear = true;
+                            break;
+                        }
+                    }
+
+                    if (!anyPlayerNear)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        if (!NPC.AnyNPCs(barrierType))
+                        {
+                            int spawnX = (DraedonHouseRect.X + DoorOffsetX) * 16 + 8;
+                            int spawnY = (DraedonHouseRect.Y + DoorOffsetY) * 16 + 8;
+
+                            int spawnedIndex = NPC.NewNPC(
+                                new Terraria.DataStructures.EntitySource_Misc("CalamityRelics: Draedon Barrier Persistence"),
+                                spawnX,
+                                spawnY,
+                                barrierType
+                            );
+                            if (spawnedIndex >= 0 && spawnedIndex < Main.maxNPCs && Main.npc[spawnedIndex].active)
+                            {
+                                HasSpawnedBarrier = true;
+                            }
+                            else
+                            {
+                                Mod.Logger.Warn($"Calamity Relics: Draedon Barrier spawn attempt returned index:{spawnedIndex}. Active check failed.");
+                            }
+                        }
+                    }
                 }
             }
         }
+
+
     }
 }
