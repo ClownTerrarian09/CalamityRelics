@@ -2,6 +2,8 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityRelics.Content.Systems;
+using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonGarage;
 using CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.RectangleDetection;
 using CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.RectangleDetection;
 
@@ -14,7 +16,7 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
         private int targetIndex = 0;
         private readonly string[] targetNames =
         [
-            "Draedon's House", "Cnidrion's Pond"
+            "Draedon's House", "Cnidrion's Pond", "Draedon Garage"
         ];
 
         /// <summary>
@@ -28,6 +30,8 @@ namespace CalamityRelics.Content.Items.Utilities.CoordinateScanner
                     return DraedonHouseSystem.DraedonHouseRect;
                 case 1:
                     return OasisRemnantSystem.OasisRemnantRect;
+                case 2:
+                    return DraedonGarageSystem.DraedonGarageRect;
                 default:
                     return Rectangle.Empty;
             }

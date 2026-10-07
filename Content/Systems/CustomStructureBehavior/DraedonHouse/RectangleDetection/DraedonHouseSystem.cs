@@ -10,7 +10,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
 {
     public class DraedonHouseSystem : ModSystem
     {
-        public static bool DisablePersistentBarrierSpawnForDebug = false;
         public static bool HasSpawnedBarrier = false;
         public static Rectangle DraedonHouseRect = Rectangle.Empty;
         public static Rectangle DraedonHouseLegsRect = Rectangle.Empty;
@@ -159,16 +158,13 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
             if (Main.netMode == NetmodeID.MultiplayerClient) return;
             if (DraedonHouseRect != Rectangle.Empty)
             {
-                Mod.Logger.Debug($"Calamity Relics: DraedonHouseRect present X:{DraedonHouseRect.X} Y:{DraedonHouseRect.Y} W:{DraedonHouseRect.Width} H:{DraedonHouseRect.Height} Unlocked:{IsHouseUnlocked} HasSpawnedBarrier:{HasSpawnedBarrier}");
-
                 int barrierType = ModContent.NPCType<DraedonBarrierNPC>();
                 if (HasSpawnedBarrier && !NPC.AnyNPCs(barrierType))
                 {
-                    Mod.Logger.Warn($"Calamity Relics: HasSpawnedBarrier was true but no active barrier NPC was found. Clearing flag to allow runtime spawn.");
                     HasSpawnedBarrier = false;
                 }
 
-                if (!IsHouseUnlocked && !HasSpawnedBarrier && !DisablePersistentBarrierSpawnForDebug)
+                if (!IsHouseUnlocked && !HasSpawnedBarrier)
                 {
                     bool anyPlayerNear = false;
                     int checkRadiusTiles = 200;
@@ -199,7 +195,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                             int spawnX = (DraedonHouseRect.X + DoorOffsetX) * 16 + 8;
                             int spawnY = (DraedonHouseRect.Y + DoorOffsetY) * 16 + 8;
 
-                            Mod.Logger.Info($"Calamity Relics: Spawning Draedon Barrier at X:{spawnX} Y:{spawnY}");
                             int spawnedIndex = NPC.NewNPC(
                                 new Terraria.DataStructures.EntitySource_Misc("CalamityRelics: Draedon Barrier Persistence"),
                                 spawnX,
@@ -209,12 +204,10 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Re
                             if (spawnedIndex >= 0 && spawnedIndex < Main.maxNPCs && Main.npc[spawnedIndex].active)
                             {
                                 HasSpawnedBarrier = true;
-                                Mod.Logger.Info($"Calamity Relics: Draedon Barrier spawned index:{spawnedIndex} at X:{Main.npc[spawnedIndex].Center.X} Y:{Main.npc[spawnedIndex].Center.Y}");
                             }
                             else
                             {
                                 Mod.Logger.Warn($"Calamity Relics: Draedon Barrier spawn attempt returned index:{spawnedIndex}. Active check failed.");
-                                Mod.Logger.Warn($"Calamity Relics: NPC.AnyNPCs(barrierType)={NPC.AnyNPCs(barrierType)}");
                             }
                         }
                     }

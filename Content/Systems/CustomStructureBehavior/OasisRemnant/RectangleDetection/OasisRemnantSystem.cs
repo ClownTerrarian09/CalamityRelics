@@ -11,7 +11,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
     public class OasisRemnantSystem : ModSystem
     {
         public static Rectangle OasisRemnantRect = Rectangle.Empty;
-        public static bool DisablePersistentCnidrionSpawnForDebug = false;
         public static int PondSpawnOffsetX = 20;
         public static int PondSpawnOffsetY = 15;
         public static int WorldDay = 0;
@@ -64,11 +63,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
                 OasisRemnantRect = Rectangle.Empty;
             }
 
-            if (OasisRemnantRect != Rectangle.Empty)
-            {
-                Mod.Logger.Info($"Calamity Relics: Loaded OasisRemnantRect X:{OasisRemnantRect.X} Y:{OasisRemnantRect.Y} W:{OasisRemnantRect.Width} H:{OasisRemnantRect.Height}");
-            }
-
             if (tag.ContainsKey("OasisPondOffsetX")) PondSpawnOffsetX = tag.GetInt("OasisPondOffsetX");
             if (tag.ContainsKey("OasisPondOffsetY")) PondSpawnOffsetY = tag.GetInt("OasisPondOffsetY");
 
@@ -96,7 +90,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
 
             if (OasisRemnantRect != Rectangle.Empty)
             {
-                Mod.Logger.Debug($"Calamity Relics: OasisRemnantRect present X:{OasisRemnantRect.X} Y:{OasisRemnantRect.Y} W:{OasisRemnantRect.Width} H:{OasisRemnantRect.Height}");
                 int cnidrionType = ModContent.NPCType<Cnidrion>();
                 bool cnidrionPresent = NPC.AnyNPCs(cnidrionType);
 
@@ -113,7 +106,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
                     int cnidrionTypeCheck = ModContent.NPCType<Cnidrion>();
                     if (HasSpawnedCnidrion && !NPC.AnyNPCs(cnidrionTypeCheck))
                     {
-                        Mod.Logger.Warn("Calamity Relics: HasSpawnedCnidrion was true but no active Cnidrion NPC found. Clearing flag to allow runtime spawn.");
                         HasSpawnedCnidrion = false;
                     }
 
@@ -143,7 +135,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
                                 }
                             }
 
-                            if (!anyPlayerNear && !DisablePersistentCnidrionSpawnForDebug)
+                            if (!anyPlayerNear)
                             {
                                 bool playerNearby = false;
                                 int checkRadius = 200;
@@ -165,7 +157,6 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
 
                                 if (playerNearby)
                                 {
-                                    Mod.Logger.Info($"Calamity Relics: Spawning Cnidrion at X:{spawnX} Y:{spawnY}");
                                     int spawnedIndex = NPC.NewNPC(
                                         new EntitySource_Misc("CalamityRelics: Cnidrion Persistence"),
                                         spawnX,
@@ -175,12 +166,10 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.OasisRemnant.Re
                                     if (spawnedIndex >= 0 && spawnedIndex < Main.maxNPCs && Main.npc[spawnedIndex].active)
                                     {
                                         HasSpawnedCnidrion = true;
-                                        Mod.Logger.Info($"Calamity Relics: Cnidrion spawned index:{spawnedIndex} at X:{Main.npc[spawnedIndex].Center.X} Y:{Main.npc[spawnedIndex].Center.Y}");
                                     }
                                     else
                                     {
                                         Mod.Logger.Warn($"Calamity Relics: Cnidrion spawn attempt returned index:{spawnedIndex}. Active check failed.");
-                                        Mod.Logger.Warn($"Calamity Relics: NPC.AnyNPCs(cnidrionType)={NPC.AnyNPCs(cnidrionType)}");
                                     }
                                 }
                             }

@@ -32,7 +32,7 @@ namespace CalamityRelics.Content.Systems.CustomStructureBehavior.DraedonHouse.Pl
                         {
                             triggerShock = true;
                         }
-                        else if (swingingHammer && targetTile.WallType > 0 && DraedonHouseSystem.ProtectedLabWalls.Contains(targetTile.WallType))
+                        else if (swingingHammer && targetTile.WallType > WallID.None && DraedonHouseSystem.ProtectedLabWalls.Contains(targetTile.WallType))
                         {
                             triggerShock = true;
                         }

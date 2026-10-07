@@ -85,10 +85,6 @@ namespace CalamityRelics.Content.WorldGen
                 int sampleEnd = cx + centerWidth / 2;
                 int totalSamples = 0;
                 int openCount = 0;
-                int blockedCount = 0;
-                int firstBlockerX = -1;
-                int firstBlockerY = -1;
-                int firstBlockerType = -1;
                 for (int sampleX = sampleStart; sampleX <= sampleEnd; sampleX += 2)
                 {
                     totalSamples++;
@@ -99,13 +95,6 @@ namespace CalamityRelics.Content.WorldGen
                         if (above.HasTile && Main.tileSolid[above.TileType])
                         {
                             columnOpen = false;
-                            blockedCount++;
-                            if (firstBlockerX == -1)
-                            {
-                                firstBlockerX = sampleX;
-                                firstBlockerY = yCheck;
-                                firstBlockerType = above.TileType;
-                            }
                             break;
                         }
                     }
@@ -169,7 +158,6 @@ namespace CalamityRelics.Content.WorldGen
                 bool specialCondition = false;
                 try
                 {
-                    Mod.Logger.Info($"Calamity Relics: Fallback placing Cnidrion pond at {p} (score {bestFallbackScore}).");
                     SchematicManager.PlaceSchematic<Action<Terraria.Chest>>(CnidrionSchematicKey, p, SchematicAnchor.TopLeft, ref specialCondition, null);
                     OasisRemnantSystem.OasisRemnantRect = new(p.X, p.Y, schematicWidth, schematicHeight);
                 }
@@ -315,11 +303,6 @@ namespace CalamityRelics.Content.WorldGen
             int bestCx = -1;
             int bestSurfaceY = -1;
 
-            int sandColumnsFound = 0;
-            int contiguousPassed = 0;
-            int exposedPassed = 0;
-            int candidateCount = 0;
-
             for (int cx = startX + halfWidth; cx < endX - halfWidth; cx += step)
             {
                 int surfaceY = -1;
@@ -333,7 +316,6 @@ namespace CalamityRelics.Content.WorldGen
                     }
                 }
                 if (surfaceY == -1) continue;
-                sandColumnsFound++;
 
                 int left = cx - schematicWidth / 2;
                 int right = cx + schematicWidth / 2;
@@ -348,8 +330,6 @@ namespace CalamityRelics.Content.WorldGen
                 {
                     continue;
                 }
-                contiguousPassed++;
-
                 int biomeEdgeBuffer = 12;
                 if (left - biomeEdgeBuffer < startX || right + biomeEdgeBuffer > endX) continue;
                 if (left - biomeEdgeBuffer < startX || right + biomeEdgeBuffer > endX)
@@ -391,10 +371,6 @@ namespace CalamityRelics.Content.WorldGen
                 int sampleEnd = cx + centerWidth / 2;
                 int totalSamples = 0;
                 int openCount = 0;
-                int blockedCount = 0;
-                int firstBlockerX = -1;
-                int firstBlockerY = -1;
-                int firstBlockerType = -1;
                 for (int sampleX = sampleStart; sampleX <= sampleEnd; sampleX += 2)
                 {
                     totalSamples++;
@@ -405,13 +381,6 @@ namespace CalamityRelics.Content.WorldGen
                         if (above.HasTile && Main.tileSolid[above.TileType])
                         {
                             columnOpen = false;
-                            blockedCount++;
-                            if (firstBlockerX == -1)
-                            {
-                                firstBlockerX = sampleX;
-                                firstBlockerY = yCheck;
-                                firstBlockerType = above.TileType;
-                            }
                             break;
                         }
                     }
@@ -423,8 +392,6 @@ namespace CalamityRelics.Content.WorldGen
                 {
                     continue;
                 }
-                exposedPassed++;
-
                 int score = (supportCount * 3) - (holeCount * 4);
 
                 if (score > bestScore)
@@ -433,7 +400,6 @@ namespace CalamityRelics.Content.WorldGen
                     bestCx = cx;
                     bestSurfaceY = surfaceY;
                 }
-                candidateCount++;
             }
 
             if (bestSurfaceY != -1)
@@ -444,14 +410,8 @@ namespace CalamityRelics.Content.WorldGen
                     bool specialCondition = false;
                     try
                     {
-                        if (bestClusterSize == 0)
-                            Mod.Logger.Info($"Calamity Relics: No real oasis found; placing Cnidrion pond at {p} (score {bestScore}).");
-                        else
-                            Mod.Logger.Info($"Calamity Relics: Placed Cnidrion pond at {p} (score {bestScore}).");
-
                         SchematicManager.PlaceSchematic<Action<Chest>>(CnidrionSchematicKey, p, SchematicAnchor.TopLeft, ref specialCondition, null);
                         OasisRemnantSystem.OasisRemnantRect = new(p.X, p.Y, schematicWidth, schematicHeight);
-                        Mod.Logger.Info($"Calamity Relics: OasisRemnantRect set to X:{OasisRemnantSystem.OasisRemnantRect.X} Y:{OasisRemnantSystem.OasisRemnantRect.Y} W:{OasisRemnantSystem.OasisRemnantRect.Width} H:{OasisRemnantSystem.OasisRemnantRect.Height}");
                         return;
                     }
                     catch (Exception ex)

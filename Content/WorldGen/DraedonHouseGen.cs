@@ -352,8 +352,6 @@ namespace CalamityRelics.Content.WorldGen
                     17,
                     43
                 );
-                Mod.Logger.Info($"Calamity Relics: DraedonHouseRect set to X:{DraedonHouseSystem.DraedonHouseRect.X} Y:{DraedonHouseSystem.DraedonHouseRect.Y} W:{DraedonHouseSystem.DraedonHouseRect.Width} H:{DraedonHouseSystem.DraedonHouseRect.Height}");
-
                 int npcSpawnX = (DraedonHouseSystem.DraedonHouseRect.X + DraedonHouseSystem.DoorOffsetX) * 16 + 8;
                 int npcSpawnY = (DraedonHouseSystem.DraedonHouseRect.Y + DraedonHouseSystem.DoorOffsetY) * 16 + 8;
 
@@ -369,11 +367,7 @@ namespace CalamityRelics.Content.WorldGen
                     npcSpawnY,
                     ModContent.NPCType<DraedonBarrierNPC>()
                 );
-                if (spawnedIndex >= 0 && spawnedIndex < Main.maxNPCs && Main.npc[spawnedIndex].active)
-                {
-                    Mod.Logger.Info($"Calamity Relics: Draedon Barrier placed by generation index:{spawnedIndex} at X:{Main.npc[spawnedIndex].Center.X} Y:{Main.npc[spawnedIndex].Center.Y} (generation-time only)");
-                }
-                else
+                if (spawnedIndex < 0 || spawnedIndex >= Main.maxNPCs || !Main.npc[spawnedIndex].active)
                 {
                     Mod.Logger.Warn($"Calamity Relics: Draedon Barrier generation spawn returned index:{spawnedIndex}. Active check failed.");
                 }
