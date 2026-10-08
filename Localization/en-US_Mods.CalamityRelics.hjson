@@ -147,6 +147,11 @@ Items: {
 		DisplayName: Enchanted Bloom
 		Tooltip: Summons a rideable blooming rose.
 	}
+
+	TalismanOfTheIlmeri: {
+		DisplayName: Talisman Of The Ilmeri
+		Tooltip: Generates hot conductive mist and is noticeably electrified
+	}
 }
 
 Projectiles: {
@@ -179,6 +184,8 @@ Projectiles: {
 	WulfrumMicrowave.DisplayName: Wulfrum Microwave
 	EnchantedBloomVine.DisplayName: Enchanted Bloom Vine
 	EnchantedLeaf.DisplayName: Enchanted Leaf
+	IlmeriMist.DisplayName: Ilmeri Mist
+	IlmeriLightning.DisplayName: Ilmeri Lightning
 }
 
 Buffs: {

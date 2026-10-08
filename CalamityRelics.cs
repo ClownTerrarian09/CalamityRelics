@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -61,6 +64,20 @@ namespace CalamityRelics
 				default:
 					break;
 			}
+		}
+
+		public override void Load()
+		{
+			if (Main.dedServ)
+				return;
+
+			Asset<Effect> effect = ModContent.Request<Effect>(
+				"CalamityRelics/Assets/Effects/StormLightning", AssetRequestMode.ImmediateLoad);
+
+			GameShaders.Misc["CalamityRelics:StormLightning"] = new MiscShaderData(effect, "StormLightning")
+				.UseProjectionMatrix(true)
+				.UseImage0(ModContent.Request<Texture2D>(
+					"CalamityRelics/Assets/Textures/Effects/LightningEffect", AssetRequestMode.ImmediateLoad));
 		}
 	}
 }
