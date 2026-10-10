@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CalamityRelics.Content.Projectiles.Friendly;
 using CalamityRelics.ModUtils;
 using Microsoft.Xna.Framework;
@@ -22,6 +23,7 @@ namespace CalamityRelics.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             var modPlayer = player.GetModPlayer<TalismanOfTheIlmeriPlayer>();
+            modPlayer.hideMistVisual = hideVisual;
             modPlayer.equipped = true;
             modPlayer.sourceItem = Item;
         }
@@ -47,9 +49,11 @@ namespace CalamityRelics.Content.Items.Accessories
         public Item sourceItem;
         public List<Vector2> mistPositions = new();
         public int lightningDischargeCooldown;
+        public bool hideMistVisual;
         private int mistSpawnTimer;
         private int strikesToSpawn;
         private bool chargeVisuals;
+        
         public override void ResetEffects()
         {
             equipped = false;
@@ -71,7 +75,7 @@ namespace CalamityRelics.Content.Items.Accessories
             {
                 mistSpawnTimer = 10;
                 Projectile.NewProjectile(Player.GetSource_Accessory(sourceItem), Player.MountedCenter, Vector2.Zero,
-                    ModContent.ProjectileType<IlmeriMist>(), 0, 0, Player.whoAmI);
+                    ModContent.ProjectileType<IlmeriMist>(), 0, 0, Player.whoAmI, hideMistVisual ? 1 : 0);
             }
 
             if (strikesToSpawn > 0)

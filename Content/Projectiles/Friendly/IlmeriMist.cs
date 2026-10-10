@@ -29,16 +29,18 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         {
             Projectile.rotation = Main.rand.NextFloat(0f, MathF.PI * 2f);
             Projectile.velocity = Main.rand.NextVector2Circular(1, 1);
+            
         }
 
         public override void AI()
         {
             
             Projectile.velocity *= 0.98f;
-            Projectile.rotation += Projectile.velocity.X * 0.1f;
+            Projectile.rotation += Projectile.velocity.X * 0.1f;;
             Projectile.alpha = 100 + (int)((1f - MathF.Min(Projectile.timeLeft / 180f, 1)) * 155f);
             Particle mist = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.5f,Color.White, 30, 1.4f, 0.1f, glowing: true);
-            GeneralParticleHandler.SpawnParticle(mist);
+            if (Projectile.ai[0] != 1)
+                GeneralParticleHandler.SpawnParticle(mist);
             if (Collision.WetCollision(Projectile.position, Projectile.width, Projectile.height))
             {
                 if(Main.rand.NextBool(5))
@@ -76,6 +78,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (Projectile.ai[0] == 1)
+                return false;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
             int frameHeight = texture.Height / Main.projFrames[Type];
