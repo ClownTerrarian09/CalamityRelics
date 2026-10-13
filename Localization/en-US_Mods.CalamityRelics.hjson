@@ -216,6 +216,7 @@ NPCs: {
 	WulfrumProbe.DisplayName: Wulfrum Probe
 	WulfrumTower.DisplayName: Wulfrum Tower
 	SecureAndDestroy.DisplayName: Secure And Destroy
+	WulfrumCrab.DisplayName: Wulfrum Crab
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
