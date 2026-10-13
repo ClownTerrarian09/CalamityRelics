@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 using CalamityRelics.Content.Items.Utilities.StructureSpawner;
 using CalamityRelics.Content.Systems;
 using Microsoft.Xna.Framework;
+using Terraria.Graphics.Effects;
 
 namespace CalamityRelics
 {
@@ -78,6 +79,18 @@ namespace CalamityRelics
 				.UseProjectionMatrix(true)
 				.UseImage0(ModContent.Request<Texture2D>(
 					"CalamityRelics/Assets/Textures/Effects/LightningEffect", AssetRequestMode.ImmediateLoad));
+			
+			Asset<Effect> borderFx = ModContent.Request<Effect>(
+				"CalamityRelics/Assets/Effects/ElectricBorder", AssetRequestMode.ImmediateLoad);
+			Asset<Texture2D> borderNoise = ModContent.Request<Texture2D>(
+				"CalamityRelics/Assets/Textures/Effects/ElectricNoise", AssetRequestMode.ImmediateLoad);
+
+			Filters.Scene["CalamityRelics:ElectricBorder"] = new Filter(
+				new ScreenShaderData(borderFx, "ElectricPass")
+					.UseImage(borderNoise, 0, SamplerState.LinearWrap)
+					.UseColor(new Color(130, 220, 155))
+					.UseIntensity(1.5f),
+				EffectPriority.High);
 		}
 	}
 }
