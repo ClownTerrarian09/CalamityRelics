@@ -29,6 +29,11 @@ namespace CalamityRelics.Content.Items
 
             Vector2 mouseOffset = Main.MouseScreen - screenCenter;
 
+            spriteBatch.End();
+
+            // Fix blurry bg
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+
             spriteBatch.Draw(BG, (new Vector2(Main.screenWidth / 2, Main.screenHeight / 2)), null, Color.White, 0, BG.Size() / 2, 1.5f, SpriteEffects.None, 1);
 
             for (int i = 0; i < 12; i++)
@@ -42,6 +47,9 @@ namespace CalamityRelics.Content.Items
 
                 spriteBatch.Draw(Ribbon, screenCenter + new Vector2(130 + (Ribbon.Width * 1.5f), -200) - new Vector2(i * 1.5f, (float)(Math.Sin((Main.GlobalTimeWrappedHourly * -3) + (i / 18)) * (15 * (i / 180)))), rect, Color.White, 0, Ribbon.Size() / 2, 1.5f, SpriteEffects.None, 1);
             }
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
             return false;
         }
