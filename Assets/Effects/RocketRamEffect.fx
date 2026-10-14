@@ -33,7 +33,6 @@ float4 MainShaderFunction(float4 inputColor : COLOR0, float2 uv : TEXCOORD0) : C
     // return color;
 
     float2 transformation = float2(1, 7);
-
  
     float pO = tex2D(noisePerlin, uv * transformation + offsetFloat * uTime); 
     float p1 = tex2D(noisePerlin, uv + offsetFloat * uTime / 5); 	

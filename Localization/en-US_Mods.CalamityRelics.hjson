@@ -111,6 +111,7 @@ Projectiles: {
 	WulfrumPortal.DisplayName: Wulfrum Portal
 	WulfrumMissile.DisplayName: Wulfrum Missile
 	WulfrumElectricOrb.DisplayName: Wulfrum Electric Orb
+	WulfrumSineMissile.DisplayName: Wulfrum Sine Missile
 }
 
 Buffs: {
