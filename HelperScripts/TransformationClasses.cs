@@ -28,7 +28,12 @@ namespace CalamityRelics.HelperScripts
         {
             this.position = position?? Vector2.Zero;
             lookDir = Vector2.Normalize(lookDir);
-            rotation = ToDegrees(MathF.Atan2(lookDir.Y, lookDir.X));
+            rotation = RotationFromVector(lookDir);
+        }
+
+        public static float RotationFromVector(Vector2 vector)
+        {
+            return ToDegrees(MathF.Atan2(vector.Y, vector.X));
         }
 
         public static float ToDegrees(float rad)

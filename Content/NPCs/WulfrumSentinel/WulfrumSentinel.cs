@@ -34,15 +34,18 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public static float barrageHoverFlyMaxSpeed => 9f; 
         public static float barrageXVel => 3; 
         public static float jumpForce => 7.5f; 
+        public static float distanceUntilMustJump => 200f; 
 
         public static float phaseBHealthThreshold => 0.5f; 
-        public static float dashVel => 7f; 
+        public static float dashVel => 9f; 
+        public static float dashFlyingVel => 14f; 
         public static float dashPreVel => -4f; 
         public static float dashWindupTime => 60; 
-        public static float dashFlyingWindupTime => 30; 
+        public static float dashFlyingWindupTime => 45; 
         public static float stompHoverTime => 240; 
         public static float dashTime => 60; 
         public static float laserVelocity => 10f;
+        public static float spriteScaleFactor => 2;
 
 
         public static int minFireRate => 120;
@@ -50,8 +53,11 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public static int rollingRateMin => 150;
         public static int rollingRateMax => 480;
         public static int stompSpeed => 10; 
+        public static int maxTurretAngle => 17; 
         public static float maxStompXFactor => 1.65f; 
-        public static float flyingXOffset => 400;
+        public float flyingStandardXOffset => 400;
+        public float flyingBarrageXOffset => 650;
+        public float flyingXOffset = 400;
 
         public static SoundStyle laserShootSound => SoundID.DD2_BetsyFireballShot;
         public static SoundStyle barrelShootSound => SoundID.DD2_DrakinShot;
@@ -77,6 +83,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public float laserStartX => NPC.spriteDirection == 1 ? Main.screenPosition.X : laserBarrelPos.X;
         public float laserStartY => laserBarrelPos.Y - laserWidth/2;
         public Vector2 laserRenderStart => new Vector2( laserStartX, laserStartY);
+        public Vector2 barrageFlyingPos => NPC.Center + new Vector2( NPC.spriteDirection == 1 ? -70 : 70,30);
         public float laserEndPosX => NPC.spriteDirection == 1 ? laserBarrelPos.X : Main.screenPosition.X + Main.screenWidth;
         public float laserLength => MathF.Abs(laserEndPosX - laserStartX);
 
@@ -100,7 +107,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public bool facePlayer = true;
         
         public float stepSpeed = 1; 
-        public int timer = 0; 
+        public int timer = 0, lastJumpTimer = 0; 
         public int stateTimer = 0; 
         public float gfxOffY = 0;
 
@@ -115,20 +122,26 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         private static Asset<Texture2D> textureRect;  
         private static Asset<Effect> effectRocketRam;
 
-        private bool inDash, inFloat, flying;
+        private bool inDash, inFloat, flying, jumping;
 
         private Vector2 spriteTarget => NPC.position + new Vector2(48, 36) + new Vector2(8, 0) * NPC.spriteDirection;
         private Vector2 currentWheelOffset;
         private Vector2 wheelKp => new Vector2(0.2f, 0.2f);
         private Vector2 wheelClampRanges => new Vector2(20, 8);
         private Vector2 mainBodyWP => NPC.Center + new Vector2(0, 0);
-        private Vector2 turretWP => NPC.Center + new Vector2(0, -16);
-        private float turretMaxAngle => 30 * 180 / MathF.PI;
+
+        private Vector2 turretWP => NPC.Center + new Vector2(0, -40);
+        private Vector2 turretSize => textureTurret.Value.Size();
+        private Vector2 turretPos => turretWP - (Vector2.UnitX * turretSize.X*3/5 * (NPC.spriteDirection == 1 ? -1 : 1));
+        private Vector2 turretDir => Vector2.Normalize(targetPlayer.Center - turretPos);
+        private bool turretInRange => MathF.Abs(MathF.Sin(float.DegreesToRadians(Origin.RotationFromVector(turretDir)))) < MathF.Sin(float.DegreesToRadians(maxTurretAngle));
+        
         private Vector2 dashTrailWP => NPC.Center+ new Vector2(-201 + -201 * -NPC.spriteDirection, 110);
         private Vector2 backWheelOffset => new Vector2(-33, 0) * NPC.spriteDirection;
         private Vector2 frontWheelOffset => new Vector2(33, 0) * NPC.spriteDirection;
         private Vector2 wheelSize => new Vector2(108, 38);
         private WulfrumSentinelDrone drone;
+        
         private Origin turretOrigin;
 
         // public bool canJump;
@@ -156,8 +169,8 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
 
         public override void SetDefaults()
         {
-            NPC.width = 178*2;
-            NPC.height= 99*2;
+            NPC.width = (int)(178*spriteScaleFactor);
+            NPC.height= (int)(99*spriteScaleFactor);
             NPC.aiStyle = -1;
             // NPC.aiStyle = NPCAIStyleID.Fighter;
             NPC.damage = 50;
@@ -172,14 +185,15 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             phaseAStatesList = new[]
             {
                 WulfrumBossStates.Chase,  
+                WulfrumBossStates.Missile,
                 WulfrumBossStates.Dash,
                 WulfrumBossStates.Chase,  
-                WulfrumBossStates.Missile
+                WulfrumBossStates.Barrage,
+                WulfrumBossStates.Dash
                 // WulfrumBossStates.Stomp
             };
             phaseBStatesList = new[]
             {
-                // WulfrumBossStates.Barrage,
                 WulfrumBossStates.FlyChase,
                 // WulfrumBossStates.Missile,
                 // WulfrumBossStates.Missile,
@@ -187,6 +201,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                 WulfrumBossStates.Dash,
                 WulfrumBossStates.Dash,
                 WulfrumBossStates.Dash,
+                WulfrumBossStates.Barrage,
                 // WulfrumBossStates.Stomp
             };
 
@@ -200,15 +215,13 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return 0;
-            // return SpawnCondition.OverworldDaySlime.Chance * 1;
         }
-        // public override dra
 
         public override void OnSpawn(IEntitySource source)
         {
             gfxOffY = 0;
             stateIndex = -1;
-
+            turretOrigin = new Origin(turretPos, turretDir);
             SetNewState();
         }
 
@@ -286,9 +299,8 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if(Main.netMode == NetmodeID.Server) return false;
-            // ported line for smth: spriteBatch.Begin(SpriteSortMode.Immediate, newBlendState ?? BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, effect, Main.GameViewMatrix.TransformationMatrix);
+            // ported line from some place i cant remember but will be important for shader development: spriteBatch.Begin(SpriteSortMode.Immediate, newBlendState ?? BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, effect, Main.GameViewMatrix.TransformationMatrix);
         
-            DrawTurret(spriteBatch, screenPos);
             // DrawMainLayers(spriteBatch, screenPos);
             if (doLaser)
             {    
@@ -298,14 +310,18 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             if (inDash)  { RenderDash(spriteBatch, screenPos); }
 
             if (flying) 
-                spriteBatch.Draw( textureBodyFlying.Value, RectangleHelper.CreateAnchored( RectangleHelper.Anchor.CENTER, NPC.Center - screenPos, NPC.Size), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
+                spriteBatch.Draw( textureBodyFlying.Value, RectangleHelper.CreateAnchored( RectangleHelper.Anchor.CENTER, NPC.Center + new Vector2(0, 6) - screenPos, NPC.Size), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
             else        
-                spriteBatch.Draw( textureBodyFlying.Value, RectangleHelper.CreateAnchored( RectangleHelper.Anchor.CENTER, NPC.Center - screenPos, NPC.Size), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
+                spriteBatch.Draw( textureMainBody.Value, RectangleHelper.CreateAnchored( RectangleHelper.Anchor.CENTER, NPC.Center - screenPos, NPC.Size), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
+            
+            DrawTurret(spriteBatch, screenPos);
             return false;
         }
         
         void DrawMainLayers(SpriteBatch spriteBatch, Vector2 screenPos)
         {
+            // Old code for old tank sprites. Still might be applicable if we get moving wheel components similar to how it was before.
+
             // Calculating new shared offsets            
             Vector2 newVal = Vector2.Zero;
             newVal.X = float.Lerp(currentWheelOffset.X, spriteTarget.X, wheelKp.X);
@@ -336,43 +352,41 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
 
         void DrawTurret(SpriteBatch spriteBatch, Vector2 screenPos)
         {
-            // Calculating origin (position and rotation target pointing towards the player)
-            Vector2 dir = Vector2.Normalize(targetPlayer.Center - turretWP);
+            if (turretInRange){
+                turretOrigin = new Origin(turretPos, turretDir);
+            }
+            else
+            {
+                if( 
+                    turretDir.X <= 0 && turretOrigin.unitVector.X > 0 ||
+                    turretDir.X > 0 && turretOrigin.unitVector.X <= 0
+                ) turretOrigin.Mirror(turretWP);
+            }
 
-            // float maxX = MathF.Cos(Origin.ToDegrees(5));
-            // float minX = MathF.Cos(Origin.ToDegrees(-turretMaxAngle));
-
-            // dir.Y = float.Clamp(dir.X, maxX, minX);
-            // dir = Vector2.Normalize(dir);
+            Vector2 pivotOrigin = new Vector2(
+                0.25f,
+                0.5f
+            ) * turretSize;
             
-            // float.Clamp(angle, 0, turretMaxAngle);
-            // if(NPC.spriteDirection > 0)
-            // {
-            //     angle = float.Clamp(angle, -turretMaxAngle, 10);
-            // }
-            // else
-            // {
-            //     if(angle > 0) angle = float.Clamp(angle, 180+turretMaxAngle, -180);
-            //     else angle = float.Clamp(angle, 170, 180);
-            // }
-            turretOrigin = new Origin(turretWP, dir);
+            Rectangle baseAABB = RectangleHelper.CreateAnchored(RectangleHelper.Anchor.BOT_LEFT, turretPos - screenPos, turretSize*spriteScaleFactor);
 
-            // Positioning Elements      
-
-            // Vector2 turretPos = GetPositionFromCentered(turretWP - screenPos, textureTurret.Value);
-            Vector2 turretSize = textureTurret.Value.Size();
-            Vector2 turretPos = turretOrigin.position - Vector2.UnitX * turretSize.X/2 * -NPC.spriteDirection - screenPos;// - Vector2.UnitY * turretSize.Y/2 - screenPos;
-            
-            // Drawing elements      
+            // Drawing element  
             spriteBatch.Draw(
                 textureTurret.Value, 
-                new Rectangle((int)turretPos.X, (int)turretPos.Y, (int)turretSize.X, (int)turretSize.Y), 
+                baseAABB, 
                 null, 
                 Color.White, 
                 turretOrigin.rotationRad, 
-                new Vector2(0, turretSize.Y/2), 
-                NPC.spriteDirection == 1 ? SpriteEffects.FlipVertically: SpriteEffects.None, 
+                pivotOrigin, 
+                dirToTarget.X >= 0 ?  SpriteEffects.None : SpriteEffects.FlipVertically, 
                 0);
+        }
+
+        public void FireMissile()
+        {
+            Vector2 velocity = Vector2.Normalize(targetPlayer.Center - turretWP) * laserVelocity;
+            int newMissileIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), turretWP, velocity, ModContent.ProjectileType<WulfrumSineMissile>(), 35, 5, -1, velocity.ToRotation());
+            SoundEngine.PlaySound(laserShootSound, turretWP);
         }
 
         public void RenderDash(SpriteBatch spriteBatch, Vector2 screenPos)
@@ -424,6 +438,18 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             if (facePlayer) FacePlayer();
             if(doLaser) LaserLogic();
 
+            // Phase One Exclusive Logic
+            if(currentStatesList == phaseAStatesList){
+                JumpLogic();
+                UpdatePersistentProjectiles();
+
+                // Fires a rolling bomb if this tick aligns with their fire rates
+                if(timer % currentRollFireRate == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    FireBomb();
+                }
+            }
+
             // Sets the initial state on spawn
             if(timer == 0){
                 
@@ -436,23 +462,9 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                 return;
             }
 
-            // Fires a laser if this tick aligns with their fire rates
-            if(currentStatesList == phaseAStatesList){
-
-                if(timer % currentFireRate == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    // FireLaser();
-                }
-
-                // Fires a rolling bomb if this tick aligns with their fire rates
-                if(timer % currentRollFireRate == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    FireBomb();
-                }
-            }
-
             // Updates the active state machine
             timer++;
+            lastJumpTimer++;
 
             if (newStateQueued)
             {
@@ -466,8 +478,50 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             }
         
         }
+
+        public void UpdatePersistentProjectiles()
+        {
+            if (turretInRange)
+            {
+                if(timer % currentFireRate == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    FireLaser();
+                }
+                
+            }
+            else
+            {   
+                if(timer % (currentFireRate/3) == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    FireMissile();
+                }
+            }
+        }
+
+        public void JumpLogic()
+        {
+            // Jump controls for the first phase, when the player gets too high
+            if(lastJumpTimer % 90 == 0 && ((targetPlayer.Center - NPC.Center).Y < -distanceUntilMustJump))
+            {
+                jumping = true;
+                lastJumpTimer = 0;
+            }
+
+            if (jumping)
+            {
+                NPC.velocity.Y = -jumpForce;
+                if ((bool)CanFallThroughPlatforms())
+                {
+                    jumping = false;
+                    lastJumpTimer = 0;
+                }
+            }
+        }
+
         public void FireLaser()
         {
+            Origin origin = turretOrigin;
+            // origin.position -=
             Vector2 velocity = turretOrigin.unitVector * laserVelocity;
             Vector2 pos = turretOrigin.LocalToWorldSpace(Vector2.UnitX * 100);
 
@@ -648,11 +702,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             }
         }
 
-        public void Jump()
-        {
-            // if(!canJump) return;
-            NPC.velocity.Y = -jumpForce;
-        }
+
 
         // ------------------------ CHASE STATE --------------------------
         public void FlyChaseStart()
@@ -660,14 +710,20 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             // Anything to initiate the state
             Main.NewText("flying chase >_<");
             NPC.noTileCollide = true;
+            flyingXOffset = flyingStandardXOffset;
         }
 
-        public void FlyChasePeriodic()
+        public void FlyChasePeriodic(bool fromState = false)
         {
             // cancel and do next state
-            if(stateTimer > 180){
+            if(stateTimer > 180 && !fromState){
                 SetNewState();
                 return;
+            }
+
+            if(timer % currentFireRate == 0 && Main.netMode != NetmodeID.MultiplayerClient && !fromState)
+            {
+                FireLaser();
             }
 
             // Main Grounded Run Cycle
@@ -697,11 +753,12 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             Main.NewText("flying chase >_<");
             NPC.noTileCollide = true;
 
+            flyingXOffset = flyingBarrageXOffset;
+
             if(Main.netMode != NetmodeID.MultiplayerClient) 
             {
                 drone.Detach();
             }
-            doLaser = true;
         }
 
         public void FlyLaserPeriodic()
@@ -721,11 +778,10 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                         drone.FireMissile();
                     }
                 }
-
-                if(stateTimer % 5 == 0)
-                {
-                    FireLaser();
-                }
+            }
+            if(stateTimer == 45)
+            {
+                doLaser = true;
             }
 
             // Main Grounded Run Cycle
@@ -753,8 +809,6 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             drone.Attach(droneOffset);
             doLaser = false;
         }
-
-
 
 
         public void LaserRender(SpriteBatch spriteBatch, Vector2 screenPos)
@@ -842,11 +896,12 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             float xDirectionFactor = targetDir.X >= 0 ? 1 : -1;
             float deacceleration = xDirectionFactor == -(vel.X / Math.Abs(vel.X)) ? deaccelerationFactor : 0;
 
-            NPC.velocity.X = Math.Clamp(vel.X + (accelerationFactor + deacceleration) * xDirectionFactor, -maxSpeed, maxSpeed);
+            if(jumping){NPC.velocity.X = NPC.spriteDirection * -maxSpeed*2/3;}
+            else{NPC.velocity.X = Math.Clamp(vel.X + (accelerationFactor + deacceleration) * xDirectionFactor, -maxSpeed, maxSpeed);}
             StepUpGroundedMovement();     
 
             if(grounded && NPC.collideX){
-                Jump();
+                JumpLogic();
             }
         }
 
@@ -919,7 +974,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public void DashStart()
         {
             // Do back dash
-            NPC.velocity.X = dirToTarget.X < 0 ? -dashPreVel : dashPreVel;
+            if(!flying) NPC.velocity.X = dirToTarget.X < 0 ? -dashPreVel : dashPreVel;
         }
 
         public void DashPeriodic()
@@ -939,7 +994,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             {
                 activeDashVel = 
                 flying ? 
-                    dirToTarget * dashVel :
+                    dirToTarget * dashFlyingVel :
                     Vector2.UnitX * (dirToTarget.X < 0 ? -dashVel : dashVel);
                 
                 // Setting velocity
@@ -1046,6 +1101,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             // NPC.noTileCollide = true;
             Main.NewText("Hovering over player (Prepare for a stomp)");
             initialBarrageFlipFactor = flipFactor;
+            flyingXOffset = flyingBarrageXOffset;
         }
         public double GetBarrageYVel(float normalizedTime)
         {
@@ -1057,27 +1113,45 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
 
         public void BarragePeriodic()
         {
-
             int missileCount = 40;
-            int ticksBetweenOrbs = 7;
-            float totalTime = missileCount * ticksBetweenOrbs;
+            int windupTicks = 30;
+            int ticksBetweenOrbs = flying ? 12 : 7;
+            float totalTime = missileCount * ticksBetweenOrbs + windupTicks;
 
-            NPC.velocity.Y = (float)GetBarrageYVel(stateTimer/totalTime);
-            NPC.velocity.X = barrageXVel * initialBarrageFlipFactor;
+            if(flying){FlyChasePeriodic(true);}
+            else
+            {
+                NPC.velocity.Y = (float)GetBarrageYVel(stateTimer/totalTime);
+                NPC.velocity.X = barrageXVel * initialBarrageFlipFactor;
+            }
 
-            if(timer % ticksBetweenOrbs == 0)
+            if(timer % ticksBetweenOrbs == 0 && stateTimer >= windupTicks)
             {
                 if(Main.netMode != NetmodeID.MultiplayerClient)
                 {
 
-                    float velX = Main.rand.NextFloat(-6, 6);
+                    Vector2 velocity;
 
-                    Vector2 velocity = new Vector2(
-                        velX,
-                        -YVelOrb
-                    );
+                    if (flying)
+                    {
+                        float velY = Main.rand.NextFloat(-6, 6);
+                        velocity = new Vector2(
+                            NPC.spriteDirection == 1 ? -10 : 10,
+                            velY
+                        );
+                        
+                    }
+                    else
+                    {
+                        float velX = Main.rand.NextFloat(-6, 6);
+                        velocity = new Vector2(
+                            velX,
+                            -YVelOrb
+                        );
+                        
+                    }
 
-                    int projectileIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * -100, velocity, ModContent.ProjectileType<WulfrumElectricOrb>(), 25, 5, -1);
+                    int projectileIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), flying ? barrageFlyingPos : NPC.Center + Vector2.UnitY * -100, velocity, ModContent.ProjectileType<WulfrumElectricOrb>(), 25, 5, -1);
                 }       
             }
 
@@ -1100,7 +1174,16 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
 
         public override bool? CanFallThroughPlatforms()
         {
-            return targetPlayer.Center.Y >= NPC.Center.Y + 20 && currentState != WulfrumBossStates.Stomp;
+            return targetPlayer.BottomLeft.Y >= NPC.BottomLeft.Y + 20 && currentState != WulfrumBossStates.Stomp;
+        }
+
+        public override void OnKill()
+        {
+            if(drone != null && Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                drone.NPC.immortal = false;
+                drone.NPC.StrikeInstantKill();
+            }
         }
     }
 }

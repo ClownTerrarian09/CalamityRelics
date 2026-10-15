@@ -3,16 +3,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.DataStructures;
 
 namespace CalamityRelics.HelperScripts
 {
-
-    public enum IntendedDrawHook // Will be added to when need be
-    {
-        ANY,
-        PRE_DRAW,
-        POST_DRAW
-    }
 
     // The core manager class for particle handling. Should be initialized on mod load if used, and reset on mod unload
     public class ParticleSystemManager
@@ -47,6 +41,7 @@ namespace CalamityRelics.HelperScripts
                 if (!particlePool[i].IsAlive)
                 {
                     particlePool[i] = baseParticle; 
+                    return;
                 }
             }
         }
@@ -65,13 +60,13 @@ namespace CalamityRelics.HelperScripts
         /// </summary>
         /// <param name="spriteBatch">The sprite batcher given through the hook method</param>
         /// <param name="drawHook">The draw hook representing when the method was called. please refrain from using the ANY option here, and assign this to the corresponding hook</param>
-        public void DrawParticles(SpriteBatch spriteBatch, IntendedDrawHook drawHook)
+        public void DrawParticles(SpriteBatch spriteBatch, string drawHook)
         {
             for (int i = 0; i < particlePool.Length; i++)
             {
                 if(
                     !particlePool[i].IsAlive ||
-                    (drawHook != particlePool[i].drawLocation && particlePool[i].drawLocation != IntendedDrawHook.ANY)
+                    (drawHook != particlePool[i].drawLocation && particlePool[i].drawLocation != "")
                 ) continue;
 
                 spriteBatch.Draw(
@@ -87,7 +82,33 @@ namespace CalamityRelics.HelperScripts
             }
         }
 
+        public void DrawParticles(string drawHook) // Will draw with Main.EntitySpriteDraw instead of the given SpriteBatcher
+        {
+            for (int i = 0; i < particlePool.Length; i++)
+            {
+                if(
+                    !particlePool[i].IsAlive || 
+                    particlePool[i].mainTexAsset == null ||
+                    (drawHook != particlePool[i].drawLocation && particlePool[i].drawLocation != "")
+                ) continue;
 
+
+
+                DrawData drawData = new DrawData(
+                    particlePool[i].mainTexAsset.Value,
+                    RectangleHelper.CreateAnchored(RectangleHelper.Anchor.CENTER, particlePool[i].position - Main.screenPosition, particlePool[i].scale),
+                    null,
+                    particlePool[i].mainColor,
+                    particlePool[i].rotation,
+                    particlePool[i].rotationPivotInfo,
+                    SpriteEffects.None
+                );
+
+                Main.EntitySpriteDraw(drawData);
+            }
+        }
+
+        // Updates particle logic. Should only be called once by the wrapper ModSystem located in the Systems folder
         public void UpdateParticles()
         {
             for (int i = 0; i < particlePool.Length; i++)
@@ -118,7 +139,7 @@ namespace CalamityRelics.HelperScripts
         public Asset<Texture2D> mainTexAsset;
         public Asset<Effect> effectAsset; // unused for now, here for custom shader support once that gets developed
         public Color mainColor;
-        public IntendedDrawHook drawLocation;
+        public string drawLocation; // a key-based system for deciding when this particle wants to be drawn. setting this to "" will make the particle draw every time the particle system decides to render anything. 
         public IParticleComponent[] components;
         public Vector2 rotationPivotInfo; // Used for the sprite batchers rotation origin system. Could be useful if you want the image to rotate around the position point instead of reside on the position itself
 
@@ -127,12 +148,12 @@ namespace CalamityRelics.HelperScripts
         public BaseParticle(
             Asset<Texture2D> texture, 
             Vector2 position, 
+            string drawLocation, 
             int lifetime = 4, 
             float rotation = 0, 
             Vector2? rotationPivot = null, 
             Color? color = null, 
             Vector2? scale = null, 
-            IntendedDrawHook drawLocation = IntendedDrawHook.ANY, 
             Asset<Effect> shaderAsset = null, 
             params IParticleComponent[] components
         )

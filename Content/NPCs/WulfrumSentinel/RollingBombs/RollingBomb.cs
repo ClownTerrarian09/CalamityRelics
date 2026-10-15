@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 using Terraria.ID;
 using Terraria.DataStructures;
 using Terraria.ModLoader.Utilities;
+using ReLogic.Content;
+using Microsoft.Xna.Framework.Graphics;
+using CalamityRelics.HelperScripts;
 
 namespace CalamityRelics.Content.NPCs.WulfrumSentinel.RollingBombs{
 
@@ -21,6 +24,8 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel.RollingBombs{
         public static int explosionDamage => 50; 
         public static int directHitDamage => 100; 
 
+        public static Asset<Texture2D> mainTex; 
+
 
         public Player targetPlayer => Main.player[NPC.target]; 
         public Vector2 dirToTarget => Vector2.Normalize(NPC.DirectionTo(targetPlayer.position)); 
@@ -29,7 +34,12 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel.RollingBombs{
 
         public float stepSpeed = 1; 
         public int timer = 0; 
-        public float gfxOffY = 0;   
+        public float gfxOffY = 0;
+
+        public override void Load()
+        {
+            mainTex = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/WulfrumSentinel/WulfrumRollingBomb");
+        }
 
         public override void SetStaticDefaults()
         {
@@ -40,8 +50,8 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel.RollingBombs{
 
         public override void SetDefaults()
         {
-            NPC.width = 18;
-            NPC.height= 40;
+            NPC.width = 47;
+            NPC.height= 47;
             NPC.aiStyle = -1;
             // NPC.aiStyle = NPCAIStyleID.Fighter;s
             NPC.damage = 100;
@@ -54,6 +64,21 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel.RollingBombs{
             NPC.dontTakeDamage = true;
 
             
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            spriteBatch.Draw(
+                mainTex.Value, 
+                RectangleHelper.CreateAnchored(RectangleHelper.Anchor.CENTER, (NPC.position + NPC.Size)-screenPos, NPC.Size), 
+                null,
+                Color.White,
+                NPC.velocity.X * 3 * timer/60f,
+                Vector2.One * 0.5f * mainTex.Size(),
+                dirToTarget.X > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                0
+                );
+
+            return false;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

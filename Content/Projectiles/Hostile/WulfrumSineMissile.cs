@@ -1,5 +1,6 @@
 
 using System;
+using CalamityMod;
 using CalamityRelics.HelperScripts;
 using Microsoft.Build.Evaluation;
 using Microsoft.Xna.Framework;
@@ -26,7 +27,11 @@ namespace CalamityRelics.Content.Projectiles.Hostile
         public float startAngle = 0;
         public float speed => 3 + 0.1f * MathF.Pow(currentTime, 1.05f);
 
-        public Asset<Texture2D> particleTexAsset;
+        public string particleDrawKey = "sine_missile_trail";
+
+        public static Asset<Texture2D> particleTexAsset;
+        public static bool drewParticles = false;
+        public static SineMissileParticleComponent missileParticleComponent;
 
         public float currentAngle => startAngle + MathF.Sin(phaseOffset + currentTime * sinePhaseFactor) * float.Clamp(angleFactor * currentTime, -angleDifMax, angleDifMax);
         
@@ -39,6 +44,7 @@ namespace CalamityRelics.Content.Projectiles.Hostile
         public override void Load()
         {
             particleTexAsset = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/WulfrumWavewireProjH"); 
+            missileParticleComponent = new();
         }
 
 		public override void SetDefaults() {
@@ -49,7 +55,22 @@ namespace CalamityRelics.Content.Projectiles.Hostile
 			Projectile.DamageType = DamageClass.Ranged;
             Projectile.scale = 1.2f;
             Projectile.hostile = true;
+            Projectile.tileCollide = false;
 		}
+        public override bool PreDraw(ref Color lightColor)
+        {
+            // Calls the particle system to draw particles for these missiles. Should only be done on one instance but must also be done in pre-draw.
+            if (!drewParticles)
+            {
+                ParticleSystemManager.Instance.DrawParticles(particleDrawKey);
+                drewParticles = true;
+            }
+            return true;
+        }
+        public override void PostDraw(Color lightColor)
+        {
+            drewParticles = false;
+        }
 
         public override void AI()
         {
@@ -57,15 +78,17 @@ namespace CalamityRelics.Content.Projectiles.Hostile
             {
                 startAngle = float.RadiansToDegrees(Projectile.velocity.ToRotation());
                 phaseOffset = Main.rand.Next(300);
-                Main.NewText(startAngle);
             }
 
-            if(currentTime % 5 == 0)
-            {
+            // Creates a new particle with the custom lightweight system with an optional modulo interval (commented out for now, just spawns one every tick) 
+
+            // if(currentTime % 5 == 0)
+            // {
                 ParticleSystemManager.Instance.CreateParticle(
-                    new BaseParticle(particleTexAsset, Projectile.Center, 45, scale: Vector2.One * 50, drawLocation: IntendedDrawHook.PRE_DRAW)
+                    new BaseParticle(particleTexAsset, Projectile.position + Vector2.UnitY * 25, particleDrawKey, 30, scale: Vector2.One * 15, components: missileParticleComponent)
                 );
-            }
+            // }
+
 
             Projectile.velocity = new Vector2(
                 MathF.Cos(float.DegreesToRadians(currentAngle)),

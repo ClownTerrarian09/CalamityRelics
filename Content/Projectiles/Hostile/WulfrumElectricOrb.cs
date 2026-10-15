@@ -18,7 +18,6 @@ namespace CalamityRelics.Content.Projectiles.Hostile
         public static float gravityFactor => 0.05f;
 
 
-        public float xVelocity = 0;
         public int currentTime = 0;
 
 
@@ -33,6 +32,7 @@ namespace CalamityRelics.Content.Projectiles.Hostile
 			Projectile.DamageType = DamageClass.Ranged;
             Projectile.scale = 1.2f;
             Projectile.hostile = true;
+            Projectile.tileCollide = false;
 		}
 
 

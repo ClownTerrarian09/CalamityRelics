@@ -74,6 +74,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             NPC.noGravity = true;
             NPC.boss = false;
             NPC.despawnEncouraged = false;
+            NPC.immortal = true;
             // NPC.;
 
             // Banner = Type;

@@ -18,6 +18,11 @@ namespace CalamityRelics.Content.Systems.ParticleSystemWrapper
 			ParticleSystemManager.Instance.ResetParicleSystem();
         }
 
+        public override void PreUpdateEntities()
+        {
+            ParticleSystemManager.Instance.UpdateParticles();
+        }
+
         public override void Unload()
 		{
 			// idk if this is actually nessecary but im putting it here anyways
