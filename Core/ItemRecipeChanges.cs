@@ -16,6 +16,7 @@ namespace CalamityRelics.Core
                 if(recipe.HasResult(ModContent.ItemType<CodebreakerBase>())){
                     recipe.RemoveIngredient(ModContent.ItemType<ChargingStationItem>());
                     recipe.AddIngredient(ModContent.ItemType<RustedCodebreaker>());
+                    recipe.AddCondition(RelicsConditions.UnlockedWulfrumRecipes);
                 }
             }
         }

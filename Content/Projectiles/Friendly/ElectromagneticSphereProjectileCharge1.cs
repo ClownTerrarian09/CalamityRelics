@@ -9,7 +9,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 {
     public class ElectromagneticSphereProjectileCharge1 : ModProjectile
     {
-        private int bounceCount;
+        private int bounceCount, timer;
         private bool initialized;
         // public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
@@ -33,6 +33,8 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         private Color color2 = new Color(157, 250, 208, 0.6f);
         public override void AI()
         {
+            timer ++;
+            Projectile.tileCollide = timer > 10 ? true : false;
             Particle ring = new BloomRing(Projectile.Center, Projectile.velocity, color, 0.25f*Projectile.ai[0], 5);
             GeneralParticleHandler.SpawnParticle(ring);
             Particle spark2 = new BoltParticle(Projectile.Center, 
@@ -53,7 +55,7 @@ namespace CalamityRelics.Content.Projectiles.Friendly
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             bounceCount++;
-            
+            timer = 0;
             if (bounceCount > 5)
             {
                 return true; 

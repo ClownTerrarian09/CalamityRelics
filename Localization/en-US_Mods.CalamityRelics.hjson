@@ -29,11 +29,45 @@ Items: {
 
 	Electroblazer: {
 		DisplayName: Electroblazer
-		Tooltip: ""
+		Tooltip: Fires a Wulfrum blaze that can activate and explode electrodes
 	}
 
 	WulfrumPowerCord: {
 		DisplayName: Wulfrum Power Cord
+		Tooltip: ""
+	}
+
+	SecurityController: {
+		DisplayName: Security Controller
+		Tooltip:
+			'''
+			Overrides local security protocols.
+			 Hold near a high-voltage barrier to initiate the unlock sequence.
+			'''
+	}
+
+	OffsetScanner: {
+		DisplayName: Biome Offset Scanner
+		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+	}
+
+	StructureSpawner: {
+		DisplayName: Structure Spawner
+		Tooltip: Right-click in your inventory to cycle schematics. Left-click in the world to place the selected structure.
+	}
+
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+		Tooltip: ""
+	}
+
+	WulfrumOrb: {
+		DisplayName: Wulfrum Orb
+		Tooltip: ""
+	}
+
+	WulfrumSpikyBalls: {
+		DisplayName: Wulfrum Spiky Balls
 		Tooltip: ""
 	}
 
@@ -54,37 +88,74 @@ Items: {
 
 	RustedCodebreaker: {
 		DisplayName: Rusted Codebreaker
-		Tooltip: ""
+		Tooltip: An ancient tool. It seems high quality, yet broken down.
 	}
 
-	OffsetScanner: {
-		DisplayName: Offset Scanner
-		Tooltip: ""
+	CnidarianSinus: {
+		DisplayName: Cnidarian Sinus
+		Tooltip: Spews popping Cnidarian tears
 	}
 
-	SecurityController: {
-		DisplayName: Security Controller
+	WulfrumWhiplash: {
+		DisplayName: Wulfrum Whiplash
+		Tooltip:
+			'''
+			1 summon tag damage
+			Your summons will focus struck enemies
+			'Not quite my tempo'
+			'''
+	}
+
+	CnidrionBag: {
+		DisplayName: Cnidrion Bag
 		Tooltip: ""
 	}
 
 	WulfrumElectromagneticSphere: {
 		DisplayName: Wulfrum Electromagnetic Sphere
+    Tooltip: ""
+  }
+  
+	StructureSizeScanner: {
+		Tooltip: ""
+		DisplayName: Structure Size Scanner
+	}
+
+	CaudalGeode: {
+		DisplayName: Caudal Geode
 		Tooltip: ""
 	}
 
 	WulfrumElectromagneticSphere2: {
-		DisplayName: Wulfrum Electromagnetic Sphere
+		DisplayName: Wulfrum Electromagnetic Sphere2
 		Tooltip: ""
 	}
 
-	WulfrumOrb: {
-		DisplayName: Wulfrum Orb
-		Tooltip: ""
+	DecayedSchematic: {
+		DisplayName: Decayed Schematic
+		Tooltip:
+			'''
+			This dusty device can be easily torn apart with a light breeze. Its rust can scratch even diamonds. 
+			Yet, its detailed drawings still dance beautifully across the screen.
+			This information will prove useful.
+
+			Click to view its contents.
+			'''
 	}
 
-	WulfrumSpikyBalls: {
-		DisplayName: Wulfrum Spiky Balls
-		Tooltip: ""
+	WulfrumMicrowaver: {
+		DisplayName: Wulfrum Microwaver
+		Tooltip: IMA FIRIN MAH LAZER
+	}
+
+	EnchantedBloom: {
+		DisplayName: Enchanted Bloom
+		Tooltip: Summons a rideable blooming rose.
+	}
+
+	TalismanOfTheIlmeri: {
+		DisplayName: Talisman Of The Ilmeri
+		Tooltip: Generates hot conductive mist and is noticeably electrified
 	}
 }
 
@@ -112,6 +183,17 @@ Projectiles: {
 	WulfrumMissile.DisplayName: Wulfrum Missile
 	WulfrumElectricOrb.DisplayName: Wulfrum Electric Orb
 	WulfrumSineMissile.DisplayName: Wulfrum Sine Missile
+	CnidarianMist.DisplayName: Cnidarian Mist
+	CnidrionBubble.DisplayName: Cnidrion Bubble
+	WaterBolt.DisplayName: Water Bolt
+	ClickEffectProj.DisplayName: Click Effect Proj
+	SecurityControllerProj.DisplayName: Security Controller Proj
+	WulfrumBeam.DisplayName: Wulfrum Beam
+	WulfrumMicrowave.DisplayName: Wulfrum Microwave
+	EnchantedBloomVine.DisplayName: Enchanted Bloom Vine
+	EnchantedLeaf.DisplayName: Enchanted Leaf
+	IlmeriMist.DisplayName: Ilmeri Mist
+	IlmeriLightning.DisplayName: Ilmeri Lightning
 }
 
 Buffs: {
@@ -129,6 +211,20 @@ Buffs: {
 		DisplayName: Wulfrum Orb Buff
 		Description: Mods.CalamityRelics.Buffs.WulfrumOrbBuff.Description
 	}
+
+	EnchantedBloomBuff: {
+		DisplayName: Enchanted Bloom Buff
+		Description: Enchanted Bloom Mount
+	}
+}
+
+NPCs: {
+	DraedonBarrierNPC.DisplayName: Security Barrier
+	Cnidrion.DisplayName: Cnidrion
+	WulfrumProbe.DisplayName: Wulfrum Probe
+	WulfrumTower.DisplayName: Wulfrum Tower
+	SecureAndDestroy.DisplayName: Secure And Destroy
+	WulfrumCrab.DisplayName: Wulfrum Crab
 }
 
 NPCs: {
@@ -137,3 +233,4 @@ NPCs: {
 	RollingBomb.DisplayName: Rolling Bomb
 	WulfrumSentinelDrone.DisplayName: Wulfrum Sentinel Drone
 }
+Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...

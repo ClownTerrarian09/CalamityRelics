@@ -130,6 +130,10 @@ namespace CalamityRelics.Content.Projectiles.Friendly
 
         private void ShootCharged(Player player)
         {
+            if (charge < 1)
+            {
+                return;
+            }
             SoundEngine.PlaySound(SoundID.Item66);
             Vector2 velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 10f;
             switch (charge)
