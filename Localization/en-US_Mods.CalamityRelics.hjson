@@ -157,6 +157,11 @@ Items: {
 		DisplayName: Talisman Of The Ilmeri
 		Tooltip: Generates hot conductive mist and is noticeably electrified
 	}
+
+	WulfrumEnergizer: {
+		DisplayName: Wulfrum Energizer
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
