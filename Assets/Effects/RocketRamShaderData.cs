@@ -15,6 +15,7 @@ public class RocketRamShaderData : MiscShaderData
     public Vector2 perlinEffectFloat;
     public Vector2 webTiling;
     public float maxAlpha;
+    public float timeAtLastDashStart;
     public float voronoiIntensity;
     public float webDistortionFactor;
     public Color webColor;
@@ -42,9 +43,9 @@ public class RocketRamShaderData : MiscShaderData
         Vector2 perlinEffectFloat,
         Vector2 webTiling,
         Color webColor,
-        float maxAlpha = 0.85f,
-        float voronoiIntensity = 1.2f,
-        float webDistortionFactor = 3f
+        float maxAlpha = 0.4f,
+        float voronoiIntensity = 0.9f,
+        float webDistortionFactor = 2.15f
 
     ) : base( effect, passName)
     {
@@ -65,12 +66,17 @@ public class RocketRamShaderData : MiscShaderData
         this.webDistortionFactor =  webDistortionFactor;
     }
 
+    public void MarkNewDash()
+    {
+        timeAtLastDashStart = Main.GlobalTimeWrappedHourly;
+    }
+
     public override void Apply(DrawData? drawData = null)
     {
 		SamplerState sampleState = SamplerState.LinearWrap;
 
 		
-        base.Shader.Parameters["uTime"]?.SetValue((float)Main.GlobalTimeWrappedHourly);
+        base.Shader.Parameters["uTime"]?.SetValue(Main.GlobalTimeWrappedHourly - timeAtLastDashStart);
         base.Shader.Parameters["offsetFloat"]?.SetValue(offsetFloat);
 		base.Shader.Parameters["webOffsetFloat"]?.SetValue(webOffsetFloat);
 		base.Shader.Parameters["perlinEffectFloat"]?.SetValue(perlinEffectFloat);
@@ -85,7 +91,7 @@ public class RocketRamShaderData : MiscShaderData
         SetTexture(noisePerlin,     5, sampleState);
         SetTexture(noiseWebGlow,    6, sampleState);
 		
-        base.Apply(drawData);
+        // base.Apply(drawData);
     }
 
     public void UpdateTime()

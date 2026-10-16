@@ -37,7 +37,6 @@ float4 MainShaderFunction(float4 inputColor : COLOR0, float2 uv : TEXCOORD0) : C
     float pO = tex2D(noisePerlin, uv * transformation + offsetFloat * uTime); 
     float p1 = tex2D(noisePerlin, uv + offsetFloat * uTime / 5); 	
     
-	float4 base = tex2D(baseMap, uv + PerlinOffset(pO));
     
     float4 voronoi = tex2D(noiseCell, float2(0.4 * uv.x * uv.x, uv.y)*1 + offsetFloat * uTime * 0.5);
     
@@ -48,6 +47,7 @@ float4 MainShaderFunction(float4 inputColor : COLOR0, float2 uv : TEXCOORD0) : C
     float webGlow = tex2D(noiseWebGlow, webScaleTf + webOffsetFloat * uTime).r;
 	
 	float alpha = tex2D(baseAlphaMap, uv + PerlinOffset(pO)).r;
+	float4 base = tex2D(baseMap, float2(alpha-0.01f, 0));
 
 
 	float voronoiAlpha = tex2D(baseAlphaMap, uv + float2(0.1, 0)).r;
@@ -55,14 +55,13 @@ float4 MainShaderFunction(float4 inputColor : COLOR0, float2 uv : TEXCOORD0) : C
 
 	float4 webOut = webColor;
 	webOut *= web + webGlow;
-	
 	webOut *= webAlpha;
+	// webOut *= webColor.a;
 	
 	voronoi *= voronoiAlpha;
 	voronoi *= voronoiIntensity;
 
-	// webOut *= webColor.a;
-	return webOut;
+	// return webOut;
 	
 	if(alpha > maxAlpha){
 		alpha = maxAlpha;
@@ -71,6 +70,15 @@ float4 MainShaderFunction(float4 inputColor : COLOR0, float2 uv : TEXCOORD0) : C
 	base *= alpha;
 	
 	float4 final = saturate(base + voronoi + webOut);
+	
+	// Intro Modifications
+	float rampUp = saturate((uTime * 4) + uv.x-1);
+	final *= rampUp;
+	
+	float addedStartGlow = saturate(-(uTime * 12) - uv.x*2+4);
+	final += final * addedStartGlow*9;
+
+
 	return final;
 	
 	//return pO;

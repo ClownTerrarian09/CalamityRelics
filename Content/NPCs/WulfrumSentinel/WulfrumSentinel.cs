@@ -136,7 +136,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         private Vector2 turretDir => Vector2.Normalize(targetPlayer.Center - turretPos);
         private bool turretInRange => MathF.Abs(MathF.Sin(float.DegreesToRadians(Origin.RotationFromVector(turretDir)))) < MathF.Sin(float.DegreesToRadians(maxTurretAngle));
         
-        private Vector2 dashTrailWP => NPC.Center+ new Vector2(-201 + -201 * -NPC.spriteDirection, 110);
+        private Vector2 dashTrailWP => NPC.Center + new Vector2(321 * NPC.spriteDirection, 25);
         private Vector2 backWheelOffset => new Vector2(-33, 0) * NPC.spriteDirection;
         private Vector2 frontWheelOffset => new Vector2(33, 0) * NPC.spriteDirection;
         private Vector2 wheelSize => new Vector2(108, 38);
@@ -236,8 +236,8 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                 textureWheelTreadBack = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/WulfrumSentinel/BackWheel");
                 textureBodyFlying = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/WulfrumSentinel/WulfrumSentinelFlying");
                 
-                textureBaseMap =        ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/BaseMap");       
-                textureBaseAlphaMap =   ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/AlphaMap");  
+                textureBaseMap =        ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/flameShaderGradient");       
+                textureBaseAlphaMap =   ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/flameShaderAlphaMap");  
                 textureNoiseCell =      ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/VoronoiMap");     
                 textureNoiseWeb =       ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/WebMap");      
                 textureNoisePerlin =    ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/PerlinMap");       
@@ -257,12 +257,12 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                     textureNoiseWeb,
                     textureNoisePerlin,
                     textureNoiseWebGlow,
-                    Vector2.UnitX * 1.4f,
-                    Vector2.UnitX * 2.3f,
-                    Vector2.UnitX * -0.07f,
-                    new Vector2(2.8f, 0.4f),
-                    new Color(0f, 1f, 0.8f, 1f),
-                    0.4f);
+                    Vector2.UnitX * 1.920f,
+                    Vector2.UnitX * 2.91f,
+                    Vector2.UnitX * -0.11f,
+                    new Vector2(2.8f, 0.5f),
+                    new Color(0.5f, 0.6f, 0.8f, 0.8f),
+                    0.6f);
             }
         }
 
@@ -392,7 +392,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
         public void RenderDash(SpriteBatch spriteBatch, Vector2 screenPos)
         {
             Vector2 testDashShaderPos = GetPositionFromCentered(dashTrailWP - screenPos, textureRect.Value);
-            Vector2 testDashShaderSize = new Vector2(400, -200);
+            Vector2 testDashShaderSize = new Vector2(500, -350);
             
             // Should in theory flip the direction of the effect
             // if(NPC.spriteDirection == -1)
@@ -409,7 +409,7 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
             // Begin new spritebatch referencing shader
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone, effectRocketRam.Value, Main.GameViewMatrix.TransformationMatrix);
             // Draw elements with shader
-            spriteBatch.Draw(textureRect.Value, new Rectangle((int)testDashShaderPos.X, (int)testDashShaderPos.Y, (int)testDashShaderSize.X, (int)testDashShaderSize.Y), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
+            spriteBatch.Draw(textureRect.Value, RectangleHelper.CreateAnchored(RectangleHelper.Anchor.CENTER, dashTrailWP-screenPos, testDashShaderSize), null, Color.White, 0, Vector2.Zero, SpriteEffect(), 0);
             // End shader batch
             spriteBatch.End();
             // Reinitialize the default settings
@@ -1003,12 +1003,21 @@ namespace CalamityRelics.Content.NPCs.WulfrumSentinel{
                 {
                     NPC.velocity.Y = activeDashVel.Y;
                 }
+
+
                 
                 Main.NewText("Dashing!");
                 inDash = true;
-                
                 facePlayer = false;
                 FacePlayer();
+
+                try {
+                    (GameShaders.Misc["CalamityRelics:RocketRam"] as RocketRamShaderData).MarkNewDash();
+                }
+                catch
+                {
+                    Main.NewText("Dash shader isnt of the correct wrapper type.");
+                }
             }
             else
             {
