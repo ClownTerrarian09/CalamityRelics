@@ -111,6 +111,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	WulfrumElectromagneticSphere: {
+		DisplayName: Wulfrum Electromagnetic Sphere
+    Tooltip: ""
+  }
+  
 	StructureSizeScanner: {
 		Tooltip: ""
 		DisplayName: Structure Size Scanner
@@ -175,6 +180,9 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	WulfrumMissile.DisplayName: Wulfrum Missile
+	WulfrumElectricOrb.DisplayName: Wulfrum Electric Orb
+	WulfrumSineMissile.DisplayName: Wulfrum Sine Missile
 	CnidarianMist.DisplayName: Cnidarian Mist
 	CnidrionBubble.DisplayName: Cnidrion Bubble
 	WaterBolt.DisplayName: Water Bolt
@@ -219,4 +227,10 @@ NPCs: {
 	WulfrumCrab.DisplayName: Wulfrum Crab
 }
 
+NPCs: {
+	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+	WulfrumSentinel.DisplayName: Wulfrum Sentinel
+	RollingBomb.DisplayName: Rolling Bomb
+	WulfrumSentinelDrone.DisplayName: Wulfrum Sentinel Drone
+}
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
