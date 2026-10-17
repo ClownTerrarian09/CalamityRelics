@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityRelics.Content.Common;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -51,10 +53,11 @@ namespace CalamityRelics.Content.Items.Accessories {
 
     public class WulfrumEnergizerWhip : GlobalProjectile {
 
-        const int maxWhipAttackCount = 15;
-        const int maxWhipMisses = 2;
-        const int buffTimeTicks = 3 * 60;
-
+        int maxWhipAttackCount = 30;
+        int maxWhipMisses = 2;
+        int buffTimeTicks = 4 * 60;
+        int whipAttackIncrease = 3;
+        int whipAttackMissDecrease = 3;
 
         public override bool InstancePerEntity => true;
         public bool didHit;
@@ -73,13 +76,17 @@ namespace CalamityRelics.Content.Items.Accessories {
 
             if (energizedPlayer.isMax) {
                 target.AddBuff(ModContent.BuffType<CalamityMod.Buffs.DamageOverTime.StaticDischarge>(), buffTimeTicks);
-                for (int i = 0; i < Main.rand.Next(2, 5); i++) {
+                for (int i = 0; i < Main.rand.Next(2, 7); i++) {
                     Dust.NewDustPerfect(
                         projectile.Center,
                         DustID.Electric,
-                        Main.rand.NextVector2Circular(15, 15)
+                        Main.rand.NextVector2Circular(10, 10)
                     );
                 }
+                SoundStyle s = Terraria.ID.SoundID.DD2_LightningBugZap;
+                s.MaxInstances = 1;
+                s.PitchVariance = 0.3f;
+                SoundEngine.PlaySound(s, projectile.Center);
             }
         }
 
@@ -94,11 +101,17 @@ namespace CalamityRelics.Content.Items.Accessories {
 
             if (energizedPlayer.isMax) {
                 target.AddBuff(ModContent.BuffType<CalamityMod.Buffs.DamageOverTime.StaticDischarge>(), buffTimeTicks);
-                Dust.NewDustPerfect(
-                    projectile.Center,
-                    DustID.Electric,
-                    Main.rand.NextVector2Circular(35, 35)
-                );
+                for (int i = 0; i < Main.rand.Next(2, 7); i++) {
+                    Dust.NewDustPerfect(
+                        projectile.Center,
+                        DustID.Electric,
+                        Main.rand.NextVector2Circular(10, 10)
+                    );
+                }
+                SoundStyle s = Terraria.ID.SoundID.DD2_LightningBugZap;
+                s.MaxInstances = 1;
+                s.PitchVariance = 0.3f;
+                SoundEngine.PlaySound(s, projectile.Center);
             }
         }
 
@@ -109,7 +122,7 @@ namespace CalamityRelics.Content.Items.Accessories {
                 if (energizedPlayer.wulfrumEnergizerItem == null) return;
 
                 if (didHit) {
-                    energizedPlayer.whipAttack++;
+                    energizedPlayer.whipAttack += whipAttackIncrease;
                     if (energizedPlayer.whipAttack > maxWhipAttackCount) {
                         energizedPlayer.whipAttack = maxWhipAttackCount;
                         energizedPlayer.isMax = true;
@@ -117,12 +130,14 @@ namespace CalamityRelics.Content.Items.Accessories {
                 } else {
                     if (energizedPlayer.whipMisses >= (maxWhipMisses - 1)) {
                         energizedPlayer.whipMisses = 0;
-                        energizedPlayer.whipAttack--;
+                        energizedPlayer.whipAttack -= whipAttackMissDecrease;
                         energizedPlayer.isMax = false;
                     } else {
                         energizedPlayer.whipMisses++;
                     }
                 }
+
+                energizedPlayer.whipAttack.Min(0);
             }
         }
     }
