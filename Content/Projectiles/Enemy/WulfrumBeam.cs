@@ -12,7 +12,7 @@ namespace CalamityRelics.Content.Projectiles.Enemy
     public class WulfrumBeam : ModProjectile
     {
         public const float MaxLength = 1200f;
-        public const int Lifetime = 120;
+        
 
         public int OwnerNPC
         {
@@ -22,7 +22,12 @@ namespace CalamityRelics.Content.Projectiles.Enemy
 
         public float Length
         {
-            get => Projectile.ai[1];
+            get => Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
+        public int Lifetime
+        {
+            get => (int)Projectile.ai[1];
             set => Projectile.ai[1] = value;
         }
 
@@ -37,13 +42,15 @@ namespace CalamityRelics.Content.Projectiles.Enemy
             Projectile.ignoreWater = true;
             Projectile.width = 16;
             Projectile.height = 24;
-            Projectile.timeLeft = Lifetime;
+            Projectile.timeLeft = 9999;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
         }
 
         public override void AI()
         {
+            if (Projectile.timeLeft > Lifetime)
+                Projectile.timeLeft = Lifetime;
             NPC probe = Main.npc[OwnerNPC];
             if (!probe.active || probe.type != ModContent.NPCType<WulfrumProbe>())
             {

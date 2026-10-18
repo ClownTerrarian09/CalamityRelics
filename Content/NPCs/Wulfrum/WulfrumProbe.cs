@@ -69,25 +69,50 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         {
             NPC.TargetClosest(true);
             Time++;
-
+            bool isCharged = NPC.ai[3] > 0;
+            if (isCharged)
+                NPC.ai[3]--;
             if (!NPC.HasValidTarget)
             {
                 StateTimer = 0;
                 return;
             }
-
+        
             Player player = Main.player[NPC.target];
 
             if (player.Distance(NPC.Center) < 2000f)
                 NPC.timeLeft = NPC.activeTime;
+            // Did this kinda strange and I dont like it but this is how it finds the tower. Would be better to send that info somehow so it didnt have to look for it /:
+            NPC tower = null;
+            if (isCharged)
+            {
+                float closest = 1500f;
+                foreach (NPC npc in Main.npc)
+                {
+                    if(!npc.active || npc.type != ModContent.NPCType<WulfrumTower>())
+                        continue;
+                    float dist = Vector2.Distance(npc.Center, NPC.Center);
+                    if (dist < closest)
+                    {
+                        closest = dist;
+                        tower = npc;
+                    }
+                }
+            }
 
+            if (isCharged && tower == null)
+                isCharged = false;
+            NPC.noTileCollide = isCharged;
             switch (AIState)
             {
                 case ProbeAIState.Stalking:
                 {
                     Vector2 directionToPlayer = Vector2.Normalize(player.Center - NPC.Center);
                     NPC.rotation = directionToPlayer.ToRotation();
-                    Vector2 hoverPos = player.Center - directionToPlayer * 400f + new Vector2(MathF.Sin(Time * 0.05f) * 10f, -100f);
+                    Vector2 hoverPos = player.Center - directionToPlayer * 400f + new Vector2(MathF.Sin(Time * 0.05f) * 30f, -100f);
+                    if (isCharged)
+                        hoverPos = tower.Center + new Vector2(MathF.Sin(Time * 0.05f) * 50f, -200f);
+
                     Vector2 desired = hoverPos - NPC.Center;
                     float speed = 10f;
                     if (desired.Length() > speed)
@@ -95,7 +120,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                     NPC.velocity = Vector2.Lerp(NPC.velocity, desired, 0.08f);
 
                     StateTimer++;
-                    if (StateTimer >= 500f || player.GetModPlayer<GrabbedPlayer>().IsGrabbed)
+                    if (StateTimer >= 500f || player.GetModPlayer<GrabbedPlayer>().IsGrabbed || isCharged)
                         SetState(ProbeAIState.Charging);
                     break;
                 }
@@ -105,6 +130,8 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                     if (StateTimer <= 100)
                         NPC.rotation = NPC.rotation.AngleLerp(directionToPlayer.ToRotation(), 0.5f);
                     Vector2 hoverPos = player.Center - directionToPlayer * 200f + new Vector2(MathF.Sin(Time * 0.05f) * 100f, -50f);
+                    if (isCharged)
+                        hoverPos = tower.Center + new Vector2(MathF.Sin(Time * 0.05f) * 50f, -200f);
                     Vector2 desired = hoverPos - NPC.Center;
                     float speed = 10f;
                     if (desired.Length() > speed)
@@ -126,9 +153,22 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                 case ProbeAIState.Beam:
                 {
                     Vector2 directionToPlayer = NPC.DirectionTo(player.Center).SafeNormalize(Vector2.UnitX);
+                    if (isCharged)
+                        directionToPlayer = new Vector2(0, 1);
                     NPC.rotation = Utils.AngleLerp(NPC.rotation, directionToPlayer.ToRotation(), 0.08f);
-                    NPC.velocity *= 0.9f;
+                    if (isCharged)
+                    {
+                        Vector2 hoverPos = tower.Center + new Vector2(MathF.Sin(Time * 0.005f) * 1000f, -450f);
+                        Vector2 desired = hoverPos - NPC.Center;
+                        float speed = 10f;
+                        if (desired.Length() > speed)
+                            desired = Vector2.Normalize(desired) * speed;
+                        NPC.velocity = Vector2.Lerp(NPC.velocity, desired, 0.08f);
+                    }
+                    else
+                        NPC.velocity *= 0.9f;
 
+                    
                     if (NPC.localAI[0] == 0f)
                     {
                         NPC.localAI[0] = 1f;
@@ -142,13 +182,15 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                             Projectile.NewProjectile(NPC.GetSource_FromAI(),
                                 NPC.Center, Vector2.Zero,
                                 ModContent.ProjectileType<WulfrumBeam>(),
-                                50, 0.2f, Main.myPlayer, ai0: NPC.whoAmI);
+                                50, 0.2f, Main.myPlayer, ai0: NPC.whoAmI, isCharged ? 750 : 120);
                         }
                     }
 
                     StateTimer++;
                     if (StateTimer >= 200f)
                     {
+                        if(isCharged && StateTimer < 800f)
+                            break;
                         NPC.localAI[0] = 0f;
                         SetState(ProbeAIState.Stalking);
                     }
