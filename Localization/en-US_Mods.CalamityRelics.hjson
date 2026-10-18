@@ -111,11 +111,6 @@ Items: {
 		Tooltip: ""
 	}
 
-	WulfrumElectromagneticSphere: {
-		DisplayName: Wulfrum Electromagnetic Sphere
-    Tooltip: ""
-  }
-  
 	StructureSizeScanner: {
 		Tooltip: ""
 		DisplayName: Structure Size Scanner
@@ -224,18 +219,15 @@ Buffs: {
 }
 
 NPCs: {
-	DraedonBarrierNPC.DisplayName: Security Barrier
-	Cnidrion.DisplayName: Cnidrion
-	WulfrumProbe.DisplayName: Wulfrum Probe
-	WulfrumTower.DisplayName: Wulfrum Tower
-	SecureAndDestroy.DisplayName: Secure And Destroy
-	WulfrumCrab.DisplayName: Wulfrum Crab
-}
-
-NPCs: {
 	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
 	WulfrumSentinel.DisplayName: Wulfrum Sentinel
 	RollingBomb.DisplayName: Rolling Bomb
 	WulfrumSentinelDrone.DisplayName: Wulfrum Sentinel Drone
+	Cnidrion.DisplayName: Cnidrion
+	SecureAndDestroy.DisplayName: Secure And Destroy
+	WulfrumCrab.DisplayName: Wulfrum Crab
+	WulfrumProbe.DisplayName: Wulfrum Probe
+	WulfrumTower.DisplayName: Wulfrum Tower
 }
+
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
