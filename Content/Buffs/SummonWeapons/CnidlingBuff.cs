@@ -4,7 +4,7 @@ using CalamityRelics.Content.Projectiles.Summon;
 
 namespace CalamityRelics.Content.Buffs.SummonWeapons
 {
-    public class WulfrumOrbBuff : ModBuff
+    public class CnidlingBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace CalamityRelics.Content.Buffs.SummonWeapons
 
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<WulfrumOrbProjectile>()] > 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<Cnidling>()] > 0)
             {
                 player.buffTime[buffIndex] = 18000;
                 return;
