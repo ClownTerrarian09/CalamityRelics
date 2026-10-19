@@ -33,7 +33,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
 
         private static Asset<Texture2D> TryRequest(string path) =>
             ModContent.HasAsset(path) ? ModContent.Request<Texture2D>(path) : null;
-
+        // AI stuffs
         private const int idleFrames = 12;
         private const int attackFrames = 7;
         private const int grabAnimTicks = attackFrames * 2;
@@ -61,12 +61,8 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             get => NPC.ai[2];
             set => NPC.ai[2] = value;
         }
-        private bool WanderRight
-        {
-            get => NPC.ai[3] == 1f;
-            set => NPC.ai[3] = value ? 1f : 0f;
-        }
 
+        private bool wanderRight;
         private int sinTimer;
         private int heldPlayer = -1;
 
@@ -113,10 +109,10 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             return Collision.CheckAABBvAABBCollision(topLeft, grabSize, target.position, new Vector2(target.width, target.height));
         }
 
-        private bool IsGroundWithin500()
+        private bool IsGroundWithin(int range)
         {
             Vector2 below = NPC.BottomLeft;
-            return Collision.SolidCollision(below, NPC.width, 500, acceptTopSurfaces: true);
+            return Collision.SolidCollision(below, NPC.width, range, acceptTopSurfaces: true);
         }
 
         private bool IsCeilingWithin100()
@@ -176,29 +172,40 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         {
             writer.Write(sinTimer);
             writer.Write((short)heldPlayer);
+            writer.Write(wanderRight);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             sinTimer = reader.ReadInt32();
             heldPlayer = reader.ReadInt16();
+            wanderRight = reader.ReadBoolean();
         }
 
         public override void AI()
         {
+            bool isCharged = NPC.ai[3] > 0;
+            if (isCharged)
+                NPC.ai[3]--;
             sinTimer++;
             if (bumpSoundCooldown > 0)
                 bumpSoundCooldown--;
 
             if (AIState != State.Holding)
                 NPC.TargetClosest();
-
+            
             switch (AIState)
             {
                 case State.Idle:
                 {
-                    float xVel = WanderRight ? -1f : 1f;
-                    float yVel = MathF.Sin(sinTimer * 0.05f) * 4f;
+                    float xVel = wanderRight ? -1f : 1f;
+                    float sin = MathF.Sin(sinTimer * 0.05f) * 4f * (isCharged ? 4f : 1f);
+                    float yVel = sin;
+                    
+                    if (IsGroundWithin(200))
+                    {
+                        yVel -= 0.5f;
+                    }
                     NPC.velocity = new Vector2(xVel, yVel);
 
                     if (Collision.TileCollision(NPC.position, NPC.velocity, NPC.width, NPC.height).X != NPC.velocity.X)
@@ -206,15 +213,9 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                         PlayBumpSound();
                         if (IsServer)
                         {
-                            WanderRight = !WanderRight;
+                            wanderRight = !wanderRight;
                             NPC.netUpdate = true;
                         }
-                    }
-
-                    if (IsGroundWithin500())
-                    {
-                        NPC.velocity.Y -= 1f;
-                        NPC.velocity.Y = MathF.Max(NPC.velocity.Y, -8f);
                     }
 
                     NPC.velocity *= 0.9f;
@@ -222,7 +223,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                     if (NPC.HasValidTarget)
                     {
                         if (GrabCooldown > 0f)
-                            GrabCooldown--;
+                            GrabCooldown -= isCharged ? 3f : 1f;
                         else if (IsServer)
                         {
                             SetState(State.Attacking);
@@ -323,10 +324,10 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
 
                     if (foundProbe)
                     {
-                        if (IsGroundWithin500())
+                        if (IsGroundWithin(500))
                         {
-                            NPC.velocity.Y = MathF.Max(NPC.velocity.Y - 0.3f, -6f);
                             NPC.velocity.X = probeX * 0.8f + MathF.Sin(sinTimer * 0.05f) * 1.5f;
+                            NPC.velocity.Y = MathF.Max(NPC.velocity.Y - 0.3f, -6f) + MathF.Cos(sinTimer * 0.03f) * 3f;
                         }
                         else
                         {
@@ -344,6 +345,19 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                     break;
                 }
             }
+            
+            if (!NPC.HasValidTarget)
+            {
+                NPC.rotation = 0;
+                return;
+            }
+
+            Player t = Main.player[NPC.target];
+            Vector2 toTarget = t.Center - NPC.Center;
+            float angle = toTarget.ToRotation();
+            if (NPC.direction == -1)
+                angle += MathHelper.Pi;
+            NPC.rotation = AIState == State.Attacking ?  angle : 0 ;
         }
 
         public override void FindFrame(int frameHeight)
@@ -519,7 +533,6 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             NPC npc = Main.npc[grabbedBy];
             Player.velocity = Vector2.Zero;
             Player.Center = npc.Center + new Vector2(-14, 28);
-            Player.fallStart = (int)(Player.position.Y / 16f);
             Player.RemoveAllGrapplingHooks();
         }
 
