@@ -157,6 +157,11 @@ Items: {
 		DisplayName: Wulfrum Energizer
 		Tooltip: ""
 	}
+
+	CnidlingEgg: {
+		DisplayName: Cnidling Egg
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -194,6 +199,7 @@ Projectiles: {
 	EnchantedLeaf.DisplayName: Enchanted Leaf
 	IlmeriMist.DisplayName: Ilmeri Mist
 	IlmeriLightning.DisplayName: Ilmeri Lightning
+	Cnidling.DisplayName: Cnidling
 }
 
 Buffs: {
@@ -215,6 +221,11 @@ Buffs: {
 	EnchantedBloomBuff: {
 		DisplayName: Enchanted Bloom Buff
 		Description: Enchanted Bloom Mount
+	}
+
+	CnidlingBuff: {
+		DisplayName: Cnidlings
+		Description: A herd of Cnidlings is fighting for you
 	}
 }
 

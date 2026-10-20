@@ -1,3 +1,4 @@
+using System;
 using CalamityRelics.Content.Buffs.SummonWeapons;
 using CalamityMod.Items.Materials;
 using CalamityRelics.Content.Projectiles.Summon;
@@ -10,17 +11,18 @@ using Terraria.ID;
 
 namespace  CalamityRelics.Content.Items.Weapons
 {
-    public class WulfrumOrb : ModItem
+    public class CnidlingEgg : ModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
-            ItemID.Sets.LockOnIgnoresCollision[Type] = true; //lock on enemy even if blocked by wall
+            ItemID.Sets.LockOnIgnoresCollision[Type] = true;
         }
         public override void SetDefaults()
         {
-            Item.width = Item.height = 32;
-            Item.damage = 70;
+            Item.width = 22;
+            Item.height = 26;
+            Item.damage = 20;
             Item.mana = 10;
             Item.useAnimation = Item.useTime = 36;
             Item.useStyle = ItemUseStyleID.Shoot;
@@ -28,8 +30,8 @@ namespace  CalamityRelics.Content.Items.Weapons
             Item.knockBack = 3f;
             Item.UseSound = SoundID.Item67;
             Item.autoReuse = true;
-            Item.buffType = ModContent.BuffType<WulfrumOrbBuff>();
-            Item.shoot = ModContent.ProjectileType<WulfrumOrbProjectile>();
+            Item.buffType = ModContent.BuffType<CnidlingBuff>();
+            Item.shoot = ModContent.ProjectileType<Cnidling>();
             Item.DamageType = DamageClass.Summon;
             
             Item.rare = ItemRarityID.Pink;
@@ -41,9 +43,39 @@ namespace  CalamityRelics.Content.Items.Weapons
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             player.AddBuff(Item.buffType, 2);
-            var projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, Main.myPlayer);
-            projectile.originalDamage = Item.damage;
-
+            for (int i = 0; i < 4; i++)
+            {
+                var proj = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI, ai0: i);
+                float d = Item.damage;
+                switch (i)
+                {
+                    // Chargin
+                    case 0:
+                    {
+                        d *= 2f;
+                        break;
+                    }
+                    // Shootin
+                    case 1:
+                    {
+                        d *= 0.3f;
+                        break;
+                    }
+                    // Spinnin
+                    case 2:
+                    {
+                        d *= 0.2f;
+                        break;
+                    }
+                    // Protectin
+                    case 3:
+                    {
+                        d *= 1.25f;
+                        break;
+                    }
+                }
+                proj.originalDamage = (int)MathF.Floor(d);
+            }
             return false;
         }
 
