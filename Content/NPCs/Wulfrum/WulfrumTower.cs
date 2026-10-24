@@ -13,6 +13,7 @@ using CalamityMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader.Utilities;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Utilities;
 
 namespace CalamityRelics.Content.NPCs.Wulfrum
 {
@@ -22,6 +23,16 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         private SpriteEffects speffect;
 
         public bool isChargeState;
+        // Float is their weight for random
+        private Dictionary<int, float> WulfrumEnemies = new()
+        {
+            [ModContent.NPCType<WulfrumGyrator>()] = 1f,
+            [ModContent.NPCType<WulfrumDrone>()] = 1f,
+            [ModContent.NPCType<WulfrumHovercraft>()] = 1f,
+            [ModContent.NPCType<WulfrumRover>()] = 1f,
+            [ModContent.NPCType<WulfrumProbe>()] = 0.3f,
+            [ModContent.NPCType<WulfrumCrab>()] = 0.3f,
+        };
         private float stateTimer{
                 get => NPC.ai[0];
                 set => NPC.ai[0] = value;
@@ -162,9 +173,15 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
             }
             
         }
-
         public void SpawnNPC(Vector2 position)
         {
+            WeightedRandom<int> picker = new WeightedRandom<int>(Main.rand);
+            foreach (var (type, weight) in WulfrumEnemies)
+                picker.Add(type, weight);
+            int npcType = picker.Get();
+            NPC.NewNPC(NPC.GetSource_FromAI(), (int)position.X, (int)position.Y, npcType);
+            
+            /*
             int randomNPC = Main.rand.Next(4);
                 switch (randomNPC)
                 {
@@ -181,8 +198,8 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                     NPC.NewNPC(NPC.GetSource_FromAI(), (int)position.X, (int)position.Y, ModContent.NPCType<WulfrumRover>());
                     break;
                 }
+                */
         }
-        List<int> WulfrumEnemies = [ModContent.NPCType<WulfrumGyrator>(), ModContent.NPCType<WulfrumDrone>(), ModContent.NPCType<WulfrumHovercraft>(), ModContent.NPCType<WulfrumRover>()];
         public void ChargeState(Player player, float fireRate, float timer)
         {
             fireRateTimer ++;
@@ -206,7 +223,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                 GeneralParticleHandler.SpawnParticle(pulseRing);
                 foreach (NPC npcType in Main.ActiveNPCs)
                     {
-                        if (WulfrumEnemies.Contains(npcType.type) && NPC.Distance(npcType.Center) < 800f)
+                        if (WulfrumEnemies.ContainsKey(npcType.type) && NPC.Distance(npcType.Center) < 800f)
                         {
                             npcType.ai[3] = 360;
                         }

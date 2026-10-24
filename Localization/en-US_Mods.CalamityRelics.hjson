@@ -29,7 +29,7 @@ Items: {
 
 	Electroblazer: {
 		DisplayName: Electroblazer
-		Tooltip: ""
+		Tooltip: Fires a Wulfrum blaze that can activate and explode electrodes
 	}
 
 	WulfrumPowerCord: {
@@ -49,6 +49,11 @@ Items: {
 	OffsetScanner: {
 		DisplayName: Biome Offset Scanner
 		Tooltip: Click a tile to print its X/Y offset relative to the generated structure.
+	}
+
+	StructureSpawner: {
+		DisplayName: Structure Spawner
+		Tooltip: Right-click in your inventory to cycle schematics. Left-click in the world to place the selected structure.
 	}
 
 	WulfrumElectromagneticSphere: {
@@ -88,7 +93,7 @@ Items: {
 
 	CnidarianSinus: {
 		DisplayName: Cnidarian Sinus
-		Tooltip: ""
+		Tooltip: Spews popping Cnidarian tears
 	}
 
 	WulfrumWhiplash: {
@@ -135,6 +140,26 @@ Items: {
 
 	WulfrumMicrowaver: {
 		DisplayName: Wulfrum Microwaver
+		Tooltip: IMA FIRIN MAH LAZER
+	}
+
+	EnchantedBloom: {
+		DisplayName: Enchanted Bloom
+		Tooltip: Summons a rideable blooming rose.
+	}
+
+	TalismanOfTheIlmeri: {
+		DisplayName: Talisman Of The Ilmeri
+		Tooltip: Generates hot conductive mist and is noticeably electrified
+	}
+
+	WulfrumEnergizer: {
+		DisplayName: Wulfrum Energizer
+		Tooltip: ""
+	}
+
+	CnidlingEgg: {
+		DisplayName: Cnidling Egg
 		Tooltip: ""
 	}
 }
@@ -160,6 +185,9 @@ Projectiles: {
 	WulfrumSpikyBallsProjectile.DisplayName: Wulfrum Spiky Balls Projectile
 	WulfrumOrbProjectile.DisplayName: Wulfrum Orb Projectile
 	WulfrumPortal.DisplayName: Wulfrum Portal
+	WulfrumMissile.DisplayName: Wulfrum Missile
+	WulfrumElectricOrb.DisplayName: Wulfrum Electric Orb
+	WulfrumSineMissile.DisplayName: Wulfrum Sine Missile
 	CnidarianMist.DisplayName: Cnidarian Mist
 	CnidrionBubble.DisplayName: Cnidrion Bubble
 	WaterBolt.DisplayName: Water Bolt
@@ -167,6 +195,11 @@ Projectiles: {
 	SecurityControllerProj.DisplayName: Security Controller Proj
 	WulfrumBeam.DisplayName: Wulfrum Beam
 	WulfrumMicrowave.DisplayName: Wulfrum Microwave
+	EnchantedBloomVine.DisplayName: Enchanted Bloom Vine
+	EnchantedLeaf.DisplayName: Enchanted Leaf
+	IlmeriMist.DisplayName: Ilmeri Mist
+	IlmeriLightning.DisplayName: Ilmeri Lightning
+	Cnidling.DisplayName: Cnidling
 }
 
 Buffs: {
@@ -184,14 +217,28 @@ Buffs: {
 		DisplayName: Wulfrum Orb Buff
 		Description: Mods.CalamityRelics.Buffs.WulfrumOrbBuff.Description
 	}
+
+	EnchantedBloomBuff: {
+		DisplayName: Enchanted Bloom Buff
+		Description: Enchanted Bloom Mount
+	}
+
+	CnidlingBuff: {
+		DisplayName: Cnidlings
+		Description: A herd of Cnidlings is fighting for you
+	}
 }
 
 NPCs: {
-	DraedonBarrierNPC.DisplayName: Security Barrier
+	DraedonBarrierNPC.DisplayName: Draedon Barrier N P C
+	WulfrumSentinel.DisplayName: Wulfrum Sentinel
+	RollingBomb.DisplayName: Rolling Bomb
+	WulfrumSentinelDrone.DisplayName: Wulfrum Sentinel Drone
 	Cnidrion.DisplayName: Cnidrion
+	SecureAndDestroy.DisplayName: Secure And Destroy
+	WulfrumCrab.DisplayName: Wulfrum Crab
 	WulfrumProbe.DisplayName: Wulfrum Probe
 	WulfrumTower.DisplayName: Wulfrum Tower
-	SecureAndDestroy.DisplayName: Secure And Destroy
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...

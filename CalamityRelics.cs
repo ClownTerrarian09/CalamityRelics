@@ -4,10 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using CalamityRelics.Content.Items.Utilities.StructureSpawner;
+using CalamityRelics.Content.Systems;
+using Microsoft.Xna.Framework;
+using Terraria.Graphics.Effects;
 
 namespace CalamityRelics
 {
@@ -31,9 +38,59 @@ namespace CalamityRelics
 						NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, playerId);
 					}
 					break;
+				case 1:
+					byte schematicIndex = reader.ReadByte();
+					Point origin = new(reader.ReadInt32(), reader.ReadInt32());
+					if (Main.netMode != NetmodeID.Server || whoAmI < 0 || whoAmI >= Main.maxPlayers)
+						break;
+
+					Player requestingPlayer = Main.player[whoAmI];
+					if (!requestingPlayer.active || requestingPlayer.dead ||
+						requestingPlayer.HeldItem.type != ModContent.ItemType<StructureSpawner>() ||
+						schematicIndex >= StructureSpawnerSystem.SchematicCount ||
+						origin.X < 0 || origin.Y < 0 || origin.X >= Main.maxTilesX - 200 || origin.Y >= Main.maxTilesY - 200)
+						break;
+
+					if (StructureSpawnerSystem.TryPlaceSchematic(schematicIndex, origin))
+					{
+						for (int xOffset = 50; xOffset <= 150; xOffset += 100)
+						{
+							for (int yOffset = 50; yOffset <= 150; yOffset += 100)
+							{
+								NetMessage.SendTileSquare(-1, origin.X + xOffset, origin.Y + yOffset, 100);
+							}
+						}
+					}
+					break;
 				default:
 					break;
 			}
+		}
+
+		public override void Load()
+		{
+			if (Main.dedServ)
+				return;
+
+			Asset<Effect> effect = ModContent.Request<Effect>(
+				"CalamityRelics/Assets/Effects/StormLightning", AssetRequestMode.ImmediateLoad);
+
+			GameShaders.Misc["CalamityRelics:StormLightning"] = new MiscShaderData(effect, "StormLightning")
+				.UseProjectionMatrix(true)
+				.UseImage0(ModContent.Request<Texture2D>(
+					"CalamityRelics/Assets/Textures/Effects/LightningEffect", AssetRequestMode.ImmediateLoad));
+			
+			Asset<Effect> borderFx = ModContent.Request<Effect>(
+				"CalamityRelics/Assets/Effects/ElectricBorder", AssetRequestMode.ImmediateLoad);
+			Asset<Texture2D> borderNoise = ModContent.Request<Texture2D>(
+				"CalamityRelics/Assets/Textures/Effects/ElectricNoise", AssetRequestMode.ImmediateLoad);
+
+			Filters.Scene["CalamityRelics:ElectricBorder"] = new Filter(
+				new ScreenShaderData(borderFx, "ElectricPass")
+					.UseImage(borderNoise, 0, SamplerState.LinearWrap)
+					.UseColor(new Color(130, 220, 155))
+					.UseIntensity(1.5f),
+				EffectPriority.High);
 		}
 	}
 }
