@@ -7,6 +7,8 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using CalamityRelics.Content.Projectiles.Friendly;
 using CalamityRelics.Content.Buffs;
+using CalamityMod.Items.Materials;
+using CalamityRelics.Core;
 
 namespace CalamityRelics.Content.Items.Weapons.Summon
 {
@@ -37,5 +39,16 @@ namespace CalamityRelics.Content.Items.Weapons.Summon
 		public override bool MeleePrefix() {
 			return true;
 		}
+		public override void AddRecipes()
+        {
+            Recipe recipes = CreateRecipe()
+            .AddIngredient(ModContent.ItemType<AnodizedWulfrumMetal>(), 15)
+			.AddIngredient(ModContent.ItemType<WulfrumMetalScrap>(), 20)
+			.AddIngredient(ModContent.ItemType<EnergyCore>())
+			.AddIngredient(ModContent.ItemType<StormlionMandible>(), 3)
+            .AddTile(TileID.Anvils)
+			.AddCondition(RelicsConditions.UnlockedWulfrumRecipes)
+            .Register();
+        }
 	}
 }

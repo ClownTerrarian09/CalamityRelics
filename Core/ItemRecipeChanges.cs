@@ -5,6 +5,8 @@ using Terraria.Localization;
 using CalamityMod.Items.DraedonMisc;
 using CalamityMod.Items.Placeables.DraedonStructures;
 using CalamityRelics.Content.Items.TileItems;
+using CalamityMod.Items.Placeables.FurnitureWulfrum.FurnitureAnodizedWulfrum;
+using CalamityMod.Items.Materials;
 
 namespace CalamityRelics.Core
 {
@@ -17,6 +19,10 @@ namespace CalamityRelics.Core
                     recipe.RemoveIngredient(ModContent.ItemType<ChargingStationItem>());
                     recipe.AddIngredient(ModContent.ItemType<RustedCodebreaker>());
                     recipe.AddCondition(RelicsConditions.UnlockedWulfrumRecipes);
+                }
+                if (recipe.HasResult(ModContent.ItemType<AnodizedWulfrumMetal>()) && recipe.HasIngredient(ModContent.ItemType<StormlionMandible>()))
+                {
+                    recipe.DisableRecipe();
                 }
             }
         }
