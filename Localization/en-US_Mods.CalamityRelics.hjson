@@ -162,6 +162,11 @@ Items: {
 		DisplayName: Cnidling Egg
 		Tooltip: ""
 	}
+
+	WulfrumRepeater: {
+		DisplayName: Wulfrum Repeater
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -200,6 +205,7 @@ Projectiles: {
 	IlmeriMist.DisplayName: Ilmeri Mist
 	IlmeriLightning.DisplayName: Ilmeri Lightning
 	Cnidling.DisplayName: Cnidling
+	WulfrumTrackerArrow.DisplayName: Wulfrum Tracker Arrow
 }
 
 Buffs: {
