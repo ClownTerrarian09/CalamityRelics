@@ -55,7 +55,7 @@ namespace CalamityRelics.Content.Items.DraedonItems
                     rangedDisplay.OverrideColor = new Color(149, 243, 43);
                     list.Insert(insertIndex + 2, rangedDisplay);
 
-                    int mageItem = ModContent.ItemType<WulfrumElectromagneticSphere2>();
+                    int mageItem = ModContent.ItemType<PlasmaGlobe>();
                     TooltipLine mageDisplay = new TooltipLine(this.Mod, "CalamityMod:MageDisplay", $"[i:{mageItem}] {CalamityUtils.GetItemName(mageItem)}");
                     mageDisplay.OverrideColor = new Color(201, 41, 255);
                     list.Insert(insertIndex + 3, mageDisplay);

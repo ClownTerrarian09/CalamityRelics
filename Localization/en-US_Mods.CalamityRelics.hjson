@@ -162,6 +162,16 @@ Items: {
 		DisplayName: Cnidling Egg
 		Tooltip: ""
 	}
+
+	RefinedWulfrum: {
+		DisplayName: Refined Wulfrum
+		Tooltip: ""
+	}
+
+	PlasmaGlobe: {
+		DisplayName: Plasma Globe
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -200,6 +210,8 @@ Projectiles: {
 	IlmeriMist.DisplayName: Ilmeri Mist
 	IlmeriLightning.DisplayName: Ilmeri Lightning
 	Cnidling.DisplayName: Cnidling
+	LightningBolt.DisplayName: Lightning Bolt
+	ZapZapZap.DisplayName: Zap Zap Zap
 }
 
 Buffs: {

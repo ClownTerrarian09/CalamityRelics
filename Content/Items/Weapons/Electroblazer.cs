@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Audio;
 using Terraria.GameInput;
+using CalamityRelics.Core;
 
 namespace CalamityRelics.Content.Items.Weapons
 {
@@ -208,6 +209,17 @@ namespace CalamityRelics.Content.Items.Weapons
 			else
 				tooltips.Add(line);
 		}
+        public override void AddRecipes()
+        {
+            Recipe recipes = CreateRecipe()
+            .AddIngredient(ModContent.ItemType<AnodizedWulfrumMetal>(), 5)
+			.AddIngredient(ModContent.ItemType<WulfrumMetalScrap>(), 20)
+			.AddIngredient(ModContent.ItemType<EnergyCore>())
+			.AddIngredient(ItemID.Torch, 10)
+            .AddTile(TileID.Anvils)
+			.AddCondition(RelicsConditions.UnlockedWulfrumRecipes)
+            .Register();
+        }
 	}
 	public class ElectroblazerPlayer : ModPlayer
 	{
