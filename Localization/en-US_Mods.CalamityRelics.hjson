@@ -228,6 +228,7 @@ NPCs: {
 	WulfrumCrab.DisplayName: Wulfrum Crab
 	WulfrumProbe.DisplayName: Wulfrum Probe
 	WulfrumTower.DisplayName: Wulfrum Tower
+	WulfrumSaw.DisplayName: Wulfrum Saw
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...
