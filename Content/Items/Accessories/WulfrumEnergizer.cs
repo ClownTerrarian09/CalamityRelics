@@ -66,9 +66,11 @@ namespace CalamityRelics.Content.Items.Accessories {
         //    didHit = false;
         //}
 
-        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone) {
-            if (!ProjectileID.Sets.IsAWhip[projectile.type]) return;
+        public override bool AppliesToEntity(Projectile projectile, bool lateInstantiation) {
+            return lateInstantiation && ProjectileID.Sets.IsAWhip[projectile.type];
+        }
 
+        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone) {
             WulfrumEnergizerPlayer energizedPlayer = Main.player[projectile.owner].GetModPlayer<WulfrumEnergizerPlayer>();
             if (energizedPlayer.wulfrumEnergizerItem == null) return;
 
@@ -92,8 +94,6 @@ namespace CalamityRelics.Content.Items.Accessories {
 
         // For multiplayer PVP
         public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info) {
-            if (!ProjectileID.Sets.IsAWhip[projectile.type]) return;
-
             WulfrumEnergizerPlayer energizedPlayer = Main.player[projectile.owner].GetModPlayer<WulfrumEnergizerPlayer>();
             if (energizedPlayer.wulfrumEnergizerItem == null) return;
 
