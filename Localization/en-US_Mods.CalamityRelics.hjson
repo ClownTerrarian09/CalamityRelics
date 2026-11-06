@@ -163,6 +163,9 @@ Items: {
 		Tooltip: ""
 	}
 
+	WulfrumRepeater: {
+		DisplayName: Wulfrum Repeater
+    
 	RefinedWulfrum: {
 		DisplayName: Refined Wulfrum
 		Tooltip: ""
@@ -210,6 +213,7 @@ Projectiles: {
 	IlmeriMist.DisplayName: Ilmeri Mist
 	IlmeriLightning.DisplayName: Ilmeri Lightning
 	Cnidling.DisplayName: Cnidling
+	WulfrumTrackerArrow.DisplayName: Wulfrum Tracker Arrow
 	LightningBolt.DisplayName: Lightning Bolt
 	ZapZapZap.DisplayName: Zap Zap Zap
 }
