@@ -165,7 +165,9 @@ Items: {
 
 	WulfrumRepeater: {
 		DisplayName: Wulfrum Repeater
-    
+		Tooltip: ""
+	}
+
 	RefinedWulfrum: {
 		DisplayName: Refined Wulfrum
 		Tooltip: ""
