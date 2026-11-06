@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace CalamityRelics.Content.Common {
@@ -37,17 +38,6 @@ namespace CalamityRelics.Content.Common {
                 value = max;
         }
 
-        public static void Min<T>(this ref T value, T min) where T : struct, IComparable<T> {
-            if (value.CompareTo(min) < 0)
-                value = min;
-        }
-
-        public static void Max<T>(this ref T value, T max) where T : struct, IComparable<T> {
-            if (value.CompareTo(max) > 0)
-                value = max;
-        }
-
-
         public static T AsLimit<T>(this T value, T min, T max) where T : IComparable<T> {
             if (value.CompareTo(min) < 0)
                 return min;
@@ -56,16 +46,35 @@ namespace CalamityRelics.Content.Common {
             return value;
         }
 
+
+        public static void Min<T>(this ref T value, T min) where T : struct, IComparable<T> {
+            if (value.CompareTo(min) < 0)
+                value = min;
+        }
         public static T AsMin<T>(this T value, T min) where T : struct, IComparable<T> {
             if (value.CompareTo(min) < 0)
                 return min;
             return value;
         }
 
+
+        public static void Max<T>(this ref T value, T max) where T : struct, IComparable<T> {
+            if (value.CompareTo(max) > 0)
+                value = max;
+        }
+
         public static T AsMax<T>(this T value, T max) where T : struct, IComparable<T> {
             if (value.CompareTo(max) > 0)
                 return max;
             return value;
+        }
+
+        public static void Absolute<T>(this ref T value) where T : struct, INumber<T> {
+            value = T.Abs(value);
+        }
+
+        public static T AsAbsolute<T>(this T value) where T : struct, INumber<T> {
+            return T.Abs(value);
         }
     }
 }

@@ -3,6 +3,13 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using CalamityMod;
+using CalamityRelics.Content.Projectiles.Friendly;
+using CalamityRelics.Content.Items.Accessories;
+using CalamityMod.Projectiles.Magic;
+using CalamityMod.Projectiles.Typeless;
+using CalamityMod.Projectiles.Melee;
+using System;
+using CalamityMod.Projectiles.Ranged;
 
 namespace CalamityRelics.Content.GlobalNPCs
 {
@@ -24,6 +31,8 @@ namespace CalamityRelics.Content.GlobalNPCs
         {
             if (wulfrumConductiveDebuff)
             {
+                Dust dust = Dust.NewDustDirect(npc.Center, 16, 16, DustID.Electric);
+                dust.noGravity = true;
                 shootTimer++;
                 
                 if (shootTimer >= 30)
@@ -57,10 +66,10 @@ namespace CalamityRelics.Content.GlobalNPCs
                                 npc.GetSource_FromAI(),
                                 npc.Center,
                                 velocity,
-                                ProjectileID.Spark, // TODO: Change this to your desired projectile ID
+                                ModContent.ProjectileType<ZapZapZap>(), // TODO: Change this to your desired projectile ID
                                 debuffDamage, 
                                 0f,
-                                debuffOwner 
+                                debuffOwner
                             );
                             
                             Main.projectile[projIndex].friendly = true;

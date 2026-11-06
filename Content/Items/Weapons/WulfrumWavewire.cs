@@ -2,6 +2,8 @@ using CalamityRelics.Content.Projectiles.Friendly;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityRelics.Core;
+using CalamityMod.Items.Materials;
 
 namespace CalamityRelics.Content.Items.Weapons
 {
@@ -34,6 +36,18 @@ namespace CalamityRelics.Content.Items.Weapons
             Item.DamageType = DamageClass.MeleeNoSpeed;
             Item.shoot = ModContent.ProjectileType<WulfrumWavewireProj>(); // Which projectile this item will shoot. We set this to our corresponding projectile.
             Item.shootSpeed = 16f;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipes = CreateRecipe()
+            .AddIngredient(ModContent.ItemType<AnodizedWulfrumMetal>(), 5)
+			.AddIngredient(ModContent.ItemType<WulfrumMetalScrap>(), 10)
+			.AddIngredient(ModContent.ItemType<EnergyCore>())
+			.AddIngredient(ItemID.WhiteString, 1)
+            .AddTile(TileID.Anvils)
+			.AddCondition(RelicsConditions.UnlockedWulfrumRecipes)
+            .Register();
         }
 	}
 }

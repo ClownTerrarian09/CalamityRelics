@@ -6,11 +6,13 @@ using Terraria.DataStructures;
 using CalamityRelics.Content.Projectiles.Friendly;
 using Microsoft.Xna.Framework;
 using JetBrains.Annotations;
+using CalamityRelics.Core;
+using CalamityMod.Items.Materials;
 
 
 namespace CalamityRelics.Content.Items.Weapons
 {
-    internal class WulfrumElectromagneticSphere2 : ModItem
+    internal class PlasmaGlobe : ModItem
     {
         protected override bool CloneNewInstances => true;
         private float holdDistance = 10;
@@ -72,6 +74,16 @@ namespace CalamityRelics.Content.Items.Weapons
 			Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer, 1f);
 			return false;
 		}
+        public override void AddRecipes()
+        {
+            Recipe recipes = CreateRecipe()
+            .AddIngredient(ModContent.ItemType<AnodizedWulfrumMetal>(), 5)
+			.AddIngredient(ModContent.ItemType<WulfrumMetalScrap>(), 10)
+			.AddIngredient(ItemID.Glass, 50)
+            .AddTile(TileID.Anvils)
+			.AddCondition(RelicsConditions.UnlockedWulfrumRecipes)
+            .Register();
+        }
         
     }
 }

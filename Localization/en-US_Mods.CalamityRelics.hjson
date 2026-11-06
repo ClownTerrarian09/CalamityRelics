@@ -165,6 +165,14 @@ Items: {
 
 	WulfrumRepeater: {
 		DisplayName: Wulfrum Repeater
+    
+	RefinedWulfrum: {
+		DisplayName: Refined Wulfrum
+		Tooltip: ""
+	}
+
+	PlasmaGlobe: {
+		DisplayName: Plasma Globe
 		Tooltip: ""
 	}
 }
@@ -206,6 +214,8 @@ Projectiles: {
 	IlmeriLightning.DisplayName: Ilmeri Lightning
 	Cnidling.DisplayName: Cnidling
 	WulfrumTrackerArrow.DisplayName: Wulfrum Tracker Arrow
+	LightningBolt.DisplayName: Lightning Bolt
+	ZapZapZap.DisplayName: Zap Zap Zap
 }
 
 Buffs: {
@@ -245,6 +255,7 @@ NPCs: {
 	WulfrumCrab.DisplayName: Wulfrum Crab
 	WulfrumProbe.DisplayName: Wulfrum Probe
 	WulfrumTower.DisplayName: Wulfrum Tower
+	WulfrumSaw.DisplayName: Wulfrum Saw
 }
 
 Conditions.UnlockedWulfrumRecipes: View an old schematic found somewhere...

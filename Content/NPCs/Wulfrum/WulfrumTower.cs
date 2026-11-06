@@ -12,12 +12,24 @@ using CalamityMod.Sounds;
 using CalamityMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.Utilities;
+using ReLogic.Content;
+using Terraria.Graphics.Shaders;
+using CalamityRelics.Assets.Effects;
+using CalamityRelics.HelperScripts;
 
 namespace CalamityRelics.Content.NPCs.Wulfrum
 {
     public class WulfrumTower : ModNPC
     {
+        private static Asset<Effect> effectBarrier;
+        private static Texture2D texture;
+        private static Asset<Texture2D> textureRect;
+
+        private static Asset<Texture2D> voronoiTexture;
+        private SpriteEffects speffect;
+
         public bool isChargeState;
         // Float is their weight for random
         private Dictionary<int, float> WulfrumEnemies = new()
@@ -37,11 +49,40 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                 get => NPC.ai[1];
                 set => NPC.ai[1] = value;
             }
+        public override void Load()
+        {
+            if(Main.netMode != NetmodeID.Server)
+            {
+                voronoiTexture = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/GeneralTextures/SquareNoise");
+                effectBarrier = ModContent.Request<Effect>("CalamityRelics/Assets/Effects/WulfrumBarrier");
+                // effectBarrier = ModContent.Request<Effect>("CalamityRelics/Assets/Effects/TestEffect");
+                textureRect = ModContent.Request<Texture2D>("CalamityRelics/Assets/Textures/Effects/RocketRamTextures/OpaqueRect");  
+
+                // GameShaders.Misc["CalamityRelics:WulfrumBarrier"] = new MiscShaderData(effectBarrier, "Main");
+                // GameShaders.Misc["CalamityRelics:WulfrumBarrier"].UseImage1(voronoiTexture);
+                GameShaders.Misc["CalamityRelics:WulfrumBarrier"] = new WulfrumBarrierShaderData(effectBarrier, "Main", voronoiTexture);
+            }
+        }
+
+        private void RenderBarrier(SpriteBatch spriteBatch, Vector2 screenPos)
+        {
+            spriteBatch.End();
+            GameShaders.Misc["CalamityRelics:WulfrumBarrier"].Apply();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone, effectBarrier.Value, Main.GameViewMatrix.TransformationMatrix);
+            spriteBatch.Draw(textureRect.Value, 
+            RectangleHelper.CreateAnchored(RectangleHelper.Anchor.CENTER, NPC.Center - screenPos, new Vector2(220, 220)),
+            // new Rectangle((int)(NPC.TopLeft.X - 70 - screenPos.X), (int)(NPC.TopLeft.Y - screenPos.Y), NPC.height + 20, NPC.height + 20), 
+            null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+
         public override void SetDefaults()
         {
+            texture = ModContent.Request<Texture2D>("CalamityRelics/Content/NPCs/Wulfrum/WulfrumTower_Glow").Value;
             NPC.aiStyle = -1;
             NPC.width = 58;
-            NPC.height = 136;
+            NPC.height = 148;
             NPC.knockBackResist = 0f;
             NPC.lifeMax = 1000;
             NPC.defense = 10;
@@ -54,6 +95,7 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
         }
         public override void SetStaticDefaults()
         {
+            Main.npcFrameCount[Type] = 9;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers();
             value.PortraitPositionYOverride = -16f;
             NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
@@ -98,6 +140,27 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
 
         }
 
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+            {
+                speffect = (NPC.spriteDirection == -1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally; 
+                Rectangle drawRectangle = texture.Frame(1, 9, 0, NPC.frame.Y/NPC.height);
+                Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, NPC.height * 0.5f);
+                spriteBatch.Draw
+                (
+                    texture,
+                    NPC.Center - screenPos+ new Vector2(0, 3),
+                    drawRectangle,
+                    Color.White,
+                    NPC.rotation,
+                    drawOrigin,
+                    1f, 
+                    speffect, 
+                    0f
+                );
+                if (isChargeState){RenderBarrier(spriteBatch, screenPos);}
+                // RenderBarrier(spriteBatch, screenPos);
+                
+        }
         public override void AI()
         {
             if (NPC.target == 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active){
@@ -214,6 +277,22 @@ namespace CalamityRelics.Content.NPCs.Wulfrum
                 NPC.HitSound = WulfrumAmplifier.Hit;
                 NPC.SuperArmor = false;
                 isChargeState = !isChargeState;
+            }
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            int startFrame = 0;
+            int endFrame = 8;
+            int frameSpeed = 4;
+            NPC.frameCounter += 1;
+            if (NPC.frameCounter >= frameSpeed){
+                NPC.frameCounter = 0f;
+                NPC.frame.Y += frameHeight;
+
+                if (frameHeight*endFrame < NPC.frame.Y){
+                    NPC.frame.Y = startFrame*frameHeight;
+                }
             }
         }
     }
